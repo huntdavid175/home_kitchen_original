@@ -32,10 +32,10 @@ const MidSection = () => {
     },
   };
   return (
-    <section className="py-12 md:py-24 overflow-hidden" ref={ref}>
+    <section className="py-12 md:py-24 overflow-hidden md:mt-8" ref={ref}>
       <div className="container mx-auto px-4">
         <motion.div
-          className="md:grid md:grid-cols-2 md:gap-12 lg:gap-20 items-center"
+          className="md:grid md:grid-cols-2 md:gap-6 lg:gap-10 items-center"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -56,7 +56,7 @@ const MidSection = () => {
           {/* Content */}
           <div className="space-y-6">
             <motion.h2
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-teal-700 leading-tight"
+              className="text-xl md:text-2xl lg:text-3xl font-bold text-teal-700 leading-tight"
               variants={itemVariants}
             >
               We pride ourselves on making real food from the best ingredients.
@@ -70,7 +70,7 @@ const MidSection = () => {
               tellus.
             </motion.p>
             <motion.div variants={itemVariants}>
-              <button className="bg-teal-700 hover:bg-teal-800 text-white px-8 py-3 h-auto text-base rounded-lg">
+              <button className="bg-teal-700 hover:bg-teal-800 text-white px-8 py-3 h-auto text-sm rounded-lg">
                 Learn More
               </button>
             </motion.div>

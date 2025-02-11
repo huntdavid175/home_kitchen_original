@@ -23,6 +23,7 @@ interface Recipe {
 import { useRouter } from "next/navigation";
 import MidSection from "@/components/Landing/MidSection";
 import StatsSection from "@/components/Landing/StatsSection";
+import HeroSection from "@/components/Landing/HeroSection";
 
 function App() {
   const router = useRouter();
@@ -418,48 +419,18 @@ function App() {
       </nav> */}
 
       {/* Hero Section */}
-      <div
-        className="bg-rose-50 h-[80vh]"
-        style={{
-          backgroundImage: `url(${"https://demo.tutsflow.com/foodera/images/bg/3.jpg"})`,
-          backgroundSize: "cover",
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-teal-700 mb-6">
-                Home cooking made simple
-              </h1>
-              <p className="text-lg text-gray-600 mb-8">
-                Choose your favorite recipes and get fresh ingredients delivered
-                to your door. Cook restaurant-quality meals at home.
-              </p>
-              <button className="bg-teal-700 text-white px-8 py-3 rounded-md text-lg hover:bg-teal-800">
-                Get Started
-              </button>
-            </div>
-            {/* <div className="relative">
-              <img
-                src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=800"
-                alt="Food box"
-                className="rounded-lg shadow-xl"
-              />
-            </div> */}
-          </div>
-        </div>
-      </div>
+      <HeroSection />
 
       {/* stats section  */}
 
-      <StatsSection />
+      {/* <StatsSection /> */}
 
       {/* mid section  */}
 
       <MidSection />
 
       {/* Weekly Recipes */}
-      <div className="max-w-7xl mx-6 md:mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl  md:mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900">
             This Week&apos;s Menu

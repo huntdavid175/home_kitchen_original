@@ -284,21 +284,23 @@ const RecipeDetailsPage = ({
               src={image || "/placeholder.svg"}
               alt={title}
               fill
-              className="object-cover rounded-t-3xl"
+              className="object-cover rounded-3xl"
               priority
             />
           </div>
-          <div className="bg-white px-6 py-8 rounded-b-3xl">
-            <div className="flex items-center gap-6 text-sm mb-4">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
-                <span>{cookingTime}</span>
+          <div className="bg-white px-2 py-8 rounded-b-3xl">
+            <div className="flex items-center justify-between gap-6 text-sm mb-4">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#006B5F]" />
+                  <span className="text-[#006B5F] text-xs">{cookingTime}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Scale className="w-4 h-4 text-[#006B5F]" />
+                  <span className="text-[#006B5F] text-xs">{calories}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Scale className="w-4 h-4" />
-                <span>{calories}</span>
-              </div>
-              <span className="text-[#006B5F]">NUTRITIONAL VALUE</span>
+              <span className="text-[#006B5F] text-xs">NUTRITIONAL VALUE</span>
             </div>
 
             <h1 className="text-[#006B5F] text-3xl font-serif mb-4">{title}</h1>
@@ -313,7 +315,7 @@ const RecipeDetailsPage = ({
 
               <div>
                 <p className="font-medium mb-1">Tools: {tools.join(", ")}</p>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-xs">
                   Allergens: {allergens.join(", ")}
                 </p>
               </div>
@@ -325,16 +327,24 @@ const RecipeDetailsPage = ({
         <div className="hidden md:block min-h-[600px] relative">
           <div className="absolute top-10 left-10 z-10 flex items-center">
             <div className="bg-white rounded-3xl shadow-lg p-12 max-w-2xl ml-auto -mr-16">
-              <div className="flex items-center gap-6 text-sm mb-6">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <span>{cookingTime}</span>
+              <div className="flex items-center justify-between gap-6 text-sm mb-6">
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-[#006B5F]" />
+                    <span className="text-[#006B5F] text-xs font-light">
+                      {cookingTime}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Scale className="w-4 h-4 text-[#006B5F]" />
+                    <span className="text-[#006B5F] text-xs font-light">
+                      {calories}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Scale className="w-4 h-4" />
-                  <span>{calories}</span>
-                </div>
-                <span className="text-[#006B5F]">NUTRITIONAL VALUE</span>
+                <span className="text-[#006B5F] text-xs font-light">
+                  NUTRITIONAL VALUE
+                </span>
               </div>
 
               <h1 className="text-[#006B5F] text-4xl font-serif mb-6">
@@ -344,13 +354,15 @@ const RecipeDetailsPage = ({
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2">
                   <span className="w-5 h-5 bg-[#006B5F] rounded-full" />
-                  <span className="uppercase">{category}</span>
+                  <span className="uppercase text-xs">{category}</span>
                 </div>
 
                 <p className="text-gray-700">{description}</p>
 
                 <div>
-                  <p className="font-medium mb-1">Tools: {tools.join(", ")}</p>
+                  <p className="font-medium mb-1 text-sm">
+                    Tools: {tools.join(", ")}
+                  </p>
                   <p className="text-gray-500 text-sm">
                     Allergens: {allergens.join(", ")}
                   </p>
@@ -463,10 +475,9 @@ const RecipeDetailsPage = ({
                     />
                   </div>
                   <div>
-                    {/* <div className="font-semibold text-gray-900 mb-2">
-                      Step {index + 1}
-                    </div> */}
-                    <p className="text-gray-600 mt-2 md:mt-0 ">{step.text}</p>
+                    <p className="text-gray-600 mt-2 md:mt-0 font-semibold">
+                      {step.text}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -493,7 +504,7 @@ const RecipeDetailsPage = ({
                     className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-200"
                   />
                 </div>
-                <h3 className="text-sm font-medium text-gray-900">
+                <h3 className="text-sm font-semibold text-gray-900">
                   {recipe.title}
                 </h3>
               </div>
