@@ -60,7 +60,7 @@ const recipes: Recipe[] = [
           "https://images.unsplash.com/photo-1529694157872-4e0c0f3b238b?auto=format&fit=crop&q=80&w=400",
       },
       {
-        text: "Make squares of baking paper the size of a bao bun . Place the baking paper on a sieve and place the bao bun on top and cover, either with a lid, foil or a plate. The less steam that escapes, the better! Don't put too many of them on the sieve: 1-3 pieces maximum, depending on the size of the sieve and pot.",
+        text: "Make squares of baking paper the size of a bao bun . Place the baking paper on a sieve and place the bao bun on top and cover, either with a lid, foil or a plate. The less steam that escapes, the better! Don&apos;t put too many of them on the sieve: 1-3 pieces maximum, depending on the size of the sieve and pot.",
         image:
           "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&q=80&w=400",
       },
@@ -432,7 +432,7 @@ const RecipeDetailsPage = ({
               <div className="absolute inset-0 flex flex-col justify-between p-2">
                 <div className="p-4 text-white flex flex-col gap-4">
                   <h1 className="text-white text-6xl md:text-7xl z-10">
-                    We'll bring <br /> it home!
+                    We&apos;ll bring <br /> it home!
                   </h1>
                   <p className="text-xl [text-wrap:balance] max-w-xs">
                     Precise amounts of ingredients delivered to your door.
