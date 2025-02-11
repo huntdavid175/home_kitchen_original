@@ -266,7 +266,7 @@ const RecipeDetailsPage = ({
     "Dairy products",
   ],
   image = "https://www.cleankitchen.ee/cdn/shop/files/K1HDtmoNMDjrpkKfZTzB45WId8E3m0DITXQ4JPQi_dE.jpg?crop=center&height=700&v=1722045832&width=1050",
-}: RecipeHeaderProps) => {
+}: any) => {
   //     setSelectedRecipe(recipe);
   //     window.scrollTo(0, 0);
   //   };
