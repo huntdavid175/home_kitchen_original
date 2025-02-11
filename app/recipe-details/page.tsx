@@ -1,16 +1,5 @@
 "use client";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Star,
-  Facebook,
-  Twitter,
-  Instagram,
-  Mail,
-  Clock,
-  Users,
-  Scale,
-} from "lucide-react";
+import { Clock, Scale } from "lucide-react";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";

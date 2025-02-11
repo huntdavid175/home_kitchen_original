@@ -1,17 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Star,
-  Facebook,
-  Twitter,
-  Instagram,
-  Mail,
-  Clock,
-  Users,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import Image from "next/image";
 
 interface Recipe {
@@ -35,8 +25,6 @@ import MidSection from "@/components/Landing/MidSection";
 import StatsSection from "@/components/Landing/StatsSection";
 
 function App() {
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-
   const router = useRouter();
 
   const recipes: Recipe[] = [

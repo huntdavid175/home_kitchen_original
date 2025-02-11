@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Star,
-  Facebook,
-  Twitter,
-  Instagram,
-  Mail,
-  Clock,
-  Users,
-} from "lucide-react";
+import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
