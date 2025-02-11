@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-xl font-bold text-teal-700 mb-4">
-              Clean Kitchen
+              Home Kitchen
             </h3>
             <p className="text-gray-600">
               Making home cooking easy and enjoyable.
