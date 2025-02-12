@@ -275,7 +275,7 @@ const RecipeDetailsPage = ({
   const selectedRecipe = recipes[0];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white mt-8">
       <div className="relative w-full overflow-hidden">
         {/* Mobile Layout */}
         <div className="md:hidden mx-2">
@@ -465,7 +465,7 @@ const RecipeDetailsPage = ({
               {selectedRecipe.steps?.map((step: any, index: any) => (
                 <div
                   key={index}
-                  className="flex flex-col md:flex-row space-x-6"
+                  className="flex flex-col md:flex-row md:space-x-6"
                 >
                   <div className="md:w-1/4 flex-shrink-0">
                     <img
