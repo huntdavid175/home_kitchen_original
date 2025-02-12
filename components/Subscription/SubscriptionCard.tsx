@@ -77,6 +77,7 @@ interface SubscriptionCardProps {
   currency?: string;
   features: string[];
   image: string;
+  handleClick?: () => void;
 }
 
 export default function SubscriptionCard({
@@ -87,6 +88,7 @@ export default function SubscriptionCard({
   currency = "GHS",
   features,
   image,
+  handleClick,
 }: SubscriptionCardProps) {
   return (
     <motion.div
@@ -94,6 +96,7 @@ export default function SubscriptionCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      onClick={handleClick}
     >
       {/* Content side */}
       <div className="p-3 sm:p-6 flex-1">

@@ -1,13 +1,119 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { motion, AnimatePresence } from "framer-motion";
 import SubscriptionCard from "@/components/Subscription/SubscriptionCard";
+import Image from "next/image";
+import Link from "next/link";
+import { Clock, Flame } from "lucide-react";
+import { s, select } from "framer-motion/client";
+
+interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  categories: string[];
+  time: string;
+  calories: number;
+}
+
+const recipes: Recipe[] = [
+  {
+    id: "1",
+    title: "Sesame honey chicken with rice",
+    description:
+      "Sesame honey chicken is a mouth-watering dish from American-Chinese cuisine.",
+    image:
+      "https://www.cleankitchen.ee/cdn/shop/files/a8C361u3tUAUD2xtCZdlA_zaIvtZyhfwv6TbO59A6cU.jpg?v=1722046023&width=1200",
+    categories: ["Poultry", "Recipes"],
+    time: "35 minutes",
+    calories: 641,
+  },
+  {
+    id: "2",
+    title: "Baoburgers with chicken kebab and curry-mango sauce",
+    description:
+      "Steamed bao buns are also great for burger buns. This time, a burger recipe with steamed buns, chicken, and curry-mango sauce.",
+    image:
+      "https://www.cleankitchen.ee/cdn/shop/files/UzbT9ZKHKeqoB-_4b2zeZgSW-wsEtLwj4nqBcoHE_gI.jpg?v=1721743606&width=1200",
+    categories: ["Poultry", "Recipes"],
+    time: "20 minutes",
+    calories: 682,
+  },
+  {
+    id: "3",
+    title: "Crispy chicken in sweet and sour sauce served with rice",
+    description:
+      "Sweet and sour chicken, a favorite of many, is a dish that probably doesn't need much introduction. The rich sweet and sour sauce makes pre-stir-fried chicken simply irresistible. Favorites are created for a reason. It goes without saying that the result is definitely best when made at home and served fresh.",
+    image:
+      "https://www.cleankitchen.ee/cdn/shop/files/ij2GrXD7XdhMLTJdpzNyP6YC46fdpLn1RbOxGT6oZ9k.jpg?v=1722218664&width=1200",
+    categories: ["Poultry", "Recipes"],
+    time: "35 minutes",
+    calories: 508,
+  },
+  {
+    id: "4",
+    title: "Chicken schnitzel with baked potatoes",
+    description:
+      "Classic chicken schnitzel served with baked potatoes and fresh salad.",
+    image:
+      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
+    categories: ["Poultry", "Recipes"],
+    time: "40 minutes",
+    calories: 720,
+  },
+  {
+    id: "5",
+    title: "Chicken lo mein with noodles",
+    description:
+      "A delicious stir-fried noodle dish with tender chicken and vegetables.",
+    image:
+      "https://www.cleankitchen.ee/cdn/shop/files/C_UQBXrDnEhfXMR6t5Ay7WB9zhPm5sa4qfyTUMvNqi4.jpg?v=1738721018&width=1200",
+    categories: ["Poultry", "Recipes"],
+    time: "25 minutes",
+    calories: 550,
+  },
+  {
+    id: "6",
+    title: "Beef steak with mashed potatoes",
+    description:
+      "Perfectly cooked beef steak served with creamy mashed potatoes.",
+    image:
+      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
+    categories: ["Meat", "Recipes"],
+    time: "30 minutes",
+    calories: 850,
+  },
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
 
 export default function Home() {
   const [peopleCount, setPeopleCount] = useState("2");
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   const subscriptionPlans = [
     {
@@ -51,56 +157,130 @@ export default function Home() {
     },
   ];
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4">
-        <div className="max-w-2xl mx-auto space-y-8">
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              How many people are eating?
-            </h2>
-            <ToggleGroup
-              type="single"
-              value={peopleCount}
-              onValueChange={(value: any) => value && setPeopleCount(value)}
-              className="justify-center"
-            >
-              {["1", "2", "4", "6"].map((count) => (
-                <ToggleGroupItem
-                  key={count}
-                  value={count}
-                  className="px-6 py-2 data-[state=on]:bg-teal-500 data-[state=on]:text-white"
-                >
-                  {count}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-          </div>
+  const handlePlanSelect = (plan: any) => {
+    setSelectedPlan(plan);
+  };
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={peopleCount}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-6"
-            >
-              {subscriptionPlans.map((plan, index) => (
-                <SubscriptionCard
-                  key={index}
-                  frequency={plan.frequency}
-                  meals={plan.meals}
-                  servings={plan.servings}
-                  price={Math.round(plan.price)}
-                  features={plan.features}
-                  image={plan.image}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [selectedPlan]);
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 ">
+      {!selectedPlan && (
+        <div className="min-h-screen bg-gray-50 py-12">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto space-y-8">
+              <div className="bg-white p-6 rounded-xl shadow-sm">
+                <h2 className="text-xl font-semibold mb-4 text-center">
+                  How many people are eating?
+                </h2>
+                <ToggleGroup
+                  type="single"
+                  value={peopleCount}
+                  onValueChange={(value: any) => value && setPeopleCount(value)}
+                  className="justify-center"
+                >
+                  {["1", "2", "4", "6"].map((count) => (
+                    <ToggleGroupItem
+                      key={count}
+                      value={count}
+                      className="px-6 py-2 data-[state=on]:bg-teal-500 data-[state=on]:text-white"
+                    >
+                      {count}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
+              </div>
+
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={peopleCount}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  {subscriptionPlans.map((plan, index) => (
+                    <SubscriptionCard
+                      key={index}
+                      frequency={plan.frequency}
+                      meals={plan.meals}
+                      servings={plan.servings}
+                      price={Math.round(plan.price)}
+                      features={plan.features}
+                      image={plan.image}
+                      handleClick={() => handlePlanSelect(plan)}
+                    />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
-      </div>
+      )}{" "}
+      {selectedPlan && (
+        <div className="flex-1">
+          <motion.div
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {recipes.map((recipe) => (
+              <motion.div
+                key={recipe.id}
+                variants={itemVariants}
+                className="flex"
+              >
+                <Link
+                  href={`/recipes/${recipe.id}`}
+                  className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 w-full"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image
+                      src={recipe.image || "/placeholder.svg"}
+                      alt={recipe.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  </div>
+                  <div className="p-4 sm:p-6 flex flex-col flex-grow">
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {recipe.categories.map((category) => (
+                        <span
+                          key={category}
+                          className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full"
+                        >
+                          {category}
+                        </span>
+                      ))}
+                    </div>
+                    <h2 className="text-sm sm:text-base font-semibold mb-2 line-clamp-2 group-hover:text-[#6D1D3A] transition-colors">
+                      {recipe.title}
+                    </h2>
+                    <p className="text-gray-600 text-xs mb-4 line-clamp-2 flex-grow">
+                      {recipe.description}
+                    </p>
+                    <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4" />
+                        <span className="text-xs">{recipe.time}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Flame className="w-4 h-4" />
+                        <span className="text-xs">{recipe.calories} kcal</span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
