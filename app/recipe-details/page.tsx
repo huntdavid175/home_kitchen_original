@@ -275,7 +275,7 @@ const RecipeDetailsPage = ({
   const selectedRecipe = recipes[0];
 
   return (
-    <div className="min-h-screen bg-white mt-8">
+    <div className="min-h-screen bg-white mt-8 md:mt-0">
       <div className="relative w-full overflow-hidden">
         {/* Mobile Layout */}
         <div className="md:hidden mx-2">
