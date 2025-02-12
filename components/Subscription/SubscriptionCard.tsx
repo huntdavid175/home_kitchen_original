@@ -96,10 +96,10 @@ export default function SubscriptionCard({
       transition={{ duration: 0.5 }}
     >
       {/* Content side */}
-      <div className="p-6 flex-1">
-        <div className="space-y-4">
+      <div className="p-3 sm:p-6 flex-1">
+        <div className="space-y-2 sm:space-y-4">
           <motion.span
-            className="text-teal-500 font-medium"
+            className="text-teal-500 text-sm sm:text-base font-medium"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
@@ -107,9 +107,9 @@ export default function SubscriptionCard({
             {frequency}
           </motion.span>
 
-          <div className="space-y-2">
+          <div className="space-y-1 sm:space-y-2">
             <motion.h3
-              className="text-2xl font-semibold"
+              className="text-lg sm:text-2xl font-semibold"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
@@ -120,16 +120,16 @@ export default function SubscriptionCard({
               </span>
             </motion.h3>
             <motion.div
-              className="flex items-center text-gray-600"
+              className="flex items-center text-gray-600 text-sm sm:text-base"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
             >
-              <Utensils className="w-5 h-5 mr-2" />
+              <Utensils className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
               <span>{servings} servings per meal</span>
             </motion.div>
             <motion.ul
-              className="space-y-1 mt-3"
+              className="space-y-0.5 sm:space-y-1 mt-2 sm:mt-3"
               initial="hidden"
               animate="visible"
               variants={{
@@ -144,13 +144,13 @@ export default function SubscriptionCard({
               {features.map((feature, index) => (
                 <motion.li
                   key={index}
-                  className="text-gray-600 text-sm flex items-start"
+                  className="text-gray-600 text-xs sm:text-sm flex items-start"
                   variants={{
                     hidden: { opacity: 0, x: -20 },
                     visible: { opacity: 1, x: 0 },
                   }}
                 >
-                  <span className="mr-2">•</span>
+                  <span className="mr-1 sm:mr-2">•</span>
                   {feature}
                 </motion.li>
               ))}
@@ -161,7 +161,7 @@ export default function SubscriptionCard({
 
       {/* Image side */}
       <motion.div
-        className="relative w-[180px] flex-shrink-0"
+        className="relative w-[130px] sm:w-[220px] flex-shrink-0"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
