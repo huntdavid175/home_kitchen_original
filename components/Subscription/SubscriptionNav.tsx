@@ -1,11 +1,21 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import type React from "react"; // Added import for React
 
 const cn = (...classes: string[]) => classes.filter(Boolean).join(" ");
 
-export default function SubscribeNav() {
+export default function SubscriptionNav() {
+  const [activeCategories, setActiveCategories] = useState<string[]>(["All"]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
   const categories = [
-    { name: "All", count: 44, active: true },
+    { name: "All", count: 44 },
     { name: "NEW", count: null },
     { name: "Barbecue", count: null },
     { name: "Pork and beef", count: null },
@@ -21,6 +31,40 @@ export default function SubscribeNav() {
     { name: "Vegan and vegetarian", count: null },
   ];
 
+  const toggleCategory = (categoryName: string) => {
+    setActiveCategories((prev) =>
+      prev.includes(categoryName)
+        ? prev.filter((cat) => cat !== categoryName)
+        : [...prev, categoryName]
+    );
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (scrollContainerRef.current?.offsetLeft || 0));
+    setScrollLeft(scrollContainerRef.current?.scrollLeft || 0);
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - (scrollContainerRef.current?.offsetLeft || 0);
+    const walk = (x - startX) * 2;
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+    }
+  };
+
+  useEffect(() => {
+    const handleMouseUpGlobal = () => setIsDragging(false);
+    document.addEventListener("mouseup", handleMouseUpGlobal);
+    return () => document.removeEventListener("mouseup", handleMouseUpGlobal);
+  }, []);
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
       <div className="container mx-auto px-4 lg:px-6">
@@ -31,13 +75,13 @@ export default function SubscribeNav() {
               <div className="w-6 h-6 rounded-full bg-[#14b8a6] text-white flex items-center justify-center text-sm font-medium">
                 1
               </div>
-              <span className="font-medium text-sm sm:text-base">RECIPES</span>
+              <span className="font-medium text-sm sm:text-sm">RECIPES</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-[#f1f5f9] text-[#64748b] flex items-center justify-center text-sm">
                 2
               </div>
-              <span className="text-[#64748b] text-sm sm:text-base hidden sm:inline">
+              <span className="text-[#64748b] text-sm sm:text-sm hidden sm:inline">
                 EXTRAS
               </span>
               <span className="text-[#64748b] text-sm sm:hidden">EXT</span>
@@ -46,7 +90,7 @@ export default function SubscribeNav() {
               <div className="w-6 h-6 rounded-full bg-[#f1f5f9] text-[#64748b] flex items-center justify-center text-sm">
                 3
               </div>
-              <span className="text-[#64748b] text-sm sm:text-base hidden sm:inline">
+              <span className="text-[#64748b] text-sm sm:text-sm hidden sm:inline">
                 DELIVERY & PAYMENT
               </span>
               <span className="text-[#64748b] text-sm sm:hidden">DEL</span>
@@ -61,17 +105,25 @@ export default function SubscribeNav() {
         </div>
 
         {/* Categories */}
-        <div className="py-4 overflow-x-auto scrollbar-hide">
-          <div className="flex gap-2 min-w-max pb-2">
+        <div
+          className="py-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+          ref={scrollContainerRef}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseUp}
+        >
+          <div className="flex gap-2 pb-2" style={{ width: "max-content" }}>
             {categories.map((category) => (
               <Badge
                 key={category.name}
                 className={cn(
-                  "rounded-full px-4 py-1.5 text-sm cursor-pointer transition-colors",
-                  category.active
+                  "rounded-full px-4 py-1.5 text-sm cursor-pointer transition-colors select-none",
+                  activeCategories.includes(category.name)
                     ? "bg-[#14b8a6] hover:bg-[#0d9488] text-white"
                     : "bg-[#e2e8f0] text-[#0f172a] hover:bg-[#cbd5e1]"
                 )}
+                onClick={() => toggleCategory(category.name)}
               >
                 {category.name} {category.count ? `(${category.count})` : ""}
               </Badge>
