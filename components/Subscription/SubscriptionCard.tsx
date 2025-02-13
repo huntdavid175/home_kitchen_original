@@ -144,7 +144,7 @@ export default function SubscriptionCard({
                 },
               }}
             >
-              {features.map((feature, index) => (
+              {/* {features.map((feature, index) => (
                 <motion.li
                   key={index}
                   className="text-gray-600 text-xs sm:text-sm flex items-start"
@@ -156,7 +156,7 @@ export default function SubscriptionCard({
                   <span className="mr-1 sm:mr-2">•</span>
                   {feature}
                 </motion.li>
-              ))}
+              ))} */}
             </motion.ul>
           </div>
         </div>

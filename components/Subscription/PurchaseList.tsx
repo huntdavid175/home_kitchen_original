@@ -49,6 +49,28 @@ const recipes = [
     cookingTime: 30,
     tags: ["SPICY", "QUICK"],
   },
+  {
+    title: "Spicy chicken stir-fry with mixed vegetables",
+    images: [
+      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
+      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
+      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
+    ],
+    price: 11.25,
+    cookingTime: 30,
+    tags: ["SPICY", "QUICK"],
+  },
+  {
+    title: "Spicy chicken stir-fry with mixed vegetables",
+    images: [
+      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
+      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
+      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
+    ],
+    price: 11.25,
+    cookingTime: 30,
+    tags: ["SPICY", "QUICK"],
+  },
 ];
 
 export default function PurchaseList() {

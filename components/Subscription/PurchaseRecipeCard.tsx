@@ -30,7 +30,7 @@ export default function PurchaseRecipeCard({
     if (isHovered) {
       intervalRef.current = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 1000); // Change image every 3 seconds when hovered
+      }, 1500); // Change image every 1.5 seconds when hovered
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
