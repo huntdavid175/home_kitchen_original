@@ -475,7 +475,8 @@ const RecipeDetailsPage = ({
                     />
                   </div>
                   <div>
-                    <p className="text-gray-600 mt-2 md:mt-0 font-semibold">
+                    {/* <p className="text-gray-600 mt-2 md:mt-0 font-semibold"> */}
+                    <p className="text-sm mt-2 md:mt-0 text-gray-600 leading-relaxed">
                       {step.text}
                     </p>
                   </div>
