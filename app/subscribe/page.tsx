@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock, Flame } from "lucide-react";
 import { s, select } from "framer-motion/client";
+import PurchaseList from "@/components/Subscription/PurchaseList";
 
 interface Recipe {
   id: string;
@@ -221,65 +222,9 @@ export default function Home() {
         </div>
       )}{" "}
       {selectedPlan && (
-        <div className="flex-1">
-          <motion.div
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {recipes.map((recipe) => (
-              <motion.div
-                key={recipe.id}
-                variants={itemVariants}
-                className="flex"
-              >
-                <Link
-                  href={`/recipes/${recipe.id}`}
-                  className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 w-full"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image
-                      src={recipe.image || "/placeholder.svg"}
-                      alt={recipe.title}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  </div>
-                  <div className="p-4 sm:p-6 flex flex-col flex-grow">
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {recipe.categories.map((category) => (
-                        <span
-                          key={category}
-                          className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full"
-                        >
-                          {category}
-                        </span>
-                      ))}
-                    </div>
-                    <h2 className="text-sm sm:text-base font-semibold mb-2 line-clamp-2 group-hover:text-[#6D1D3A] transition-colors">
-                      {recipe.title}
-                    </h2>
-                    <p className="text-gray-600 text-xs mb-4 line-clamp-2 flex-grow">
-                      {recipe.description}
-                    </p>
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4" />
-                        <span className="text-xs">{recipe.time}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Flame className="w-4 h-4" />
-                        <span className="text-xs">{recipe.calories} kcal</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+        <>
+          <PurchaseList />
+        </>
       )}
     </div>
   );
