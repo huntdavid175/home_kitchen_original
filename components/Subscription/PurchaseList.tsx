@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import RecipeCard from "@/components/Subscription/PurchaseRecipeCard";
+import RecipeDetailsDialog from "./RecipeDetailsDialog";
 
 const recipes = [
   {
@@ -76,26 +77,37 @@ const recipes = [
 export default function PurchaseList() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
+  const [open, setOpen] = useState(false);
+  const [showNutrition, setShowNutrition] = useState(false);
+
   const filteredRecipes = selectedTag
     ? recipes.filter((recipe) => recipe.tags.includes(selectedTag))
     : recipes;
 
   const allTags = Array.from(new Set(recipes.flatMap((recipe) => recipe.tags)));
 
+  const setOpenHandler = (open: boolean) => {
+    setOpen(open);
+  };
+
+  const setShowNutritionHandler = (show: boolean) => {
+    setShowNutrition(show);
+  };
+
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[120px]">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
-        <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
+        {/* <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
           Our Recipes
-        </h1>
+        </h1> */}
 
         {/* Tag filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
           {allTags.map((tag) => (
             <motion.button
               key={tag}
@@ -111,7 +123,7 @@ export default function PurchaseList() {
               {tag}
             </motion.button>
           ))}
-        </div>
+        </div> */}
 
         {/* Recipe grid */}
         <motion.div
@@ -137,11 +149,17 @@ export default function PurchaseList() {
               }}
               transition={{ duration: 0.5 }}
             >
-              <RecipeCard {...recipe} />
+              <RecipeCard {...recipe} showDetails={setOpenHandler} />
             </motion.div>
           ))}
         </motion.div>
       </motion.div>
+      <RecipeDetailsDialog
+        isOpen={open}
+        setIsOpen={setOpenHandler}
+        showNutrition={showNutrition}
+        setShowNutrition={setShowNutritionHandler}
+      />
     </div>
   );
 }

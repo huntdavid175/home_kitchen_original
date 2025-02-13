@@ -12,6 +12,7 @@ interface RecipeCardProps {
   price: number;
   cookingTime: number;
   tags: string[];
+  showDetails: (open: boolean) => void;
 }
 
 export default function PurchaseRecipeCard({
@@ -20,6 +21,7 @@ export default function PurchaseRecipeCard({
   price,
   cookingTime,
   tags,
+  showDetails,
 }: RecipeCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(0);
@@ -62,6 +64,7 @@ export default function PurchaseRecipeCard({
       onHoverEnd={() => setIsHovered(false)}
       whileHover={{ scale: 1.03 }}
       transition={{ duration: 0.3 }}
+      onClick={() => showDetails(true)}
     >
       {/* Image Container */}
       <div className="relative aspect-[4/3] overflow-hidden">

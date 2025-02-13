@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       "broccoli-omega.vercel.app",
       "freepngimg.com",
       "png.pngtree.com",
+      "cdn.shopify.com",
     ], // Add your image domains here
   },
 };

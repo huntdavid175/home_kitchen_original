@@ -43,7 +43,7 @@ export default function TimeBadge({ time, maxTime = 100 }: TimeBadgeProps) {
         />
       </svg>
       <div className="relative flex flex-col items-center justify-center">
-        <span className="text-sm font-semibold">{time}</span>
+        <span className="text-xs font-semibold">{time}</span>
         {/* <Clock className="w-3 h-3" /> */}
       </div>
     </div>
