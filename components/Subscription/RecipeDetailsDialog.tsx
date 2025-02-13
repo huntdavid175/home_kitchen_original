@@ -165,7 +165,7 @@ export default function RecipeDetailsDialog({
       {/* <DialogTrigger asChild>
         <Button variant="outline">Open Recipe</Button>
       </DialogTrigger> */}
-      <DialogContent className="max-w-7xl p-0 overflow-auto max-h-[90vh]">
+      <DialogContent className="max-w-7xl p-0 overflow-auto max-h-[90vh] pb-20 md:px-8 ">
         <DialogHeader className="p-6 pb-0 space-y-4">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-2xl font-bold">
@@ -189,18 +189,50 @@ export default function RecipeDetailsDialog({
               className="object-cover"
             />
           </div>
-
-          <div className="text-sm text-gray-600">
-            Tools: Cutting board, Knife, Pot, Pan
+          <div>
+            <button
+              className="w-full py-3 border rounded-lg flex items-center justify-between px-4 hover:bg-gray-50"
+              onClick={() => setShowNutrition(!showNutrition)}
+            >
+              <span className="font-medium">Nutritional value</span>
+              <ChevronDown
+                className={`h-5 w-5 transform transition-transform ${
+                  showNutrition ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+            {showNutrition && (
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                <p>Nutritional information would be displayed here.</p>
+              </div>
+            )}
           </div>
 
-          <p>
+          <div className="flex flex-wrap gap-2 pb-4">
+            <Badge variant="secondary">Fish and seafood</Badge>
+            <Badge variant="secondary">Lactose-free</Badge>
+            <Badge variant="secondary">Ready in up to 30 minutes</Badge>
+            <Badge variant="secondary">Spicy</Badge>
+          </div>
+
+          <div className="text-xs text-center text-gray-600 ">
+            <span className="font-semibold">Allergens: </span>Peanuts, Sulphur
+            dioxide and sulphites, Sesame seeds, Egg products, Gluten, Nut
+            products, Soy protein, Fish products
+          </div>
+
+          <div className="text-xs text-center text-gray-600">
+            <span className="font-semibold">Tools: </span> Cutting board, Knife,
+            Pot, Pan
+          </div>
+
+          <p className="text-center text-sm">
             A simple meal of juicy red fish fillet and spicy egg noodles with
             Turkish beans. You can control the spiciness of the food yourself!
           </p>
 
           <div>
-            <h2 className="text-xl font-semibold mb-4">
+            <h2 className="text-lg font-semibold mb-4">
               Ingredients for 2 servings
             </h2>
             <div className="flex flex-wrap justify-center md:justify-start gap-6">
@@ -218,8 +250,8 @@ export default function RecipeDetailsDialog({
                     />
                   </div>
                   <div>
-                    <div className="font-medium">{ingredient.name}</div>
-                    <div className="text-sm text-gray-600">
+                    <div className="font-medium text-sm">{ingredient.name}</div>
+                    <div className="text-xs text-gray-600">
                       {ingredient.amount} {ingredient.unit}, {ingredient.weight}
                     </div>
                   </div>
@@ -254,7 +286,7 @@ export default function RecipeDetailsDialog({
           </div>
 
           <div>
-            <h2 className="text-3xl font-bold mb-8">Recipe</h2>
+            <h2 className="text-3xl font-bold mt-8 mb-8">Recipe</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recipeSteps.map((step) => (
                 <div key={step.number} className="space-y-4">
@@ -267,7 +299,7 @@ export default function RecipeDetailsDialog({
                         className="object-cover"
                       />
                     </div>
-                    <div className="absolute top-2 left-2 bg-white rounded-full w-8 h-8 flex items-center justify-center font-semibold shadow-md">
+                    <div className="absolute top-2 left-2 bg-white rounded-full w-8 h-8 flex items-center justify-center font-semibold text-xs shadow-md">
                       {step.number}
                     </div>
                   </div>
@@ -279,7 +311,7 @@ export default function RecipeDetailsDialog({
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <button
               className="w-full py-3 border rounded-lg flex items-center justify-between px-4 hover:bg-gray-50"
               onClick={() => setShowNutrition(!showNutrition)}
@@ -296,8 +328,8 @@ export default function RecipeDetailsDialog({
                 <p>Nutritional information would be displayed here.</p>
               </div>
             )}
-          </div>
-
+          </div> */}
+          {/* 
           <div className="flex flex-wrap gap-2 pb-4">
             <Badge variant="secondary">Fish and seafood</Badge>
             <Badge variant="secondary">Lactose-free</Badge>
@@ -308,7 +340,7 @@ export default function RecipeDetailsDialog({
           <div className="text-sm text-gray-600 pb-6">
             Allergens: Peanuts, Sulphur dioxide and sulphites, Sesame seeds, Egg
             products, Gluten, Nut products, Soy protein, Fish products
-          </div>
+          </div> */}
         </div>
       </DialogContent>
     </Dialog>
