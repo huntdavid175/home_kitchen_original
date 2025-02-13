@@ -73,8 +73,8 @@ export default function SubscriptionNav() {
           <div>
             <svg
               id="logo-15"
-              width="49"
-              height="48"
+              width="29"
+              height="28"
               viewBox="0 0 49 48"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -102,29 +102,27 @@ export default function SubscriptionNav() {
             </svg>
           </div>
           <div className="flex items-center gap-4 sm:gap-8 ">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-[#14b8a6] text-white flex items-center justify-center text-sm font-medium">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-[#14b8a6] text-white flex items-center justify-center text-xs font-medium">
                 1
               </div>
-              <span className="font-medium text-sm sm:text-sm">RECIPES</span>
+              <span className="font-medium text-xs ">RECIPES</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-[#f1f5f9] text-[#64748b] flex items-center justify-center text-sm">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-[#f1f5f9] text-[#64748b] flex items-center justify-center text-xs">
                 2
               </div>
-              <span className="text-[#64748b] text-sm sm:text-sm hidden sm:inline">
-                EXTRAS
-              </span>
-              <span className="text-[#64748b] text-sm sm:hidden">EXT</span>
+              <span className="text-[#64748b] text-xs   sm:inline">EXTRAS</span>
+              {/* <span className="text-[#64748b] text-sm sm:hidden">EXT</span> */}
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-[#f1f5f9] text-[#64748b] flex items-center justify-center text-sm">
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-[#f1f5f9] text-[#64748b] flex items-center justify-center text-xs">
                 3
               </div>
-              <span className="text-[#64748b] text-sm sm:text-sm hidden sm:inline">
+              <span className="text-[#64748b] text-xs   sm:inline">
                 DELIVERY & PAYMENT
               </span>
-              <span className="text-[#64748b] text-sm sm:hidden">DEL</span>
+              {/* <span className="text-[#64748b] text-sm sm:hidden">DEL</span> */}
             </div>
           </div>
           <div className="relative ml-4">

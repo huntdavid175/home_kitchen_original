@@ -95,7 +95,7 @@ export default function PurchaseList() {
   };
 
   return (
-    <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[120px]">
+    <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[140px]">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
