@@ -1,68 +1,3 @@
-// import Image from "next/image";
-// import { Utensils } from "lucide-react";
-
-// interface SubscriptionCardProps {
-//   frequency: string;
-//   meals: number;
-//   servings: number;
-//   price: number;
-//   currency?: string;
-//   features: string[];
-//   image: string;
-// }
-
-// export default function SubscriptionCard({
-//   frequency,
-//   meals,
-//   servings,
-//   price,
-//   currency = "SR",
-//   features,
-//   image,
-// }: SubscriptionCardProps) {
-//   return (
-//     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 ease-in-out flex cursor-pointer hover:bg-green-50">
-//       {/* Content side */}
-//       <div className="p-6 flex-1">
-//         <div className="space-y-4">
-//           <span className="text-teal-500 font-medium">{frequency}</span>
-
-//           <div className="space-y-2">
-//             <h3 className="text-2xl font-semibold">
-//               {meals} Meals / {price} {currency}
-//             </h3>
-//             <div className="flex items-center text-gray-600">
-//               <Utensils className="w-5 h-5 mr-2" />
-//               <span>{servings} servings per meal</span>
-//             </div>
-//             <ul className="space-y-1 mt-3">
-//               {features.map((feature, index) => (
-//                 <li
-//                   key={index}
-//                   className="text-gray-600 text-sm flex items-start"
-//                 >
-//                   <span className="mr-2">•</span>
-//                   {feature}
-//                 </li>
-//               ))}
-//             </ul>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Image side */}
-//       <div className="relative w-[220px] flex-shrink-0">
-//         <Image
-//           src={image || "/placeholder.svg"}
-//           alt="Subscription meal preview"
-//           fill
-//           className="object-cover"
-//         />
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import Image from "next/image";
@@ -112,7 +47,7 @@ export default function SubscriptionCard({
 
           <div className="space-y-1 sm:space-y-2">
             <motion.h3
-              className="text-lg sm:text-2xl font-semibold"
+              className="text-sm sm:text-lg font-semibold"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
@@ -129,7 +64,9 @@ export default function SubscriptionCard({
               transition={{ delay: 0.4 }}
             >
               <Utensils className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-              <span>{servings} servings per meal</span>
+              <span className="text-xs sm:text-sm">
+                {servings} servings per meal
+              </span>
             </motion.div>
             <motion.ul
               className="space-y-0.5 sm:space-y-1 mt-2 sm:mt-3"
