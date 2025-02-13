@@ -46,11 +46,16 @@ export default function PurchaseRecipeCard({
     };
   }, [isHovered, images.length]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (event: React.MouseEvent | React.TouchEvent) => {
+    event.stopPropagation();
     setQuantity(1);
   };
 
-  const adjustQuantity = (amount: number) => {
+  const adjustQuantity = (
+    amount: number,
+    event: React.MouseEvent | React.TouchEvent
+  ) => {
+    event.stopPropagation();
     const newQuantity = quantity + amount;
     if (newQuantity >= 0) {
       setQuantity(newQuantity);
@@ -122,7 +127,7 @@ export default function PurchaseRecipeCard({
                 <span className="text-gray-500 text-xs"> / portion</span>
               </div>
               <button
-                onClick={handleAddToCart}
+                onClick={(e) => handleAddToCart(e)}
                 className="bg-blue-600 text-white text-xs px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 ADD
@@ -136,7 +141,7 @@ export default function PurchaseRecipeCard({
             >
               <div className="flex items-center justify-between">
                 <button
-                  onClick={() => adjustQuantity(-1)}
+                  onClick={(e) => adjustQuantity(-1, e)}
                   className="p-1 hover:bg-blue-700 rounded-full transition-colors"
                 >
                   <Minus className="w-4 h-4" />
@@ -150,7 +155,7 @@ export default function PurchaseRecipeCard({
                   </div>
                 </div>
                 <button
-                  onClick={() => adjustQuantity(1)}
+                  onClick={(e) => adjustQuantity(1, e)}
                   className="p-1 hover:bg-blue-700 rounded-full transition-colors"
                 >
                   <Plus className="w-4 h-4" />
