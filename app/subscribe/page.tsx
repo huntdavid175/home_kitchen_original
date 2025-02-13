@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Clock, Flame } from "lucide-react";
 import { s, select } from "framer-motion/client";
 import PurchaseList from "@/components/Subscription/PurchaseList";
+import SubscriptionNav from "@/components/Subscription/SubscriptionNav";
 
 interface Recipe {
   id: string;
@@ -223,6 +224,7 @@ export default function Home() {
       )}{" "}
       {selectedPlan && (
         <>
+          <SubscriptionNav />
           <PurchaseList />
         </>
       )}

@@ -7,16 +7,18 @@ const Footer = () => {
       <div className="max-w-7xl  md:mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-xl font-bold text-teal-700 mb-4">
+            <h3 className="text-lg font-bold text-teal-700 mb-4">
               Home Kitchen
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               Making home cooking easy and enjoyable.
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">Quick Links</h4>
-            <ul className="space-y-2">
+            <h4 className="font-semibold text-gray-900 mb-4 text-sm">
+              Quick Links
+            </h4>
+            <ul className="space-y-2 text-xs">
               <li>
                 <a href="#" className="text-gray-600 hover:text-teal-700">
                   About Us
@@ -40,8 +42,8 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">Legal</h4>
-            <ul className="space-y-2">
+            <h4 className="font-semibold text-gray-900 mb-4 text-sm">Legal</h4>
+            <ul className="space-y-2 text-xs">
               <li>
                 <a href="#" className="text-gray-600 hover:text-teal-700">
                   Privacy Policy
@@ -60,7 +62,9 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-900 mb-4">Follow Us</h4>
+            <h4 className="font-semibold text-gray-900 mb-4 text-sm">
+              Follow Us
+            </h4>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-600 hover:text-teal-700">
                 <Facebook size={24} />

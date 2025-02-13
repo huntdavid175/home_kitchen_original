@@ -112,11 +112,11 @@ export default function PurchaseRecipeCard({
           {quantity === 0 ? (
             <div className="flex items-center justify-between">
               <div className="text-lg">
-                <span className="text-gray-500 text-xs">€</span>
-                <span className="font-semibold text-xs">
+                <span className="text-red-500 text-xs">₵ </span>
+                <span className="font-semibold text-xs text-red-500">
                   {price.toFixed(2)}
                 </span>
-                <span className="text-gray-500 text-xs">/portion</span>
+                <span className="text-gray-500 text-xs"> / portion</span>
               </div>
               <button
                 onClick={handleAddToCart}
