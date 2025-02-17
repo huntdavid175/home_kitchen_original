@@ -11,6 +11,7 @@ import { Clock, Flame } from "lucide-react";
 import { s, select } from "framer-motion/client";
 import PurchaseList from "@/components/Subscription/PurchaseList";
 import SubscriptionNav from "@/components/Subscription/SubscriptionNav";
+import MealPlanSelection from "@/components/Subscription/MealPlanSelection";
 
 interface Recipe {
   id: string;
@@ -170,57 +171,7 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 ">
       {!selectedPlan && (
-        <div className="min-h-screen bg-gray-50 py-12">
-          <div className="container mx-auto px-4">
-            <div className="max-w-2xl mx-auto space-y-8">
-              <div className="bg-white p-6 rounded-xl shadow-sm">
-                <h2 className="text-xl font-semibold mb-4 text-center">
-                  How many people are eating?
-                </h2>
-                <ToggleGroup
-                  type="single"
-                  value={peopleCount}
-                  onValueChange={(value: any) => value && setPeopleCount(value)}
-                  className="justify-center"
-                >
-                  {["1", "2", "4", "6"].map((count) => (
-                    <ToggleGroupItem
-                      key={count}
-                      value={count}
-                      className="px-6 py-2 data-[state=on]:bg-teal-500 data-[state=on]:text-white"
-                    >
-                      {count}
-                    </ToggleGroupItem>
-                  ))}
-                </ToggleGroup>
-              </div>
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={peopleCount}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-6"
-                >
-                  {subscriptionPlans.map((plan, index) => (
-                    <SubscriptionCard
-                      key={index}
-                      frequency={plan.frequency}
-                      meals={plan.meals}
-                      servings={plan.servings}
-                      price={Math.round(plan.price)}
-                      features={plan.features}
-                      image={plan.image}
-                      handleClick={() => handlePlanSelect(plan)}
-                    />
-                  ))}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
+        <MealPlanSelection handlePlanSelect={handlePlanSelect} />
       )}{" "}
       {selectedPlan && (
         <>
