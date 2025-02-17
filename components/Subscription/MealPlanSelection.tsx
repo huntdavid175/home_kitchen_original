@@ -158,8 +158,8 @@ export default function MealPlanSelection({
             Choose your plan size
           </h1>
           <p className="text-center text-gray-600 mb-8">
-            We'll set this as your default size, but you can always change it
-            from week to week.
+            We&apos;ll set this as your default size, but you can always change
+            it from week to week.
           </p>
 
           {/* Selection Controls */}
