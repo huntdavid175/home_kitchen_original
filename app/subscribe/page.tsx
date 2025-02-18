@@ -12,6 +12,7 @@ import { s, select } from "framer-motion/client";
 import PurchaseList from "@/components/Subscription/PurchaseList";
 import SubscriptionNav from "@/components/Subscription/SubscriptionNav";
 import MealPlanSelection from "@/components/Subscription/MealPlanSelection";
+import DeliveryForm from "@/components/Registration/DeliveryForm";
 
 interface Recipe {
   id: string;
@@ -169,14 +170,15 @@ export default function Home() {
   }, [selectedPlan]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 ">
+    <div className="max-w-5xl mx-auto px-4 ">
       {!selectedPlan && (
         <MealPlanSelection handlePlanSelect={handlePlanSelect} />
       )}{" "}
       {selectedPlan && (
         <>
-          <SubscriptionNav />
-          <PurchaseList />
+          <DeliveryForm />
+          {/* <SubscriptionNav />
+          <PurchaseList /> */}
         </>
       )}
     </div>

@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       "freepngimg.com",
       "png.pngtree.com",
       "cdn.shopify.com",
+      "img.hellofresh.com",
     ], // Add your image domains here
   },
 };
