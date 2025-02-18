@@ -86,7 +86,7 @@ export default function MealPlanSelection({
 
       {/* Progress Steps */}
       <div className="fixed top-16 left-0 right-0 z-20 bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container max-w-lg mx-auto px-4 py-4">
           <div className="flex justify-between">
             <div className="flex flex-col items-center">
               <div className="w-6 h-6 rounded-full bg-[#067a46] text-white flex items-center justify-center text-xs mb-1">
