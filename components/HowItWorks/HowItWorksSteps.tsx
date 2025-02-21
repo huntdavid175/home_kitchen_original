@@ -97,7 +97,7 @@ export default function HowItWorksSteps() {
             <p className="text-base ">
               Choose from{" "}
               <span className="font-semibold">over 60 recipes every week</span>{" "}
-              that cater to your household's needs, including quick & easy
+              that cater to your household&apos;s needs, including quick & easy
               options, Calorie Smart, and family-friendly meals. Plus, take
               advantage of our amazing offer and{" "}
               <span className="font-semibold">GET STARTED!</span>
@@ -128,7 +128,7 @@ export default function HowItWorksSteps() {
               2. Get your delivery
             </h2>
             <p className="text-base">
-              Forget groceries. Each week, you'll receive{" "}
+              Forget groceries. Each week, you&apos;ll receive{" "}
               <span className="font-semibold">
                 simple step-by-step recipes complete with nutritional
                 information and fresh, pre-measured ingredients
