@@ -301,7 +301,7 @@ function App() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      {/* <HeroSection /> */}
+      <HeroSection />
 
       <MidSection />
 
