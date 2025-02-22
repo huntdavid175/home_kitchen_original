@@ -25,6 +25,7 @@ import MidSection from "@/components/Landing/MidSection";
 import StatsSection from "@/components/Landing/StatsSection";
 import HeroSection from "@/components/Landing/HeroSection";
 import Testimonial from "@/components/Landing/Testimonial";
+import MealsShippedSection from "@/components/Landing/MealsShippedSection";
 
 function App() {
   const router = useRouter();
@@ -229,6 +230,72 @@ function App() {
         },
       ],
     },
+    {
+      title: "Korean tacos with tofu and kimchi",
+      image:
+        "https://images.unsplash.com/photo-1562059390-a761a084768e?auto=format&fit=crop&q=80&w=800",
+      prepTime: "35 minutes",
+      servings: 3,
+      description:
+        "Fusion tacos with crispy tofu and spicy kimchi. A vegetarian twist on Korean flavors.",
+      ingredients: [
+        { name: "Firm tofu", amount: "400g" },
+        { name: "Kimchi", amount: "200g" },
+        { name: "Corn tortillas", amount: "9 pieces" },
+        { name: "Gochujang", amount: "2 tbsp" },
+        { name: "Sesame oil", amount: "2 tbsp" },
+      ],
+      steps: [
+        {
+          text: "Press and cube tofu, then fry until crispy.",
+          image:
+            "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          text: "Warm tortillas and prepare toppings.",
+          image:
+            "https://images.unsplash.com/photo-1464219222984-216ebffaaf85?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          text: "Assemble tacos with tofu, kimchi, and sauce.",
+          image:
+            "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&q=80&w=400",
+        },
+      ],
+    },
+    {
+      title: "Korean tacos with tofu and kimchi",
+      image:
+        "https://images.unsplash.com/photo-1562059390-a761a084768e?auto=format&fit=crop&q=80&w=800",
+      prepTime: "35 minutes",
+      servings: 3,
+      description:
+        "Fusion tacos with crispy tofu and spicy kimchi. A vegetarian twist on Korean flavors.",
+      ingredients: [
+        { name: "Firm tofu", amount: "400g" },
+        { name: "Kimchi", amount: "200g" },
+        { name: "Corn tortillas", amount: "9 pieces" },
+        { name: "Gochujang", amount: "2 tbsp" },
+        { name: "Sesame oil", amount: "2 tbsp" },
+      ],
+      steps: [
+        {
+          text: "Press and cube tofu, then fry until crispy.",
+          image:
+            "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          text: "Warm tortillas and prepare toppings.",
+          image:
+            "https://images.unsplash.com/photo-1464219222984-216ebffaaf85?auto=format&fit=crop&q=80&w=400",
+        },
+        {
+          text: "Assemble tacos with tofu, kimchi, and sauce.",
+          image:
+            "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&q=80&w=400",
+        },
+      ],
+    },
   ];
 
   const testimonials = [
@@ -390,57 +457,23 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      {/* <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="text-2xl font-bold text-teal-700">Home Kitchen</div>
-            <div className="hidden md:flex space-x-8">
-              <a href="#" className="text-gray-600 hover:text-teal-700">
-                Subscribe
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-700">
-                Recipes
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-700">
-                How it Works
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-700">
-                Gift Card
-              </a>
-              <a href="#" className="text-gray-600 hover:text-teal-700">
-                FAQ
-              </a>
-            </div>
-            <button className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800">
-              Log In
-            </button>
-          </div>
-        </div>
-      </nav> */}
-
       {/* Hero Section */}
       <HeroSection />
-
-      {/* stats section  */}
-
-      {/* <StatsSection /> */}
-
-      {/* mid section  */}
 
       <MidSection />
 
       {/* Weekly Recipes */}
       <div className="max-w-7xl  md:mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">
-            This Week&apos;s Menu
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+            {/* This Week&apos;s Menu */}
+            Week of February 24th
           </h2>
           <button className="text-teal-700 hover:text-teal-800">
             View all recipes →
           </button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {recipes.map((recipe, index) => (
             <div
               key={index}
@@ -461,6 +494,8 @@ function App() {
           ))}
         </div>
       </div>
+
+      <MealsShippedSection />
 
       {/* Testimonials */}
       <Testimonial />

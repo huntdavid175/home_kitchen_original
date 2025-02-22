@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       "png.pngtree.com",
       "cdn.shopify.com",
       "img.hellofresh.com",
+      "media.blueapron.com",
     ], // Add your image domains here
   },
 };
