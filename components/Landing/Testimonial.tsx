@@ -1,60 +1,79 @@
-import React from "react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const testimonials = [
   {
-    text: "Clean Kitchen has transformed how I cook at home. The recipes are easy to follow and delicious!",
-    author: "Sarah",
+    quote:
+      "Before Blue Apron, I tried HelloFresh. Blue Apron beats them on all counts—directions, freshness, packing, and prep.",
+    author: "CHERYL",
   },
   {
-    text: "The meal planning service saves me so much time. Everything is fresh and perfectly portioned.",
-    author: "Michael",
+    quote:
+      "The recipes are creative and delicious. It has transformed our weeknight dinners from stressful to enjoyable!",
+    author: "MICHAEL",
   },
   {
-    text: "Best meal kit service I've tried. The variety keeps dinner exciting every week.",
-    author: "Emma",
+    quote:
+      "I love how everything is pre-measured and the instructions are so clear. It's made cooking fun again!",
+    author: "SARAH",
   },
 ];
 
-const Testimonial = () => {
+export default function Testimonial() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((current) =>
+        current === testimonials.length - 1 ? 0 : current + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
-    <div className="bg-rose-50 py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900">
-            What Our Customers Say
-          </h2>
-        </div>
-        <div className="relative">
-          <div className="flex overflow-x-hidden">
-            <div className="flex space-x-8">
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="w-full md:w-1/3 flex-shrink-0 px-4">
-                  <div className="bg-white p-8 rounded-lg shadow-sm">
-                    <div className="flex text-yellow-400 mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={20} fill="currentColor" />
-                      ))}
-                    </div>
-                    <p className="text-gray-600 mb-4">{testimonial.text}</p>
-                    <p className="font-semibold text-gray-900">
-                      - {testimonial.author}
-                    </p>
-                  </div>
+    <div className="relative h-[400px] md:h-[500px] w-full overflow-hidden">
+      {/* Background Image */}
+      <Image
+        src="https://media.blueapron.com/assets/registration/homepage/cooking-pot.webp?height=600&quality=90"
+        alt="Kitchen scene with recipe books and prepared food"
+        fill
+        className="object-cover"
+        priority
+      />
+
+      {/* Content Overlay */}
+      <div className="absolute inset-0 flex items-center justify-center px-4">
+        <div className="bg-white p-8 md:p-12 max-w-3xl text-center rounded-sm">
+          <p className="text-teal-500 text-lg md:text-xl mb-6">
+            Celebrating 10 years of happy customers
+          </p>
+
+          <div className="relative h-[120px] flex items-center justify-center">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className={`absolute w-full transition-opacity duration-700 ${
+                  index === currentIndex ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <blockquote className="text-teal-800 text-lg md:text-lg font-medium mb-6">
+                  {testimonial.quote}
+                </blockquote>
+                <div className="flex flex-col items-center">
+                  <div className="w-12 h-0.5 bg-teal-600 mb-3" />
+                  <cite className="text-teal-700 font-medium not-italic">
+                    {testimonial.author}
+                  </cite>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          <button className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
-            <ChevronLeft className="text-gray-600" />
-          </button>
-          <button className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
-            <ChevronRight className="text-gray-600" />
-          </button>
         </div>
       </div>
     </div>
   );
-};
-
-export default Testimonial;
+}
