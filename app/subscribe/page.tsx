@@ -13,6 +13,7 @@ import PurchaseList from "@/components/Subscription/PurchaseList";
 import SubscriptionNav from "@/components/Subscription/SubscriptionNav";
 import MealPlanSelection from "@/components/Subscription/MealPlanSelection";
 import DeliveryForm from "@/components/Registration/DeliveryForm";
+import CheckoutPage from "@/components/Subscription/Checkout";
 
 interface Recipe {
   id: string;
@@ -118,6 +119,10 @@ const itemVariants = {
 export default function Home() {
   const [peopleCount, setPeopleCount] = useState("2");
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showDeliveryForm, setShowDeliveryForm] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [hasMealPlan, setHasMealPlan] = useState(false);
 
   const subscriptionPlans = [
     {
@@ -161,8 +166,50 @@ export default function Home() {
     },
   ];
 
+  useEffect(() => {
+    // Check authentication status (replace with actual logic)
+    const user = localStorage.getItem("user"); // Example, replace with real auth check
+    setIsAuthenticated(!!user);
+    
+  
+    // Check if the user has already selected a meal plan
+    const storedMealPlan = localStorage.getItem("selectedMealPlan");
+    console.log("storedMealPlan", storedMealPlan);
+
+    setHasMealPlan(!!storedMealPlan);
+
+    if (storedMealPlan ) {
+      setShowDeliveryForm(true);
+    }
+  }, []);
+
   const handlePlanSelect = (plan: any) => {
+    if (!isAuthenticated) {
+      localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
+      setShowDeliveryForm(false);
+      window.location.href = "/login"; // Redirect to login page if not logged in
+      return;
+    }
+  
+    // Save meal plan selection
+    localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
+    setShowDeliveryForm(true);
     setSelectedPlan(plan);
+  };
+  const handleBack = () => {
+    setSelectedPlan(null);
+    setShowDeliveryForm(false);
+    setHasMealPlan(false);
+    localStorage.removeItem("selectedMealPlan");
+  };
+  const handleGoBack = () => {
+    setShowDeliveryForm(true);
+    setShowCheckout(false);
+  };
+
+  const handleNext = () => {
+    setShowDeliveryForm(false);
+    setShowCheckout(true);
   };
 
   useEffect(() => {
@@ -171,16 +218,11 @@ export default function Home() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 ">
-      {!selectedPlan && (
-        <MealPlanSelection handlePlanSelect={handlePlanSelect} />
-      )}{" "}
-      {selectedPlan && (
-        <>
-          <DeliveryForm />
-          {/* <SubscriptionNav />
-          <PurchaseList /> */}
-        </>
-      )}
+      {!selectedPlan && !hasMealPlan && !showDeliveryForm && (
+      <MealPlanSelection handlePlanSelect={handlePlanSelect} />
+    )}
+      {(selectedPlan || hasMealPlan) && showDeliveryForm && <DeliveryForm handleBack={handleBack} handleNext={handleNext} />}
+      {showCheckout && <CheckoutPage Goback={handleGoBack} />}
     </div>
   );
 }

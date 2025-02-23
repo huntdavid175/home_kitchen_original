@@ -10,7 +10,7 @@ const navItems = [
   { name: "Recipes", href: "/recipe-listing" },
   { name: "How it Works", href: "/how-it-works" },
   { name: "Gift Card", href: "#" },
-  { name: "FAQ", href: "#" },
+  { name: "FAQ", href: "/faq" },
 ];
 
 export default function Navigation() {
@@ -21,7 +21,7 @@ export default function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const shouldBeFixed = scrollPosition > 100; // Adjust this value as needed
+      const shouldBeFixed = scrollPosition > -10; // Adjust this value as needed
 
       setIsScrolled(scrollPosition > 0);
       setIsFixed(shouldBeFixed);
@@ -76,9 +76,9 @@ export default function Navigation() {
 
             {/* Login Button */}
             <div className="hidden md:block">
-              <button className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800 transition-colors">
-                Log In
-              </button>
+                <button onClick={()=>window.location.href = "/login"} className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800 transition-colors">
+                  Log In
+                </button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -123,10 +123,10 @@ export default function Navigation() {
                   </Link>
                 ))}
                 <div className="flex gap-4 pt-12">
-                  <button className="w-full text-center block px-3 py-2 text-base  font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md">
+                  <button onClick={()=>window.location.href = "/login"} className="w-full text-center block px-3 py-2 text-base  font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md">
                     Log In
                   </button>
-                  <button className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md">
+                  <button onClick={()=>window.location.href = "/login"} className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md">
                     Register
                   </button>
                 </div>
