@@ -46,7 +46,7 @@ export default function MealPlanSelection({
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Image
             src="/placeholder.svg?height=32&width=120"
-            alt="Hello Fresh"
+            alt="House Kitchen"
             width={120}
             height={32}
             className="h-8 w-auto"

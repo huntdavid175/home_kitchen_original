@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Home Kitchen",
+  title: "House Kitchen",
   description: "Delicious Meals, Delivered to Your Door",
 };
 

@@ -57,7 +57,7 @@ export default function Navigation() {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link href="/" className="text-2xl font-bold text-teal-700">
-                Home Kitchen
+                House Kitchen
               </Link>
             </div>
 
