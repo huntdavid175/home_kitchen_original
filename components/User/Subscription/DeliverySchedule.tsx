@@ -98,7 +98,8 @@ export default function DeliverySchedule() {
       id: 1,
       name: "Garlic Butter Steak",
       description: "with Roasted Potatoes & Green Beans",
-      image: "/placeholder.svg?height=200&width=200",
+      image:
+        "https://cdn.shopify.com/s/files/1/0273/0993/2644/files/WZoIdtd2WZC_UCmquaFt1HcRthJ_ekddTKMRY-GymsY_300x200_crop_center@2x.jpg?v=1724897311",
       tags: ["35 min", "650 cal", "High Protein"],
       popular: true,
     },
@@ -106,7 +107,8 @@ export default function DeliverySchedule() {
       id: 2,
       name: "Creamy Tuscan Chicken",
       description: "with Sun-Dried Tomatoes & Spinach",
-      image: "/placeholder.svg?height=200&width=200",
+      image:
+        "https://cdn.shopify.com/s/files/1/0273/0993/2644/files/9SN0HXFFhE0D7DbTgYNClU1RD-lxZDeo7DefZpv9grg_300x200_crop_center@2x.png?v=1728439485",
       tags: ["40 min", "580 cal", "Gluten-Free"],
       new: true,
     },
@@ -114,21 +116,24 @@ export default function DeliverySchedule() {
       id: 3,
       name: "Vegetable Stir Fry",
       description: "with Sesame Ginger Sauce & Rice",
-      image: "/placeholder.svg?height=200&width=200",
+      image:
+        "https://cdn.shopify.com/s/files/1/0273/0993/2644/files/WZoIdtd2WZC_UCmquaFt1HcRthJ_ekddTKMRY-GymsY_300x200_crop_center@2x.jpg?v=1724897311",
       tags: ["25 min", "520 cal", "Vegetarian"],
     },
     {
       id: 4,
       name: "Honey Glazed Salmon",
       description: "with Roasted Brussels Sprouts & Quinoa",
-      image: "/placeholder.svg?height=200&width=200",
+      image:
+        "https://cdn.shopify.com/s/files/1/0273/0993/2644/files/uR5qC5nnExxzqqzqc4FqccKs3rt2M_bEy8T2zwGpO1U_675adcec-8398-4be2-9c7b-6fe227bfa6f8_300x200_crop_center@2x.png?v=1735956246",
       tags: ["30 min", "590 cal", "Omega-3"],
     },
     {
       id: 5,
       name: "Beef Burrito Bowl",
       description: "with Cilantro Lime Rice & Black Beans",
-      image: "/placeholder.svg?height=200&width=200",
+      image:
+        "https://cdn.shopify.com/s/files/1/0273/0993/2644/files/V187q3GEcBPudjLXjlZjxh04ARCci6EnAtsZiS2c1zU_300x200_crop_center@2x.jpg?v=1731117781",
       tags: ["35 min", "720 cal", "Family Favorite"],
       popular: true,
     },
@@ -136,7 +141,8 @@ export default function DeliverySchedule() {
       id: 6,
       name: "Mediterranean Falafel Bowl",
       description: "with Hummus & Tzatziki",
-      image: "/placeholder.svg?height=200&width=200",
+      image:
+        "https://media.blueapron.com/agora/images/product/CCMK0003388/attachment/5466d776efe58503c68339a0dc1bfc13.jpg?width=400",
       tags: ["30 min", "550 cal", "Vegetarian"],
       new: true,
     },

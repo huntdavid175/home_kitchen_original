@@ -12,10 +12,10 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value || "";
 
   // Redirect logic
-  if (path.startsWith("/admin") && !token) {
-    // Redirect to login if trying to access admin without token
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  // if (path.startsWith("/admin") && !token) {
+  //   // Redirect to login if trying to access admin without token
+  //   return NextResponse.redirect(new URL("/login", request.url));
+  // }
 
   if (isPublicPath && token) {
     // Redirect to admin dashboard if trying to access login/signup with token

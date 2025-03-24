@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Logo from "../ui/Logo";
 
 const navItems = [
   { name: "Subscribe", href: "/subscribe" },
@@ -57,7 +58,10 @@ export default function Navigation() {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link href="/" className="text-2xl font-bold text-teal-700">
-                Home Kitchen
+                <h3 className="text-lg font-bold text-teal-700 mb-4 flex items-center gap-2">
+                  <Logo />
+                  Home Kitchen
+                </h3>
               </Link>
             </div>
 
@@ -76,9 +80,12 @@ export default function Navigation() {
 
             {/* Login Button */}
             <div className="hidden md:block">
-                <button onClick={()=>window.location.href = "/login"} className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800 transition-colors">
-                  Log In
-                </button>
+              <button
+                onClick={() => (window.location.href = "/login")}
+                className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800 transition-colors"
+              >
+                Log In
+              </button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -123,10 +130,16 @@ export default function Navigation() {
                   </Link>
                 ))}
                 <div className="flex gap-4 pt-12">
-                  <button onClick={()=>window.location.href = "/login"} className="w-full text-center block px-3 py-2 text-base  font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md">
+                  <button
+                    onClick={() => (window.location.href = "/login")}
+                    className="w-full text-center block px-3 py-2 text-base  font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md"
+                  >
                     Log In
                   </button>
-                  <button onClick={()=>window.location.href = "/login"} className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md">
+                  <button
+                    onClick={() => (window.location.href = "/login")}
+                    className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md"
+                  >
                     Register
                   </button>
                 </div>
