@@ -7,7 +7,13 @@ import Image from "next/image";
 import ProgressBar from "./progressBar";
 // import { useRouter } from "next/router";
 
-export default function CheckoutPage({ Goback }: { Goback: () => void }) {
+export default function CheckoutPage({
+  Goback,
+  handleNext,
+}: {
+  Goback: () => void;
+  handleNext: () => void;
+}) {
   //   const router = useRouter();
   const [form, setForm] = useState({
     name: "",
@@ -31,6 +37,7 @@ export default function CheckoutPage({ Goback }: { Goback: () => void }) {
     setTimeout(() => {
       setLoading(false);
       alert("Payment successful!");
+      handleNext();
       //   router.push("/order-confirmation");
     }, 2000);
   };

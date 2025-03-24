@@ -122,6 +122,7 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showDeliveryForm, setShowDeliveryForm] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showMealPlanSelection, setShowMealPlanSelection] = useState(false);
   const [hasMealPlan, setHasMealPlan] = useState(false);
 
   const subscriptionPlans = [
@@ -170,15 +171,14 @@ export default function Home() {
     // Check authentication status (replace with actual logic)
     const user = localStorage.getItem("user"); // Example, replace with real auth check
     setIsAuthenticated(!!user);
-    
-  
+
     // Check if the user has already selected a meal plan
     const storedMealPlan = localStorage.getItem("selectedMealPlan");
     console.log("storedMealPlan", storedMealPlan);
 
     setHasMealPlan(!!storedMealPlan);
 
-    if (storedMealPlan ) {
+    if (storedMealPlan) {
       setShowDeliveryForm(true);
     }
   }, []);
@@ -190,7 +190,7 @@ export default function Home() {
       window.location.href = "/login"; // Redirect to login page if not logged in
       return;
     }
-  
+
     // Save meal plan selection
     localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
     setShowDeliveryForm(true);
@@ -212,6 +212,11 @@ export default function Home() {
     setShowCheckout(true);
   };
 
+  const handleShowMealPlanSelection = () => {
+    setShowCheckout(false);
+    setShowMealPlanSelection(true);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [selectedPlan]);
@@ -219,10 +224,18 @@ export default function Home() {
   return (
     <div className="max-w-5xl mx-auto px-4 ">
       {!selectedPlan && !hasMealPlan && !showDeliveryForm && (
-      <MealPlanSelection handlePlanSelect={handlePlanSelect} />
-    )}
-      {(selectedPlan || hasMealPlan) && showDeliveryForm && <DeliveryForm handleBack={handleBack} handleNext={handleNext} />}
-      {showCheckout && <CheckoutPage Goback={handleGoBack} />}
+        <MealPlanSelection handlePlanSelect={handlePlanSelect} />
+      )}
+      {(selectedPlan || hasMealPlan) && showDeliveryForm && (
+        <DeliveryForm handleBack={handleBack} handleNext={handleNext} />
+      )}
+      {showCheckout && (
+        <CheckoutPage
+          Goback={handleGoBack}
+          handleNext={handleShowMealPlanSelection}
+        />
+      )}
+      {showMealPlanSelection && <PurchaseList />}
     </div>
   );
 }
