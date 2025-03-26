@@ -19,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
+import { login } from "@/app/actions/login";
 
 // Validation schema
 const loginSchema = z.object({
@@ -49,8 +50,15 @@ export default function LoginPage() {
   async function onSubmit(data: LoginFormValues) {
     try {
       setIsLoading(true);
-      // TODO: Implement your login logic here
-      console.log(data);
+
+      // Create FormData from the form values
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+
+      // Call the server action
+      await login(formData);
+
       toast.success("Login successful!");
     } catch (error) {
       toast.error("Invalid email or password");
