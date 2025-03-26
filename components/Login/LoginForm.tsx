@@ -216,7 +216,7 @@ export default function LoginPage() {
         {/* New User */}
         <div className="text-center text-sm">
           <p className="text-slate-600">
-            New to Hungryroot?{" "}
+            New to House Kitchen?{" "}
             <a
               href="#"
               className="font-medium text-green-600 hover:text-green-700"
