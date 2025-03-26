@@ -52,7 +52,7 @@ export default function HeroSection() {
             >
               <Leaf className="w-6 h-6 text-green-600 mr-2" />
               <span className="text-lg font-semibold">
-                100% genuine Products
+                100% organic Products
               </span>
             </motion.div>
             <motion.h1
