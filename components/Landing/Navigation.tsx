@@ -60,7 +60,7 @@ export default function Navigation() {
               <Link href="/" className="text-2xl font-bold text-teal-700">
                 <h3 className="text-lg font-bold text-teal-700 mb-4 flex items-center gap-2">
                   <Logo />
-                  Home Kitchen
+                  House Kitchen
                 </h3>
               </Link>
             </div>

@@ -10,7 +10,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-bold text-teal-700 mb-4 flex items-center gap-2">
               <Logo />
-              Home Kitchen
+              House Kitchen
             </h3>
             <p className="text-gray-600 text-sm">
               Making home cooking easy and enjoyable.
