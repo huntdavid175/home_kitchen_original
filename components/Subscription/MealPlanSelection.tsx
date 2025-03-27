@@ -44,52 +44,6 @@ export default function MealPlanSelection({
 
   return (
     <div className="min-h-screen bg-white">
-<<<<<<< HEAD
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Image
-            src="/placeholder.svg?height=32&width=120"
-            alt="House Kitchen"
-            width={120}
-            height={32}
-            className="h-8 w-auto"
-          />
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <div className="font-bold">Get $211 Off</div>
-              <div className="text-sm text-gray-600">
-                Pause or cancel anytime
-              </div>
-            </div>
-            <div className="relative">
-              <Button variant="ghost" size="icon" className="relative">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="8" cy="21" r="1" />
-                  <circle cx="19" cy="21" r="1" />
-                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-                </svg>
-                <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#c92020] text-white text-xs flex items-center justify-center">
-                  2
-                </span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-=======
->>>>>>> 47ea524922c62759d32bd845c94a5e7fcb00749b
       {/* Progress Steps */}
       <ProgressBar progress={1} />
 
