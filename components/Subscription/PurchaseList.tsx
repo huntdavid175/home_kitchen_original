@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import RecipeCard from "@/components/Subscription/PurchaseRecipeCard";
 import RecipeDetailsDialog from "./RecipeDetailsDialog";
+import SubscriptionNav from "./SubscriptionNav";
 
 const recipes = [
   {
@@ -96,6 +97,7 @@ export default function PurchaseList() {
 
   return (
     <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[140px]">
+      <SubscriptionNav />
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

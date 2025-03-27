@@ -1,37 +1,24 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import Navigation from "@/components/Landing/Navigation";
-import Footer from "@/components/Landing/Footer";
+import { Toaster } from "sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Home Kitchen",
-  description: "Delicious Meals, Delivered to Your Door",
+export const metadata = {
+  title: "Meal Prep Service",
+  description: "Fresh, healthy meals delivered to your door",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navigation />
+      <body className={inter.className}>
         {children}
-        <Footer />
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

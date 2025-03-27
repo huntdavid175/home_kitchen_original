@@ -1,3 +1,4 @@
+import { originalFaqs } from "@/components/HowItWorks/faqData";
 import FAQSection from "@/components/HowItWorks/FAQSection";
 import HowItWorksSteps from "@/components/HowItWorks/HowItWorksSteps";
 import OurValues from "@/components/HowItWorks/OurValues";
@@ -26,7 +27,7 @@ export default function page() {
       </div>
       <HowItWorksSteps />
       <OurValues />
-      <FAQSection />
+      <FAQSection faqs={originalFaqs} />
     </div>
   );
 }
