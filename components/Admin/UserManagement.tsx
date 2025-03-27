@@ -1021,7 +1021,7 @@ export default function UserManagement() {
             <div className="py-4">
               <div className="mb-6">
                 <h3 className="text-lg font-semibold">
-                  {selectedUser.name}'s Subscription
+                  {selectedUser.name}&apos;s Subscription
                 </h3>
                 <p className="text-gray-500">{selectedUser.email}</p>
               </div>

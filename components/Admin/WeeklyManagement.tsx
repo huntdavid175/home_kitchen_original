@@ -395,8 +395,8 @@ export default function WeeklyMealPlanning() {
                       No Meals Selected
                     </h3>
                     <p className="text-gray-500 text-center max-w-md mt-1">
-                      You haven't selected any meals for this week yet. Click
-                      the "Add Meals" button to start planning.
+                      You haven&apos;t selected any meals for this week yet.
+                      Click the &quot;Add Meals&quot; button to start planning.
                     </p>
                     <Button className="mt-4" onClick={handleAddMeals}>
                       <Plus className="h-4 w-4 mr-2" />

@@ -1,14 +1,18 @@
-"use client";
+// "use client";
 
 import AuthForm from "@/components/Auth/Login/SignIn";
 import LoginForm from "@/components/Auth/Login/LoginForm";
 import React from "react";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export default async function SignIn() {
-  const supabase = createClient();
-  const { data: user } = await supabase.auth.getUser();
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  console.log(user);
 
   if (user) {
     redirect("/");

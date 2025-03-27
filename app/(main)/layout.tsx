@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
-import Navigation from "@/components/Landing/Navigation";
+import Navigation from "@/components/Landing/Navigation/Navigation";
 import Footer from "@/components/Landing/Footer";
+import NavigationContainer from "@/components/Landing/Navigation/NavigationContainer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export default function RootLayout({
     <main>
       <div className={cn(inter.className, "min-h-screen bg-white")}>
         {/* Main site header */}
-        <Navigation />
+        <NavigationContainer />
 
         {/* Main content */}
         <main>{children}</main>

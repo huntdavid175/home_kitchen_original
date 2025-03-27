@@ -121,7 +121,7 @@ export default function SignupForm() {
 
       toast.success("Account created successfully!");
       // Redirect to home page or dashboard
-      window.location.href = "/";
+      window.location.href = "/subscribe";
     } catch (error) {
       toast.error("An error occurred during signup");
     } finally {

@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { login } from "@/app/actions/login";
+import { useRouter } from "next/navigation";
 
 // Validation schema
 const loginSchema = z.object({
@@ -38,6 +39,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -51,17 +53,21 @@ export default function LoginPage() {
     try {
       setIsLoading(true);
 
-      // Create FormData from the form values
       const formData = new FormData();
       formData.append("email", data.email);
       formData.append("password", data.password);
 
-      // Call the server action
-      await login(formData);
+      const result = await login(formData);
+
+      if (result?.error) {
+        toast.error(result.error);
+        return;
+      }
 
       toast.success("Login successful!");
+      router.push("/user/subscriptions");
     } catch (error) {
-      toast.error("Invalid email or password");
+      toast.error("An error occurred during login");
     } finally {
       setIsLoading(false);
     }

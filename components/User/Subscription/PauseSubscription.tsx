@@ -155,7 +155,7 @@ export default function PauseSubscription() {
       <div className="border-t pt-6">
         <h3 className="font-semibold text-lg mb-4">Cancel Your Subscription</h3>
         <p className="text-gray-600 mb-4">
-          We're sorry to see you go. If you cancel, your subscription will
+          We&apos;re sorry to see you go. If you cancel, your subscription will
           remain active until the end of your current billing period.
         </p>
 

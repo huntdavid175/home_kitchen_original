@@ -495,8 +495,8 @@ export default function SubscriptionOverview() {
                 <AlertTriangle className="h-4 w-4" />
                 <AlertTitle>Meals not selected</AlertTitle>
                 <AlertDescription className="mt-1">
-                  You haven't selected your meals for this delivery yet. Please
-                  select your meals before the cutoff date.
+                  You haven&apos;t selected your meals for this delivery yet.
+                  Please select your meals before the cutoff date.
                 </AlertDescription>
                 <Button
                   className="w-full mt-3 bg-amber-600 hover:bg-amber-700 text-white"
