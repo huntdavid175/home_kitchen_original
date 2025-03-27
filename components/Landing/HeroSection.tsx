@@ -73,7 +73,7 @@ export default function HeroSection() {
               home-cooked meals.
             </motion.p>
             <motion.button
-              className="bg-[#8BC34A] text-white text-sm px-8 py-3 rounded-md font-semibold hover:bg-[#7CB342] transition duration-300"
+              className="bg-orange-500 text-white text-sm px-8 py-3 rounded-md font-semibold hover:bg-orange-600 transition duration-300"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.6 }}

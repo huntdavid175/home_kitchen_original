@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={cn(inter.className, "min-h-screen bg-white")}>
+    <main>
+      <div className={cn(inter.className, "min-h-screen bg-white")}>
         {/* Main site header */}
         <Navigation />
 
@@ -28,7 +28,7 @@ export default function RootLayout({
 
         {/* Main site footer */}
         <Footer />
-      </body>
-    </html>
+      </div>
+    </main>
   );
 }

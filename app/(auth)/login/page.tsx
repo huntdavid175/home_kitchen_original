@@ -1,7 +1,7 @@
 "use client";
 
-import AuthForm from "@/components/Login/SignIn";
-import LoginForm from "@/components/Login/LoginForm";
+import AuthForm from "@/components/Auth/Login/SignIn";
+import LoginForm from "@/components/Auth/Login/LoginForm";
 import React from "react";
 import { createClient } from "@/utils/supabase/client";
 import { redirect } from "next/navigation";

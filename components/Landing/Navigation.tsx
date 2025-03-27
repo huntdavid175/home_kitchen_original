@@ -58,7 +58,7 @@ export default function Navigation() {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link href="/" className="text-2xl font-bold text-teal-700">
-                <h3 className="text-lg font-bold text-teal-700 mb-4 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-teal-700 flex items-center gap-2">
                   <Logo />
                   House Kitchen
                 </h3>
@@ -79,12 +79,18 @@ export default function Navigation() {
             </nav>
 
             {/* Login Button */}
-            <div className="hidden md:block">
+            <div className="hidden md:block space-x-4">
               <button
                 onClick={() => (window.location.href = "/login")}
-                className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800 transition-colors"
+                className="bg-white text-teal-700 border border-teal-700 px-4 py-2 rounded-md hover:bg-teal-800 hover:text-white transition-colors"
               >
                 Log In
+              </button>
+              <button
+                onClick={() => (window.location.href = "/subscribe")}
+                className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-900 transition-colors"
+              >
+                Sign Up
               </button>
             </div>
 
