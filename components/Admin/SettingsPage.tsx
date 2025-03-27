@@ -477,7 +477,7 @@ export default function SettingsPage() {
                     defaultValue="https://your-app.example.com/webhooks/mealkit"
                   />
                   <p className="text-sm text-gray-500">
-                    We'll send webhook events to this URL.
+                    We&apos;ll send webhook events to this URL.
                   </p>
                 </div>
 

@@ -208,8 +208,9 @@ export default function SignupForm() {
                     Receive what you need
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    We'll deliver fresh produce and pre-portioned ingredients,
-                    like top-quality meat and sustainably sourced seafood.
+                    We&apos;ll deliver fresh produce and pre-portioned
+                    ingredients, like top-quality meat and sustainably sourced
+                    seafood.
                   </p>
                 </div>
               </div>
