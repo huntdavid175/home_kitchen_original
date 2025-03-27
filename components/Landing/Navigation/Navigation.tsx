@@ -4,24 +4,34 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import Logo from "../../ui/Logo";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { useAtom, useSetAtom } from "jotai";
+import { userAtom } from "@/store/auth";
+import { logout } from "@/app/actions/login";
 const navItems = [
   { name: "Subscribe", href: "/subscribe" },
   { name: "Recipes", href: "/recipe-listing" },
   { name: "How it Works", href: "/how-it-works" },
   { name: "Gift Card", href: "#" },
-  { name: "FAQ", href: "#" },
+  { name: "FAQ", href: "/faq" },
 ];
 
-export default function Navigation() {
+export default function Navigation({ user }: { user: User | null }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
+  // const [user, setUser] = useAtom(userAtom);
+  const setUser = useSetAtom(userAtom);
+  const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      const shouldBeFixed = scrollPosition > 100; // Adjust this value as needed
+      const shouldBeFixed = scrollPosition > -10;
 
       setIsScrolled(scrollPosition > 0);
       setIsFixed(shouldBeFixed);
@@ -30,6 +40,8 @@ export default function Navigation() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  setUser(user);
 
   return (
     <>
@@ -57,7 +69,10 @@ export default function Navigation() {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link href="/" className="text-2xl font-bold text-teal-700">
-                House Kitchen
+                <h3 className="text-lg font-bold text-teal-700 flex items-center gap-2">
+                  <Logo />
+                  House Kitchen
+                </h3>
               </Link>
             </div>
 
@@ -75,10 +90,34 @@ export default function Navigation() {
             </nav>
 
             {/* Login Button */}
-            <div className="hidden md:block">
-              <button className="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800 transition-colors">
-                Log In
-              </button>
+            <div className="hidden md:block space-x-4">
+              {!user ? (
+                <>
+                  <Link
+                    // onClick={() => router.push("/login")}
+                    href="/login"
+                    className="bg-white text-teal-700 border border-teal-700 px-4 py-2 rounded-md hover:bg-teal-800 hover:text-white transition-colors text-sm"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    // onClick={() => router.push("/signup")}
+                    href="/signup"
+                    className="bg-teal-700 text-white px-4 py-2 border border-teal-700 rounded-md hover:bg-teal-900 transition-colors text-sm"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              ) : null}
+              {user && (
+                <button
+                  onClick={() => logout()}
+                  // href="/login"
+                  className="bg-white text-teal-700 border border-teal-700 px-4 py-2 rounded-md hover:bg-teal-800 hover:text-white transition-colors text-sm"
+                >
+                  Signout
+                </button>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -123,10 +162,16 @@ export default function Navigation() {
                   </Link>
                 ))}
                 <div className="flex gap-4 pt-12">
-                  <button className="w-full text-center block px-3 py-2 text-base  font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md">
+                  <button
+                    onClick={() => router.push("/login")}
+                    className="w-full text-center block px-3 py-2 text-base  font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md"
+                  >
                     Log In
                   </button>
-                  <button className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md">
+                  <button
+                    onClick={() => router.push("/signup")}
+                    className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md"
+                  >
                     Register
                   </button>
                 </div>

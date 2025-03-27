@@ -14,11 +14,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Truck } from "lucide-react";
+import ProgressBar from "../Subscription/progressBar";
 
-export default function DeliveryForm() {
+export default function DeliveryForm({
+  handleNext, handleBack
+}: {
+  handleNext: () => void;
+  handleBack: () => void;
+}) {
+  
   return (
     <div className="container mx-auto p-6">
-      <div className="grid gap-16 lg:grid-cols-[1fr,400px]">
+      <ProgressBar progress={3} />
+      <div className="grid gap-16 pt-16 lg:grid-cols-[1fr,400px]">
         {/* Delivery Form */}
         <div className="space-y-6">
           <div className="bg-muted/50 flex gap-2 p-4 rounded-lg">
@@ -122,9 +130,14 @@ export default function DeliveryForm() {
             </div>
           </div>
 
-          <Button className="w-full bg-green-700 hover:bg-green-800" size="lg">
+          <div className="flex gap-4">
+          <Button onClick={handleBack} className="w-full bg-red-200 text-black hover:bg-red-300" size="lg">
+            Go back
+          </Button>
+          <Button onClick={handleNext} className="w-full bg-green-700 hover:bg-green-800" size="lg">
             Next step
           </Button>
+          </div>
         </div>
 
         {/* Order Summary */}

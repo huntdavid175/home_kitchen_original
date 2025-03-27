@@ -1,18 +1,10 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-import Navigation from "@/components/Landing/Navigation";
-import Footer from "@/components/Landing/Footer";
+import { Toaster } from "sonner";
+import type { Metadata } from "next";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "House Kitchen",
@@ -21,17 +13,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navigation />
+      <body className={`${inter.className} ${GeistMono.variable}`}>
         {children}
-        <Footer />
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   );

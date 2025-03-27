@@ -1,5 +1,6 @@
 import React from "react";
 import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
+import Logo from "../ui/Logo";
 
 const Footer = () => {
   return (
@@ -7,7 +8,8 @@ const Footer = () => {
       <div className="max-w-7xl  md:mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-bold text-teal-700 mb-4">
+            <h3 className="text-lg font-bold text-teal-700 mb-4 flex items-center gap-2">
+              <Logo />
               House Kitchen
             </h3>
             <p className="text-gray-600 text-sm">
