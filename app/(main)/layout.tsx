@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <main>
-      <div className={cn(inter.className, "min-h-screen bg-white")}>
+      <div className={cn("min-h-screen bg-white")}>
         {/* Main site header */}
         <NavigationContainer />
 

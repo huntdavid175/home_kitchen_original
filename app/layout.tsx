@@ -1,10 +1,14 @@
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
+import "./fonts.css";
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "House Kitchen",
@@ -18,7 +22,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${GeistMono.variable}`}>
+      <body
+        className={`${plusJakarta.className} ${GeistMono.variable} font-sans`}
+      >
         {children}
         <Toaster position="top-right" richColors />
       </body>

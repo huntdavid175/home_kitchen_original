@@ -49,7 +49,7 @@ export default function MealPlanSelection({
 
       {/* Savings Alert */}
       {discount && (
-        <div className="fixed top-[134px] left-0 right-0 z-30 bg-[#e4f6d1]">
+        <div className="fixed top-16 left-0 right-0 z-30 bg-[#e4f6d1]">
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2 text-[#067a46]">
               <Tag size={20} />

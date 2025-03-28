@@ -69,7 +69,7 @@ export default function Navigation({ user }: { user: User | null }) {
             {/* Logo */}
             <div className="flex-shrink-0">
               <Link href="/" className="text-2xl font-bold text-teal-700">
-                <h3 className="text-lg font-bold text-teal-700 flex items-center gap-2">
+                <h3 className="text-lg font-bold text-teal-700 flex items-center gap-2 font-source">
                   <Logo />
                   House Kitchen
                 </h3>
@@ -82,7 +82,7 @@ export default function Navigation({ user }: { user: User | null }) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-600 hover:text-teal-700 transition-colors"
+                  className="text-gray-600 hover:text-teal-700 transition-colors font-source"
                 >
                   {item.name}
                 </Link>
@@ -96,14 +96,14 @@ export default function Navigation({ user }: { user: User | null }) {
                   <Link
                     // onClick={() => router.push("/login")}
                     href="/login"
-                    className="bg-white text-teal-700 border border-teal-700 px-4 py-2 rounded-md hover:bg-teal-800 hover:text-white transition-colors text-sm"
+                    className="bg-white text-teal-700 border border-teal-700 px-4 py-2 rounded-md hover:bg-teal-800 hover:text-white transition-colors text-sm font-source"
                   >
                     Log In
                   </Link>
                   <Link
                     // onClick={() => router.push("/signup")}
                     href="/signup"
-                    className="bg-teal-700 text-white px-4 py-2 border border-teal-700 rounded-md hover:bg-teal-900 transition-colors text-sm"
+                    className="bg-teal-700 text-white px-4 py-2 border border-teal-700 rounded-md hover:bg-teal-900 transition-colors text-sm font-source"
                   >
                     Sign Up
                   </Link>
@@ -113,9 +113,9 @@ export default function Navigation({ user }: { user: User | null }) {
                 <button
                   onClick={() => logout()}
                   // href="/login"
-                  className="bg-white text-teal-700 border border-teal-700 px-4 py-2 rounded-md hover:bg-teal-800 hover:text-white transition-colors text-sm"
+                  className="bg-white text-teal-700 border border-teal-700 px-4 py-2 rounded-md hover:bg-teal-800 hover:text-white transition-colors text-sm font-source"
                 >
-                  Signout
+                  Sign Out
                 </button>
               )}
             </div>
@@ -156,24 +156,37 @@ export default function Navigation({ user }: { user: User | null }) {
                     onClick={() => setIsMenuOpen(false)}
                     key={item.name}
                     href={item.href}
-                    className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-teal-700 hover:bg-gray-50 transition-colors"
+                    className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-teal-700 hover:bg-gray-50 transition-colors font-source"
                   >
                     {item.name}
                   </Link>
                 ))}
                 <div className="flex gap-4 pt-12">
-                  <button
-                    onClick={() => router.push("/login")}
-                    className="w-full text-center block px-3 py-2 text-base  font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md"
-                  >
-                    Log In
-                  </button>
-                  <button
-                    onClick={() => router.push("/signup")}
-                    className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md"
-                  >
-                    Register
-                  </button>
+                  {!user && (
+                    <>
+                      {" "}
+                      <button
+                        onClick={() => router.push("/login")}
+                        className="w-full text-center block px-3 py-2 text-base font-medium text-teal-700 bg-white border border-teal-700 hover:bg-teal-800 transition-colors rounded-md font-source"
+                      >
+                        Log In
+                      </button>
+                      <button
+                        onClick={() => router.push("/signup")}
+                        className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md font-source"
+                      >
+                        Register
+                      </button>{" "}
+                    </>
+                  )}
+                  {user && (
+                    <button
+                      onClick={() => logout()}
+                      className="w-full text-center block px-3 py-2 text-base font-medium text-white bg-teal-700 hover:bg-teal-800 transition-colors rounded-md font-source"
+                    >
+                      Sign Out
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>

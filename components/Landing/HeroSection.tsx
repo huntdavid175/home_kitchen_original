@@ -93,6 +93,7 @@ export default function HeroSection() {
           >
             <Image
               src="https://broccoli-omega.vercel.app/_next/image?url=%2Fimg%2Fslider%2F21.png&w=3840&q=75"
+              //  src="https://images.pexels.com/photos/7879834/pexels-photo-7879834.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
               alt="Fresh vegetables"
               width={600}
               height={400}
