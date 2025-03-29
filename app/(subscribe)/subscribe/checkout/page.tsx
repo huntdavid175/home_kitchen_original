@@ -4,7 +4,7 @@ import DeliveryForm from "@/components/Registration/DeliveryForm";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const CheckoutPage = () => {
   const router = useRouter();
 
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -30,4 +30,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default CheckoutPage;

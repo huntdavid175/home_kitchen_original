@@ -1,7 +1,7 @@
 import PurchaseList from "@/components/Subscription/PurchaseList";
 import React from "react";
 
-const page = () => {
+const SelectMealsPage = () => {
   return (
     <div>
       <PurchaseList />
@@ -9,4 +9,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default SelectMealsPage;

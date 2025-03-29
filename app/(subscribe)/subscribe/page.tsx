@@ -116,7 +116,7 @@ const itemVariants = {
   },
 };
 
-export default function Home() {
+export default function SubscribePage() {
   const [peopleCount, setPeopleCount] = useState("2");
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
