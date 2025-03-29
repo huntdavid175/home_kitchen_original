@@ -14,7 +14,7 @@ import SubscriptionNav from "@/components/Subscription/SubscriptionNav";
 import MealPlanSelection from "@/components/Subscription/MealPlanSelection";
 import DeliveryForm from "@/components/Registration/DeliveryForm";
 import CheckoutPage from "@/components/Subscription/Checkout";
-
+import { useRouter } from "next/navigation";
 interface Recipe {
   id: string;
   title: string;
@@ -125,6 +125,8 @@ export default function Home() {
   const [showMealPlanSelection, setShowMealPlanSelection] = useState(false);
   const [hasMealPlan, setHasMealPlan] = useState(false);
 
+  const router = useRouter();
+
   const subscriptionPlans = [
     {
       frequency: "Weekly",
@@ -184,17 +186,16 @@ export default function Home() {
   }, []);
 
   const handlePlanSelect = (plan: any) => {
-    if (!isAuthenticated) {
-      localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
-      setShowDeliveryForm(false);
-      window.location.href = "/login"; // Redirect to login page if not logged in
-      return;
-    }
+    // if (!isAuthenticated) {
+    //   localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
+    //   setShowDeliveryForm(false);
+    //   window.location.href = "/login"; // Redirect to login page if not logged in
+    //   return;
+    // }
 
     // Save meal plan selection
     localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
-    setShowDeliveryForm(true);
-    setSelectedPlan(plan);
+    router.push("/subscribe/checkout");
   };
   const handleBack = () => {
     setSelectedPlan(null);

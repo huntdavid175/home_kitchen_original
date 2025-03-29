@@ -1,3 +1,4 @@
+import Footer from "@/components/Landing/Footer";
 import "../globals.css";
 
 export const metadata = {
@@ -11,8 +12,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main lang="en">
-      <div className="min-h-screen">{children}</div>
-    </main>
+    <>
+      <main lang="en">
+        <div className="min-h-screen">{children}</div>
+      </main>
+      <Footer />
+    </>
   );
 }

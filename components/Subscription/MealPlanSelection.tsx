@@ -184,15 +184,9 @@ export default function MealPlanSelection({
               className="w-full py-6 text-base bg-[#067a46] hover:bg-[#056835]"
               onClick={() =>
                 handlePlanSelect({
-                  id: "2",
-                  title: "Baoburgers with chicken kebab and curry-mango sauce",
-                  description:
-                    "Steamed bao buns are also great for burger buns. This time, a burger recipe with steamed buns, chicken, and curry-mango sauce.",
-                  image:
-                    "https://www.cleankitchen.ee/cdn/shop/files/UzbT9ZKHKeqoB-_4b2zeZgSW-wsEtLwj4nqBcoHE_gI.jpg?v=1721743606&width=1200",
-                  categories: ["Poultry", "Recipes"],
-                  time: "20 minutes",
-                  calories: 682,
+                  people,
+                  mealsPerWeek,
+                  total: prices.firstBoxTotal,
                 })
               }
             >
