@@ -52,7 +52,7 @@ export default function BrowseMenuCTA() {
       <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#067a46] mb-2 sm:mb-4">
         Choose from 100+ weekly options
       </h2>
-      <p className="text-gray-600 text-sm sm:text-base mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto">
+      <p className="text-gray-600 text-sm sm:text-base mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto font">
         Enjoy a wide variety of easy recipes and pre-made meals with quality
         ingredients.
       </p>

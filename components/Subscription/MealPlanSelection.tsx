@@ -53,7 +53,7 @@ export default function MealPlanSelection({
           <div className="container mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-2 text-[#067a46]">
               <Tag size={20} />
-              <span>You&apos;ll save $211 in total.</span>
+              <span>You&apos;ll save ₵211 in total.</span>
             </div>
             <button
               type="button"
