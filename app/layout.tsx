@@ -1,7 +1,6 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-import "./fonts.css";
 import { Toaster } from "sonner";
 import type { Metadata } from "next";
 

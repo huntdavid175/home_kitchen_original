@@ -30,6 +30,7 @@ import {
 import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
 import { useRouter } from "next/navigation";
+import PaystackPop from "@paystack/inline-js";
 
 const deliverySchema = z.object({
   firstName: z.string().min(2, "Please enter a valid first name"),
@@ -44,6 +45,35 @@ const deliverySchema = z.object({
 });
 
 type DeliveryFormValues = z.infer<typeof deliverySchema>;
+
+const makePaymentIntent = async () => {
+  try {
+    const response = await fetch("http://localhost:3001/api/payment", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json", // Add this line
+      },
+      body: JSON.stringify({
+        email: "fawaz.dogbe@gmail.com",
+        amount: 1000,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Payment error:", errorData);
+      throw new Error(errorData.message || "Payment failed");
+    }
+
+    const data = await response.json();
+    console.log("Payment success:", data);
+    return data;
+  } catch (error) {
+    console.error("Payment error:", error);
+    throw error; // Re-throw the error to handle it in the component
+  }
+};
 
 export default function DeliveryForm({
   handleNext,
@@ -71,20 +101,36 @@ export default function DeliveryForm({
 
   const [loading, setLoading] = useState(false);
 
-  const handlePayment = () => {
-    setLoading(true);
-    setTimeout(() => {
+  const handlePayment = async () => {
+    try {
+      setLoading(true);
+      const response = await makePaymentIntent();
+
+      if (response.status === true) {
+        setLoading(false);
+        try {
+          const popup = new PaystackPop();
+          popup.resumeTransaction(response.data.access_code);
+        } catch (error) {
+          console.error("Paystack popup error:", error);
+          setLoading(false);
+          // Handle popup error gracefully
+        }
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
       setLoading(false);
-      alert("Payment successful!");
-      // handleNext();
-      router.push("/subscribe/select-meals");
-      //   router.push("/order-confirmation");
-    }, 2000);
+      // Handle payment error gracefully
+    }
   };
 
-  const onSubmit = (data: DeliveryFormValues) => {
-    console.log(data);
-    handlePayment();
+  const onSubmit = async (data: DeliveryFormValues) => {
+    try {
+      await handlePayment();
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setLoading(false);
+    }
   };
 
   return (
