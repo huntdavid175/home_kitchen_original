@@ -133,17 +133,17 @@ export default function MealPlanSelection({
               <div className="flex justify-between">
                 <span className="text-sm">Box price</span>
                 <span className="font-medium text-sm">
-                  ${prices.boxPrice.toFixed(2)}
+                  ₵{prices.boxPrice.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-sm">Price per serving</span>
                 <div className="text-right">
                   <span className="line-through text-gray-400 mr-2 text-sm">
-                    ${PRICE_PER_SERVING.toFixed(2)}
+                    ₵{PRICE_PER_SERVING.toFixed(2)}
                   </span>
                   <span className="text-[#c92020] text-sm font-medium">
-                    ${prices.pricePerServing.toFixed(2)}
+                    ₵{prices.pricePerServing.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function MealPlanSelection({
                 <span className="text-sm">Shipping</span>
                 <div className="text-right">
                   <span className="line-through text-gray-400 mr-2">
-                    ${SHIPPING_COST.toFixed(2)}
+                    ₵{SHIPPING_COST.toFixed(2)}
                   </span>
                   <span className="text-[#c92020] font-medium text-sm">
                     FREE
@@ -163,14 +163,14 @@ export default function MealPlanSelection({
                   <span className="font-medium text-sm">First box total</span>
                   <div className="text-right">
                     <div className="inline-block bg-[#c92020] text-white text-xs px-2 py-0.5 rounded mb-1">
-                      ${prices.discount.toFixed(2)} off
+                      ₵{prices.discount.toFixed(2)} off
                     </div>
                     <div>
                       <span className="line-through text-gray-400 mr-2 text-lg">
-                        ${(prices.boxPrice + SHIPPING_COST).toFixed(2)}
+                        ₵{(prices.boxPrice + SHIPPING_COST).toFixed(2)}
                       </span>
                       <span className="text-[#c92020] font-bold text-lg">
-                        ${prices.firstBoxTotal.toFixed(2)}
+                        ₵{prices.firstBoxTotal.toFixed(2)}
                       </span>
                     </div>
                   </div>

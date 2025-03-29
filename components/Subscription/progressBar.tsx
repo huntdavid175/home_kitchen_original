@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check, ShoppingCart } from "lucide-react";
 import React from "react";
 
 function ProgressBar({ progress }: any) {
@@ -39,7 +39,7 @@ function ProgressBar({ progress }: any) {
             >
               <Check />
             </div>
-            <span className="text-xs text-gray-400">Address</span>
+            <span className="text-xs text-gray-400">Checkout</span>
           </div>
           <div className="flex-1 mx-2 self-start mt-3">
             <div className="h-[2px] bg-gray-200" />
@@ -54,12 +54,12 @@ function ProgressBar({ progress }: any) {
             >
               <Check />
             </div>
-            <span className="text-xs text-gray-400">Checkout</span>
+            <span className="text-xs text-gray-400">Select Meals</span>
           </div>
-          <div className="flex-1 mx-2 self-start mt-3">
+          {/* <div className="flex-1 mx-2 self-start mt-3">
             <div className="h-[2px] bg-gray-200" />
-          </div>
-          <div className="flex flex-col items-center">
+          </div> */}
+          {/* <div className="flex flex-col items-center">
             <div
               className={`w-6 h-6 rounded-full ${
                 progress === 5
@@ -70,7 +70,7 @@ function ProgressBar({ progress }: any) {
               <Check />
             </div>
             <span className="text-xs text-gray-400">Select Meals</span>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -197,21 +197,21 @@ export default function Home() {
     localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
     router.push("/subscribe/checkout");
   };
-  const handleBack = () => {
-    setSelectedPlan(null);
-    setShowDeliveryForm(false);
-    setHasMealPlan(false);
-    localStorage.removeItem("selectedMealPlan");
-  };
+  // const handleBack = () => {
+  //   setSelectedPlan(null);
+  //   setShowDeliveryForm(false);
+  //   setHasMealPlan(false);
+  //   localStorage.removeItem("selectedMealPlan");
+  // };
   const handleGoBack = () => {
     setShowDeliveryForm(true);
     setShowCheckout(false);
   };
 
-  const handleNext = () => {
-    setShowDeliveryForm(false);
-    setShowCheckout(true);
-  };
+  // const handleNext = () => {
+  //   setShowDeliveryForm(false);
+  //   setShowCheckout(true);
+  // };
 
   const handleShowMealPlanSelection = () => {
     setShowCheckout(false);
@@ -227,9 +227,9 @@ export default function Home() {
       {!selectedPlan && !hasMealPlan && !showDeliveryForm && (
         <MealPlanSelection handlePlanSelect={handlePlanSelect} />
       )}
-      {(selectedPlan || hasMealPlan) && showDeliveryForm && (
+      {/* {(selectedPlan || hasMealPlan) && showDeliveryForm && (
         <DeliveryForm handleBack={handleBack} handleNext={handleNext} />
-      )}
+      )} */}
       {showCheckout && (
         <CheckoutPage
           Goback={handleGoBack}

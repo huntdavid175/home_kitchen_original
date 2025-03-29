@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,15 +29,16 @@ import {
 } from "@/components/ui/select";
 import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
+import { useRouter } from "next/navigation";
 
 const deliverySchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  address1: z.string().min(5, "Address must be at least 5 characters"),
+  firstName: z.string().min(2, "Please enter a valid first name"),
+  lastName: z.string().min(2, "Please enter a valid last name"),
+  address1: z.string().min(5, "Please enter a valid address"),
   address2: z.string().optional(),
-  city: z.string().min(2, "City must be at least 2 characters"),
-  zipCode: z.string().min(5, "ZIP code must be at least 5 characters"),
-  phone: z.string().min(10, "Phone number must be at least 10 characters"),
+  city: z.string().min(2, "Please enter a valid city"),
+  zipCode: z.string().min(5, "Please enter a valid ZIP code"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
   deliveryInstruction: z.string().optional(),
   sameAsBilling: z.boolean().default(true),
 });
@@ -63,15 +67,30 @@ export default function DeliveryForm({
     },
   });
 
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  const handlePayment = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      alert("Payment successful!");
+      // handleNext();
+      router.push("/subscribe/select-meals");
+      //   router.push("/order-confirmation");
+    }, 2000);
+  };
+
   const onSubmit = (data: DeliveryFormValues) => {
     console.log(data);
-    handleNext();
+    handlePayment();
   };
 
   return (
     <div className="container mx-auto p-6">
       <ProgressBar progress={3} />
-      <div className="grid gap-16 pt-16 lg:grid-cols-[1fr,400px]">
+      <div className="max-w-5xl mx-auto grid gap-16 pt-16 lg:grid-cols-[1fr,400px]">
         {/* Delivery Form */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -295,8 +314,9 @@ export default function DeliveryForm({
                 type="submit"
                 className="w-full bg-green-700 hover:bg-green-800"
                 size="lg"
+                disabled={loading}
               >
-                Checkout
+                {loading ? "Processing..." : "Checkout"}
               </Button>
             </div>
           </form>
@@ -321,7 +341,7 @@ export default function DeliveryForm({
                   </h3>
                   <p className="text-xs text-muted-foreground">
                     20 servings at <span className="line-through">$9.99</span>{" "}
-                    <span className="text-red-600">$5.00</span> each
+                    <span className="text-red-600">₵5.00</span> each
                   </p>
                 </div>
               </div>
@@ -329,13 +349,13 @@ export default function DeliveryForm({
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Box price</span>
-                  <span>$199.80</span>
+                  <span>₵199.80</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
                   <div>
                     <span className="line-through text-muted-foreground mr-2">
-                      $10.99
+                      ₵10.99
                     </span>
                     <span className="text-red-600 ">FREE</span>
                   </div>
@@ -355,7 +375,7 @@ export default function DeliveryForm({
 
               <div className="flex justify-between text-red-600 text-sm">
                 <span>Discount</span>
-                <span>$110.89</span>
+                <span>₵110.89</span>
               </div>
 
               <button className="text-green-700 text-sm font-medium">
@@ -367,10 +387,10 @@ export default function DeliveryForm({
                   <span className="font-semibold">First box total</span>
                   <div>
                     <span className="line-through text-muted-foreground mr-2">
-                      $210.79
+                      ₵210.79
                     </span>
                     <span className="text-base font-bold text-red-600">
-                      $99.90
+                      ₵99.90
                     </span>
                   </div>
                 </div>

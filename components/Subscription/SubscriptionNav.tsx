@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type React from "react"; // Added import for React
 import Logo from "../ui/Logo";
+import ProgressBar from "./progressBar";
 
 const cn = (...classes: string[]) => classes.filter(Boolean).join(" ");
 
@@ -67,10 +68,10 @@ export default function SubscriptionNav() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
-      <div className="container mx-auto px-4 lg:px-6">
-        {/* Progress Steps */}
-        <div className="flex items-center justify-between py-4 border-b">
+    // <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
+    <div className="container mx-auto px-4 lg:px-6">
+      {/* Progress Steps */}
+      {/* <div className="flex items-center justify-between py-4 border-b">
           <Logo />
           <div className="flex items-center gap-4 sm:gap-8 ">
             <div className="flex flex-col items-center gap-2">
@@ -84,7 +85,7 @@ export default function SubscriptionNav() {
                 2
               </div>
               <span className="text-[#64748b] text-xs   sm:inline">EXTRAS</span>
-              {/* <span className="text-[#64748b] text-sm sm:hidden">EXT</span> */}
+            
             </div>
             <div className="flex flex-col items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-[#f1f5f9] text-[#64748b] flex items-center justify-center text-xs">
@@ -93,7 +94,7 @@ export default function SubscriptionNav() {
               <span className="text-[#64748b] text-xs   sm:inline">
                 DELIVERY & PAYMENT
               </span>
-              {/* <span className="text-[#64748b] text-sm sm:hidden">DEL</span> */}
+            
             </div>
           </div>
           <div className="relative ml-4">
@@ -102,44 +103,45 @@ export default function SubscriptionNav() {
               3
             </span>
           </div>
-        </div>
+        </div> */}
+      <ProgressBar progress={4} />
 
-        {/* Categories */}
-        <div
-          className="py-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
-          ref={scrollContainerRef}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseUp}
-        >
-          <div className="flex gap-2 pb-2" style={{ width: "max-content" }}>
-            {categories.map((category) => (
-              <Badge
-                key={category.name}
-                className={cn(
-                  "rounded-full px-4 py-1.5 text-xs cursor-pointer transition-colors select-none",
-                  activeCategories.includes(category.name)
-                    ? "bg-[#14b8a6] hover:bg-[#0d9488] text-white"
-                    : "bg-[#e2e8f0] text-[#0f172a] hover:bg-[#cbd5e1]"
-                )}
-                onClick={() => toggleCategory(category.name)}
-              >
-                {category.name} {category.count ? `(${category.count})` : ""}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {/* Price */}
-        <div className="pb-4">
-          <p className="text-sm">
-            Portion price from 4 meals{" "}
-            <span className="line-through text-[#64748b]">€8.14</span>{" "}
-            <span className="font-medium text-[#14b8a6]">€7.43</span>
-          </p>
+      {/* Categories */}
+      <div
+        className="pt-0 py-4 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+        ref={scrollContainerRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseUp}
+      >
+        <div className="flex gap-2 pb-2" style={{ width: "max-content" }}>
+          {categories.map((category) => (
+            <Badge
+              key={category.name}
+              className={cn(
+                "rounded-full px-4 py-1.5 text-xs cursor-pointer transition-colors select-none",
+                activeCategories.includes(category.name)
+                  ? "bg-[#14b8a6] hover:bg-[#0d9488] text-white"
+                  : "bg-[#e2e8f0] text-[#0f172a] hover:bg-[#cbd5e1]"
+              )}
+              onClick={() => toggleCategory(category.name)}
+            >
+              {category.name} {category.count ? `(${category.count})` : ""}
+            </Badge>
+          ))}
         </div>
       </div>
+
+      {/* Price */}
+      <div className="pb-4">
+        <p className="text-sm">
+          Portion price from 4 meals{" "}
+          <span className="line-through text-[#64748b]">€8.14</span>{" "}
+          <span className="font-medium text-[#14b8a6]">€7.43</span>
+        </p>
+      </div>
     </div>
+    // </div>
   );
 }
