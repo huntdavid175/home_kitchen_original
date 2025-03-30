@@ -47,20 +47,17 @@ type DeliveryFormValues = z.infer<typeof deliverySchema>;
 
 const makePaymentIntent = async () => {
   try {
-    const response = await fetch(
-      "https://6976-47-55-56-11.ngrok-free.app/api/payment",
-      {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: "fawaz.dogbe@gmail.com",
-          amount: 1000,
-        }),
-      }
-    );
+    const response = await fetch("http://localhost:3001/api/payment", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "fawaz.dogbe@gmail.com",
+        amount: 1000,
+      }),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -118,15 +115,16 @@ export default function DeliveryForm({
       const response = await makePaymentIntent();
 
       if (response.status === true && paystackHandler) {
-        setLoading(false);
+        // setLoading(false);
         try {
           paystackHandler.newTransaction({
             key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
             email: "fawaz.dogbe@gmail.com",
             amount: 1000,
+            currency: "GHS",
             onSuccess: (transaction: any) => {
               console.log("Payment successful:", transaction);
-              router.push("/subscribe/select-meals");
+              router.replace("/subscribe/select-meals");
             },
             onCancel: () => {
               console.log("Payment cancelled");
@@ -135,6 +133,8 @@ export default function DeliveryForm({
               console.error("Payment error:", error);
             },
           });
+          // paystackHandler.resumeTransaction(response.data.access_code);
+          console.log("completed");
         } catch (error) {
           console.error("Paystack popup error:", error);
           setLoading(false);
