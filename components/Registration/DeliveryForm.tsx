@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +30,7 @@ import {
 import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
 import { useRouter } from "next/navigation";
+import PaystackPop from "@paystack/inline-js";
 
 const deliverySchema = z.object({
   firstName: z.string().min(2, "Please enter a valid first name"),
@@ -98,43 +99,45 @@ export default function DeliveryForm({
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [PaystackPop, setPaystackPop] = useState<any>(null);
-
-  useEffect(() => {
-    // Dynamically import PaystackPop only on the client side
-    import("@paystack/inline-js").then((module) => {
-      setPaystackPop(module.default);
-    });
-  }, []);
 
   const handlePayment = async () => {
     try {
       setLoading(true);
       const response = await makePaymentIntent();
 
-      if (response.status === true && PaystackPop) {
+      if (response.status === true) {
         setLoading(false);
         try {
-          const popup = new PaystackPop();
-          popup.resumeTransaction(response.data.access_code);
+          const handler = new PaystackPop();
+          handler.newTransaction({
+            key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
+            email: "fawaz.dogbe@gmail.com",
+            amount: 1000,
+            currency: "GHS",
+            onSuccess: (transaction: any) => {
+              console.log("Payment successful:", transaction);
+              router.push("/subscribe/select-meals");
+            },
+            onCancel: () => {
+              console.log("Payment cancelled");
+            },
+            onError: (error: any) => {
+              console.error("Payment error:", error);
+            },
+          });
         } catch (error) {
           console.error("Paystack popup error:", error);
           setLoading(false);
         }
       }
     } catch (error) {
-      console.error("Payment error:", error);
-      setLoading(false);
+      console.log(error);
     }
   };
 
-  const onSubmit = async (data: DeliveryFormValues) => {
-    try {
-      await handlePayment();
-    } catch (error) {
-      console.error("Form submission error:", error);
-      setLoading(false);
-    }
+  const onSubmit = (data: DeliveryFormValues) => {
+    console.log(data);
+    handlePayment();
   };
 
   return (
