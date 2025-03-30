@@ -48,7 +48,7 @@ type DeliveryFormValues = z.infer<typeof deliverySchema>;
 const makePaymentIntent = async () => {
   try {
     const response = await fetch(
-      "https://321f-47-55-56-11.ngrok-free.app/api/payment",
+      "https://6976-47-55-56-11.ngrok-free.app/api/payment",
       {
         method: "POST",
         credentials: "include",
