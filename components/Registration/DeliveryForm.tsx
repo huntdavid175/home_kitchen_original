@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,7 +30,6 @@ import {
 import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
 import { useRouter } from "next/navigation";
-import PaystackPop from "@paystack/inline-js";
 
 const deliverySchema = z.object({
   firstName: z.string().min(2, "Please enter a valid first name"),
@@ -52,7 +51,7 @@ const makePaymentIntent = async () => {
       method: "POST",
       credentials: "include",
       headers: {
-        "Content-Type": "application/json", // Add this line
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: "fawaz.dogbe@gmail.com",
@@ -71,7 +70,7 @@ const makePaymentIntent = async () => {
     return data;
   } catch (error) {
     console.error("Payment error:", error);
-    throw error; // Re-throw the error to handle it in the component
+    throw error;
   }
 };
 
@@ -98,15 +97,22 @@ export default function DeliveryForm({
   });
 
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
+  const [PaystackPop, setPaystackPop] = useState<any>(null);
+
+  useEffect(() => {
+    // Dynamically import PaystackPop only on the client side
+    import("@paystack/inline-js").then((module) => {
+      setPaystackPop(module.default);
+    });
+  }, []);
 
   const handlePayment = async () => {
     try {
       setLoading(true);
       const response = await makePaymentIntent();
 
-      if (response.status === true) {
+      if (response.status === true && PaystackPop) {
         setLoading(false);
         try {
           const popup = new PaystackPop();
@@ -114,13 +120,11 @@ export default function DeliveryForm({
         } catch (error) {
           console.error("Paystack popup error:", error);
           setLoading(false);
-          // Handle popup error gracefully
         }
       }
     } catch (error) {
       console.error("Payment error:", error);
       setLoading(false);
-      // Handle payment error gracefully
     }
   };
 
