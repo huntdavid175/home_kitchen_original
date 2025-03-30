@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,7 +30,6 @@ import {
 import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
 import { useRouter } from "next/navigation";
-import PaystackPop from "@paystack/inline-js";
 
 const deliverySchema = z.object({
   firstName: z.string().min(2, "Please enter a valid first name"),
@@ -99,13 +98,21 @@ export default function DeliveryForm({
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [PaystackPop, setPaystackPop] = useState<any>(null);
+
+  useEffect(() => {
+    // Dynamically import PaystackPop only on the client side
+    import("@paystack/inline-js").then((module) => {
+      setPaystackPop(module.default);
+    });
+  }, []);
 
   const handlePayment = async () => {
     try {
       setLoading(true);
       const response = await makePaymentIntent();
 
-      if (response.status === true) {
+      if (response.status === true && PaystackPop) {
         setLoading(false);
         try {
           const handler = new PaystackPop();
@@ -113,7 +120,6 @@ export default function DeliveryForm({
             key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
             email: "fawaz.dogbe@gmail.com",
             amount: 1000,
-            currency: "GHS",
             onSuccess: (transaction: any) => {
               console.log("Payment successful:", transaction);
               router.push("/subscribe/select-meals");
@@ -131,13 +137,18 @@ export default function DeliveryForm({
         }
       }
     } catch (error) {
-      console.log(error);
+      console.error("Payment error:", error);
+      setLoading(false);
     }
   };
 
-  const onSubmit = (data: DeliveryFormValues) => {
-    console.log(data);
-    handlePayment();
+  const onSubmit = async (data: DeliveryFormValues) => {
+    try {
+      await handlePayment();
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setLoading(false);
+    }
   };
 
   return (
