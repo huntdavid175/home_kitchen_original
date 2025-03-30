@@ -30,38 +30,50 @@ type CheckEmailResponse = {
 export async function checkEmail(
   formData: FormData
 ): Promise<CheckEmailResponse> {
-  const supabase = await createClient();
-
   try {
     const validatedData = emailSchema.parse({
       email: formData.get("email"),
     });
 
-    // Check if user exists
-    const { data: existingUser, error } = await supabase
-      .from("users")
-      .select("email")
-      .eq("email", validatedData.email)
-      .single();
+    // Make a fetch request to the local API
+    const response = await fetch(
+      `http://localhost:3001/api/users/${validatedData.email}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    if (error && error.code !== "PGRST116") {
+    const data = await response.json();
+
+    if (response.status === 404) {
+      return {
+        status: "available",
+        message: "Email is available for signup",
+      };
+    }
+
+    if (response.status === 400) {
+      return {
+        status: "error",
+        error: data.error || "Invalid email format",
+      };
+    }
+
+    if (response.status === 500) {
       return {
         status: "error",
         error: "An error occurred while checking email",
       };
     }
 
-    if (existingUser) {
-      return {
-        status: "exists",
-        message:
-          "An account with this email already exists. Please sign in instead.",
-      };
-    }
-
+    // If we get here, the user exists (response.status === 200)
     return {
-      status: "available",
-      message: "Email is available for signup",
+      status: "exists",
+      message:
+        "An account with this email already exists. Please sign in instead.",
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -81,24 +93,54 @@ export async function signup(formData: FormData) {
   const supabase = await createClient();
 
   try {
+    // Log the raw form data
+    console.log("Raw form data:", {
+      email: formData.get("email"),
+      password: formData.get("password"),
+    });
+
     const validatedData = signupSchema.parse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
 
-    const { error } = await supabase.auth.signUp({
+    console.log("Validated data:", validatedData);
+
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email: validatedData.email,
       password: validatedData.password,
     });
 
     if (error) {
+      console.error("Supabase signup error:", error);
       return { error: error.message };
+    }
+
+    // Sync user with our database
+    if (signUpData.user?.id) {
+      const syncResponse = await fetch("http://localhost:3001/api/users/sync", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          supabaseUserId: signUpData.user.id,
+        }),
+      });
+
+      if (!syncResponse.ok) {
+        console.error("Failed to sync user with database");
+        // We don't want to fail the signup if sync fails
+        // Just log the error and continue
+      }
     }
 
     revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
+    console.error("Signup error:", error);
     if (error instanceof z.ZodError) {
+      console.error("Validation errors:", error.errors);
       return { error: error.errors[0].message };
     }
     return { error: "An error occurred during signup" };

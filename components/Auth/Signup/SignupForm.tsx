@@ -54,10 +54,17 @@ export default function SignupForm() {
   const signupForm = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      email: "",
+      email: email,
       password: "",
     },
   });
+
+  // Update form values when email changes
+  React.useEffect(() => {
+    if (email) {
+      signupForm.setValue("email", email);
+    }
+  }, [email, signupForm]);
 
   async function onEmailSubmit(data: EmailFormValues) {
     try {
@@ -106,15 +113,24 @@ export default function SignupForm() {
   }
 
   async function onSignupSubmit(data: SignupFormValues) {
+    console.log(email);
     try {
       setIsLoading(true);
+      console.log("Submitting signup data:", data);
+
       const formData = new FormData();
-      formData.append("email", data.email);
+      formData.append("email", email);
       formData.append("password", data.password);
+
+      console.log("FormData entries:", {
+        email: formData.get("email"),
+        password: formData.get("password"),
+      });
 
       const result = await signup(formData);
 
       if (result.error) {
+        console.error("Signup error:", result.error);
         toast.error(result.error);
         return;
       }
@@ -123,6 +139,7 @@ export default function SignupForm() {
       // Redirect to home page or dashboard
       window.location.href = "/subscribe";
     } catch (error) {
+      console.error("Error in onSignupSubmit:", error);
       toast.error("An error occurred during signup");
     } finally {
       setIsLoading(false);
@@ -311,6 +328,10 @@ export default function SignupForm() {
                               {...field}
                               type="email"
                               value={email}
+                              onChange={(e) => {
+                                field.onChange(e);
+                                signupForm.setValue("email", email);
+                              }}
                               disabled
                               className="h-12 w-full rounded-md border border-gray-300 px-4 bg-gray-50"
                             />
