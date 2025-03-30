@@ -47,17 +47,20 @@ type DeliveryFormValues = z.infer<typeof deliverySchema>;
 
 const makePaymentIntent = async () => {
   try {
-    const response = await fetch("http://localhost:3001/api/payment", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: "fawaz.dogbe@gmail.com",
-        amount: 1000,
-      }),
-    });
+    const response = await fetch(
+      "https://321f-47-55-56-11.ngrok-free.app/api/payment",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "fawaz.dogbe@gmail.com",
+          amount: 1000,
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
