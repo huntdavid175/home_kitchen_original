@@ -98,12 +98,14 @@ export default function DeliveryForm({
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [PaystackPop, setPaystackPop] = useState<any>(null);
+  const [paystackHandler, setPaystackHandler] = useState<any>(null);
 
   useEffect(() => {
     // Dynamically import PaystackPop only on the client side
     import("@paystack/inline-js").then((module) => {
-      setPaystackPop(module.default);
+      const PaystackPop = module.default;
+      const handler = new PaystackPop();
+      setPaystackHandler(handler);
     });
   }, []);
 
@@ -112,11 +114,10 @@ export default function DeliveryForm({
       setLoading(true);
       const response = await makePaymentIntent();
 
-      if (response.status === true && PaystackPop) {
+      if (response.status === true && paystackHandler) {
         setLoading(false);
         try {
-          const handler = new PaystackPop();
-          handler.newTransaction({
+          paystackHandler.newTransaction({
             key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
             email: "fawaz.dogbe@gmail.com",
             amount: 1000,
