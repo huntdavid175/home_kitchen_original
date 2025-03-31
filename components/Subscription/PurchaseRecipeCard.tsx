@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Minus, Plus } from "lucide-react";
 import TimeBadge from "./TimeBadge";
+import { useCart } from "./Cart/CartProvider";
 
 interface RecipeCardProps {
   title: string;
@@ -24,9 +25,15 @@ export default function PurchaseRecipeCard({
   showDetails,
 }: RecipeCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [quantity, setQuantity] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { items, addItem, updateQuantity, removeItem } = useCart();
+
+  // Get the current quantity from cart
+  const cartItem = items.find(
+    (item) => item.id === title.toLowerCase().replace(/\s+/g, "-")
+  );
+  const quantity = cartItem?.quantity || 0;
 
   useEffect(() => {
     if (isHovered) {
@@ -48,7 +55,13 @@ export default function PurchaseRecipeCard({
 
   const handleAddToCart = (event: React.MouseEvent | React.TouchEvent) => {
     event.stopPropagation();
-    setQuantity(1);
+    addItem({
+      id: title.toLowerCase().replace(/\s+/g, "-"),
+      name: title,
+      image: images[0],
+      price: price,
+      quantity: 1,
+    });
   };
 
   const adjustQuantity = (
@@ -58,8 +71,13 @@ export default function PurchaseRecipeCard({
     event.stopPropagation();
     const newQuantity = quantity + amount;
     if (newQuantity >= 0) {
-      setQuantity(newQuantity);
+      updateQuantity(title.toLowerCase().replace(/\s+/g, "-"), newQuantity);
     }
+  };
+
+  const handleRemove = (event: React.MouseEvent | React.TouchEvent) => {
+    event.stopPropagation();
+    removeItem(title.toLowerCase().replace(/\s+/g, "-"));
   };
 
   return (
@@ -161,6 +179,12 @@ export default function PurchaseRecipeCard({
                   <Plus className="w-4 h-4" />
                 </button>
               </div>
+              <button
+                onClick={(e) => handleRemove(e)}
+                className="w-full mt-2 text-xs text-blue-200 hover:text-white transition-colors"
+              >
+                Remove from cart
+              </button>
             </motion.div>
           )}
         </div>

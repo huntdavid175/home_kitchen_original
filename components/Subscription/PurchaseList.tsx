@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import RecipeCard from "@/components/Subscription/PurchaseRecipeCard";
 import RecipeDetailsDialog from "./RecipeDetailsDialog";
 import SubscriptionNav from "./SubscriptionNav";
+import { FloatingCart } from "./Cart/FloatiingCart";
+import { CartProvider } from "./Cart/CartProvider";
 
 const recipes = [
   {
@@ -77,7 +79,6 @@ const recipes = [
 
 export default function PurchaseList() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
-
   const [open, setOpen] = useState(false);
   const [showNutrition, setShowNutrition] = useState(false);
 
@@ -96,72 +97,75 @@ export default function PurchaseList() {
   };
 
   return (
-    <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[140px]">
-      <SubscriptionNav />
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-7xl mx-auto"
-      >
-        {/* <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
-          Our Recipes
-        </h1> */}
-
-        {/* Tag filter */}
-        {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
-          {allTags.map((tag) => (
-            <motion.button
-              key={tag}
-              onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                selectedTag === tag
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 hover:bg-gray-100"
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {tag}
-            </motion.button>
-          ))}
-        </div> */}
-
-        {/* Recipe grid */}
+    <CartProvider>
+      <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[140px]">
+        <SubscriptionNav />
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-7xl mx-auto"
         >
-          {filteredRecipes.map((recipe, index) => (
-            <motion.div
-              key={index}
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.5 }}
-            >
-              <RecipeCard {...recipe} showDetails={setOpenHandler} />
-            </motion.div>
-          ))}
+          {/* <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
+            Our Recipes
+          </h1> */}
+
+          {/* Tag filter */}
+          {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {allTags.map((tag) => (
+              <motion.button
+                key={tag}
+                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  selectedTag === tag
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-gray-700 hover:bg-gray-100"
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {tag}
+              </motion.button>
+            ))}
+          </div> */}
+
+          {/* Recipe grid */}
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1,
+                },
+              },
+            }}
+          >
+            {filteredRecipes.map((recipe, index) => (
+              <motion.div
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5 }}
+              >
+                <RecipeCard {...recipe} showDetails={setOpenHandler} />
+              </motion.div>
+            ))}
+          </motion.div>
         </motion.div>
-      </motion.div>
-      <RecipeDetailsDialog
-        isOpen={open}
-        setIsOpen={setOpenHandler}
-        showNutrition={showNutrition}
-        setShowNutrition={setShowNutritionHandler}
-      />
-    </div>
+        <RecipeDetailsDialog
+          isOpen={open}
+          setIsOpen={setOpenHandler}
+          showNutrition={showNutrition}
+          setShowNutrition={setShowNutritionHandler}
+        />
+        <FloatingCart />
+      </div>
+    </CartProvider>
   );
 }

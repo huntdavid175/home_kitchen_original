@@ -195,7 +195,7 @@ export default function SubscribePage() {
 
     // Save meal plan selection
     localStorage.setItem("selectedMealPlan", JSON.stringify(plan));
-    router.push("/subscribe/checkout");
+    router.push("/subscribe/select-meals");
   };
   // const handleBack = () => {
   //   setSelectedPlan(null);
