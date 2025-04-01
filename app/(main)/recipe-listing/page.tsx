@@ -7,85 +7,55 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import PagePagination from "@/components/Landing/Recipes/PagePagination";
 
-interface Recipe {
+interface Nutrition {
   id: string;
-  title: string;
-  description: string;
-  image: string;
-  categories: string[];
-  time: string;
-  calories: number;
+  nutrition: string;
+  value: string;
+  created_at: string;
 }
 
-const recipes: Recipe[] = [
-  {
-    id: "1",
-    title: "Sesame honey chicken with rice",
-    description:
-      "Sesame honey chicken is a mouth-watering dish from American-Chinese cuisine.",
-    image:
-      "https://www.cleankitchen.ee/cdn/shop/files/a8C361u3tUAUD2xtCZdlA_zaIvtZyhfwv6TbO59A6cU.jpg?v=1722046023&width=1200",
-    categories: ["Poultry", "Recipes"],
-    time: "35 minutes",
-    calories: 641,
-  },
-  {
-    id: "2",
-    title: "Baoburgers with chicken kebab and curry-mango sauce",
-    description:
-      "Steamed bao buns are also great for burger buns. This time, a burger recipe with steamed buns, chicken, and curry-mango sauce.",
-    image:
-      "https://www.cleankitchen.ee/cdn/shop/files/UzbT9ZKHKeqoB-_4b2zeZgSW-wsEtLwj4nqBcoHE_gI.jpg?v=1721743606&width=1200",
-    categories: ["Poultry", "Recipes"],
-    time: "20 minutes",
-    calories: 682,
-  },
-  {
-    id: "3",
-    title: "Crispy chicken in sweet and sour sauce served with rice",
-    description:
-      "Sweet and sour chicken, a favorite of many, is a dish that probably doesn't need much introduction. The rich sweet and sour sauce makes pre-stir-fried chicken simply irresistible. Favorites are created for a reason. It goes without saying that the result is definitely best when made at home and served fresh.",
-    image:
-      "https://www.cleankitchen.ee/cdn/shop/files/ij2GrXD7XdhMLTJdpzNyP6YC46fdpLn1RbOxGT6oZ9k.jpg?v=1722218664&width=1200",
-    categories: ["Poultry", "Recipes"],
-    time: "35 minutes",
-    calories: 508,
-  },
-  {
-    id: "4",
-    title: "Chicken schnitzel with baked potatoes",
-    description:
-      "Classic chicken schnitzel served with baked potatoes and fresh salad.",
-    image:
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-    categories: ["Poultry", "Recipes"],
-    time: "40 minutes",
-    calories: 720,
-  },
-  {
-    id: "5",
-    title: "Chicken lo mein with noodles",
-    description:
-      "A delicious stir-fried noodle dish with tender chicken and vegetables.",
-    image:
-      "https://www.cleankitchen.ee/cdn/shop/files/C_UQBXrDnEhfXMR6t5Ay7WB9zhPm5sa4qfyTUMvNqi4.jpg?v=1738721018&width=1200",
-    categories: ["Poultry", "Recipes"],
-    time: "25 minutes",
-    calories: 550,
-  },
-  {
-    id: "6",
-    title: "Beef steak with mashed potatoes",
-    description:
-      "Perfectly cooked beef steak served with creamy mashed potatoes.",
-    image:
-      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
-    categories: ["Meat", "Recipes"],
-    time: "30 minutes",
-    calories: 850,
-  },
-];
+interface Tag {
+  id: string;
+  name: string;
+  created_at: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+}
+
+interface Recipe {
+  recipe_id: string;
+  recipe_name: string;
+  subname: string;
+  description: string;
+  difficulty: string;
+  cooking_time: string;
+  total_time: string;
+  image_url: string | null;
+  recipe_created_at: string;
+  category: Category;
+  cooking_steps: any[];
+  tags: Tag[];
+  cooking_tools: any[];
+  ingredients: any[];
+  not_shipped_ingredients: any[];
+  nutritions: Nutrition[];
+}
+
+interface PaginationData {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+}
 
 const categories = [
   "Premium",
@@ -124,6 +94,78 @@ const itemVariants = {
 };
 
 export default function RecipeListingPage() {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<PaginationData>({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 20,
+  });
+  const [shouldAnimate, setShouldAnimate] = useState(true);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://localhost:3001/api/recipes?page=${pagination.currentPage}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch recipes");
+        }
+        const { data, pagination: paginationData } = await response.json();
+        console.log("Recipes data:", data);
+        setRecipes(data || []);
+        setPagination({
+          currentPage: paginationData.currentPage,
+          totalPages: paginationData.totalPages,
+          totalItems: paginationData.totalItems,
+          itemsPerPage: paginationData.itemsPerPage,
+        });
+        // Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        // Reset animation
+        setShouldAnimate(false);
+        setTimeout(() => setShouldAnimate(true), 100);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+        toast.error("Failed to load recipes");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipes();
+  }, [pagination.currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setPagination((prev) => ({ ...prev, currentPage: page }));
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6D1D3A] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading recipes...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8 lg:py-12">
@@ -185,22 +227,25 @@ export default function RecipeListingPage() {
               className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
               variants={containerVariants}
               initial="hidden"
-              animate="visible"
+              animate={shouldAnimate ? "visible" : "hidden"}
             >
               {recipes.map((recipe) => (
                 <motion.div
-                  key={recipe.id}
+                  key={recipe.recipe_id}
                   variants={itemVariants}
                   className="flex"
                 >
                   <Link
-                    href={`/recipes/${recipe.id}`}
+                    href={`/recipe-listing/${recipe.recipe_id}`}
                     className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200 w-full"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <Image
-                        src={recipe.image || "/placeholder.svg"}
-                        alt={recipe.title}
+                        src={
+                          recipe.image_url ||
+                          "https://cdn.shopify.com/s/files/1/0273/0993/2644/files/zjfOqW8yc9T2Rl4cCS5jGcvMfK3bJ8te_EvB_R7BU5A_300x200_crop_center@2x.png?v=1741831515"
+                        }
+                        alt={recipe.recipe_name}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -208,17 +253,20 @@ export default function RecipeListingPage() {
                     </div>
                     <div className="p-4 sm:p-6 flex flex-col flex-grow">
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {recipe.categories.map((category) => (
+                        <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+                          {recipe.category.name}
+                        </span>
+                        {recipe.tags.map((tag) => (
                           <span
-                            key={category}
+                            key={tag.id}
                             className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full"
                           >
-                            {category}
+                            {tag.name}
                           </span>
                         ))}
                       </div>
                       <h2 className="text-sm sm:text-base font-semibold mb-2 line-clamp-2 group-hover:text-[#6D1D3A] transition-colors">
-                        {recipe.title}
+                        {recipe.recipe_name}
                       </h2>
                       <p className="text-gray-600 text-xs mb-4 line-clamp-2 flex-grow">
                         {recipe.description}
@@ -226,20 +274,41 @@ export default function RecipeListingPage() {
                       <div className="flex items-center gap-4 text-sm text-gray-500 mt-auto">
                         <div className="flex items-center gap-1.5">
                           <Clock className="w-4 h-4" />
-                          <span className="text-xs">{recipe.time}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5">
-                          <Flame className="w-4 h-4" />
                           <span className="text-xs">
-                            {recipe.calories} kcal
+                            {recipe.total_time} mins
                           </span>
                         </div>
+                        {recipe.nutritions.map(
+                          (nutrition) =>
+                            nutrition.nutrition === "calories" && (
+                              <div
+                                key={nutrition.id}
+                                className="flex items-center gap-1.5"
+                              >
+                                <Flame className="w-4 h-4" />
+                                <span className="text-xs">
+                                  {nutrition.value} kcal
+                                </span>
+                              </div>
+                            )
+                        )}
                       </div>
                     </div>
                   </Link>
                 </motion.div>
               ))}
             </motion.div>
+
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+              <div className="mt-8">
+                <PagePagination
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
