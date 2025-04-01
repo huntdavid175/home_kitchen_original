@@ -113,7 +113,8 @@ export default function DeliveryForm({
   const handlePayment = async () => {
     try {
       setLoading(true);
-      const response = await makePaymentIntent();
+      // const response = await makePaymentIntent();
+      const response = { status: true };
 
       if (response.status === true && paystackHandler) {
         try {
