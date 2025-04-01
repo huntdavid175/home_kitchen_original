@@ -35,16 +35,16 @@ function PaymentSuccessContent() {
           email with your order details shortly.
         </p>
         <div className="space-y-4">
-          <Link href="/dashboard" className="block">
+          <Link href="/user/subscriptions/" className="block">
             <Button className="w-full bg-green-700 hover:bg-green-800">
               Go to Dashboard
             </Button>
           </Link>
-          <Link href="/" className="block">
+          {/* <Link href="/" className="block">
             <Button variant="outline" className="w-full">
               Return to Home
             </Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>
