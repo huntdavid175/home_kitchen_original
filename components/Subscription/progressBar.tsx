@@ -39,7 +39,7 @@ function ProgressBar({ progress }: any) {
             >
               <Check />
             </div>
-            <span className="text-xs text-gray-400">Checkout</span>
+            <span className="text-xs text-gray-400">Select Meals</span>
           </div>
           <div className="flex-1 mx-2 self-start mt-3">
             <div className="h-[2px] bg-gray-200" />
@@ -54,7 +54,7 @@ function ProgressBar({ progress }: any) {
             >
               <Check />
             </div>
-            <span className="text-xs text-gray-400">Select Meals</span>
+            <span className="text-xs text-gray-400">Checkout</span>
           </div>
           {/* <div className="flex-1 mx-2 self-start mt-3">
             <div className="h-[2px] bg-gray-200" />

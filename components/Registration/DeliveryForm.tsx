@@ -99,6 +99,7 @@ export default function DeliveryForm({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [paystackHandler, setPaystackHandler] = useState<any>(null);
+  const [progress, setProgress] = useState(3);
 
   useEffect(() => {
     // Dynamically import PaystackPop only on the client side
@@ -115,27 +116,39 @@ export default function DeliveryForm({
       const response = await makePaymentIntent();
 
       if (response.status === true && paystackHandler) {
-        // setLoading(false);
         try {
+          // Generate a unique order number
+          const timestamp = Date.now();
+          const randomNum = Math.floor(Math.random() * 1000);
+          const orderNumber = `ORD-${timestamp}-${randomNum}`;
+
           paystackHandler.newTransaction({
             key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
             email: "fawaz.dogbe@gmail.com",
             amount: 1000,
             currency: "GHS",
             onSuccess: (transaction: any) => {
+              setProgress(4);
               console.log("Payment successful:", transaction);
-              router.replace("/subscribe/payment-success");
+              const transactionId = transaction.reference;
+              console.log("Transaction ID:", transactionId);
+              console.log("Order Number:", orderNumber);
+
+              // Navigate to success page with both transaction ID and order number
+              router.replace(
+                `/subscribe/payment-success?transactionId=${transactionId}&orderNumber=${orderNumber}`
+              );
             },
             onCancel: () => {
               console.log("Payment cancelled");
+              setLoading(false);
             },
             onError: (error: any) => {
               console.error("Payment error:", error);
               toast.error("Payment failed");
+              setLoading(false);
             },
           });
-          // paystackHandler.resumeTransaction(response.data.access_code);
-          console.log("completed");
         } catch (error) {
           console.error("Paystack popup error:", error);
           setLoading(false);
@@ -158,7 +171,7 @@ export default function DeliveryForm({
 
   return (
     <div className="container mx-auto p-6">
-      <ProgressBar progress={3} />
+      <ProgressBar progress={progress} />
       <div className="max-w-5xl mx-auto grid gap-8 lg:gap-16 pt-16 lg:grid-cols-[1fr,400px]">
         {/* Main Content */}
         <div className="space-y-8">

@@ -24,13 +24,13 @@ export default function PaymentSuccessPage() {
     Date.now() + 2 * 24 * 60 * 60 * 1000
   ).toLocaleDateString();
 
-  // If no order number is provided, redirect to home
-  //   useEffect(() => {
-  //     setMounted(true);
-  //     if (!searchParams.get("orderNumber") && mounted) {
-  //       router.push("/");
-  //     }
-  //   }, [searchParams, router, mounted]);
+  //   If no order number is provided, redirect to home
+  useEffect(() => {
+    setMounted(true);
+    if (!searchParams.get("orderNumber") && mounted) {
+      router.push("/");
+    }
+  }, [searchParams, router, mounted]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">

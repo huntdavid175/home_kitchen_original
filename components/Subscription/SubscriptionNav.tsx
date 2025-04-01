@@ -104,7 +104,7 @@ export default function SubscriptionNav() {
             </span>
           </div>
         </div> */}
-      <ProgressBar progress={4} />
+      <ProgressBar progress={2} />
 
       {/* Categories */}
       <div
