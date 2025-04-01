@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { ShoppingCart, X, Plus, Minus, ChevronUp } from "lucide-react";
 import Image from "next/image";
-
+import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +13,7 @@ export function FloatingCart() {
   const { items, totalItems, totalPrice, updateQuantity, removeItem } =
     useCart();
   const [isMobile, setIsMobile] = useState(false);
-
+  const router = useRouter();
   // Check if we're on a mobile device
   useEffect(() => {
     const checkMobile = () => {
@@ -100,6 +100,8 @@ export function FloatingCart() {
             style={{
               maxWidth: isMobile ? "calc(100vw - 32px)" : "24rem",
               zIndex: 101,
+              bottom: isMobile ? "5rem" : "2rem",
+              right: isMobile ? "1rem" : "2rem",
             }}
           >
             {/* Cart Content */}
@@ -118,7 +120,7 @@ export function FloatingCart() {
             {/* Rest of the cart content */}
             <div
               className={`${
-                isMobile ? "max-h-[60vh]" : "max-h-[50vh]"
+                isMobile ? "max-h-[60vh]" : "max-h-[70vh]"
               } overflow-y-auto`}
             >
               {items.length === 0 ? (
@@ -213,7 +215,10 @@ export function FloatingCart() {
                   <span className="font-medium">Total</span>
                   <span className="font-bold text-red-600">₵{totalPrice}</span>
                 </div>
-                <Button className="w-full bg-green-700 text-white hover:bg-green-800">
+                <Button
+                  className="w-full bg-green-700 text-white hover:bg-green-800"
+                  onClick={() => router.push("/subscribe/checkout")}
+                >
                   Checkout
                 </Button>
               </div>
@@ -224,7 +229,11 @@ export function FloatingCart() {
 
       <motion.button
         onClick={toggleCart}
-        className="fixed bottom-4 right-4 bg-green-700 text-white rounded-full p-3 sm:p-4 shadow-lg flex items-center gap-2 z-[102]"
+        className="fixed bg-green-700 text-white rounded-full p-3 sm:p-4 shadow-lg flex items-center gap-2 z-[102]"
+        style={{
+          bottom: isMobile ? "1rem" : "2rem",
+          right: isMobile ? "1rem" : "2rem",
+        }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         animate={isOpen ? { rotate: 180 } : { rotate: 0 }}

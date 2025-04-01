@@ -30,7 +30,7 @@ import {
 import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
 import { useRouter } from "next/navigation";
-
+import { toast } from "sonner";
 const deliverySchema = z.object({
   firstName: z.string().min(2, "Please enter a valid first name"),
   lastName: z.string().min(2, "Please enter a valid last name"),
@@ -124,13 +124,14 @@ export default function DeliveryForm({
             currency: "GHS",
             onSuccess: (transaction: any) => {
               console.log("Payment successful:", transaction);
-              router.replace("/subscribe/select-meals");
+              router.replace("/subscribe/payment-success");
             },
             onCancel: () => {
               console.log("Payment cancelled");
             },
             onError: (error: any) => {
               console.error("Payment error:", error);
+              toast.error("Payment failed");
             },
           });
           // paystackHandler.resumeTransaction(response.data.access_code);
@@ -158,240 +159,271 @@ export default function DeliveryForm({
   return (
     <div className="container mx-auto p-6">
       <ProgressBar progress={3} />
-      <div className="max-w-5xl mx-auto grid gap-16 pt-16 lg:grid-cols-[1fr,400px]">
-        {/* Delivery Form */}
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="bg-muted/50 flex gap-2 p-4 rounded-lg">
-              <Truck className="w-5 h-5 text-black" />
+      <div className="max-w-5xl mx-auto grid gap-8 lg:gap-16 pt-16 lg:grid-cols-[1fr,400px]">
+        {/* Main Content */}
+        <div className="space-y-8">
+          {/* Delivery Form */}
+          <div className="lg:col-start-1">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                <div className="bg-muted/50 flex gap-2 p-4 rounded-lg">
+                  <Truck className="w-5 h-5 text-black" />
+                  <span className="text-muted-foreground text-sm">
+                    Please provide your address to see available delivery dates.
+                  </span>
+                </div>
+
+                <div className="grid gap-6">
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>First name *</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input {...field} placeholder="First name" />
+                              {!form.formState.errors.firstName &&
+                                field.value.length >= 2 && (
+                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
+                                )}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Last name *</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input {...field} placeholder="Last name" />
+                              {!form.formState.errors.lastName &&
+                                field.value.length >= 2 && (
+                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
+                                )}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="address1"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address line 1 *</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input {...field} placeholder="Address line 1" />
+                            {!form.formState.errors.address1 &&
+                              field.value.length >= 5 && (
+                                <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
+                              )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="address2"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address line 2</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input {...field} placeholder="Address line 2" />
+                            {!form.formState.errors.address2 &&
+                              typeof field.value === "string" &&
+                              field.value.length > 0 && (
+                                <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
+                              )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="city"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>City *</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input {...field} placeholder="City" />
+                              {!form.formState.errors.city &&
+                                field.value.length >= 2 && (
+                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
+                                )}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>ZIP code *</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input {...field} placeholder="ZIP code" />
+                              {!form.formState.errors.zipCode &&
+                                field.value.length >= 5 && (
+                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
+                                )}
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone number *</FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Input
+                              {...field}
+                              type="tel"
+                              placeholder="Phone number"
+                            />
+                            {!form.formState.errors.phone &&
+                              field.value.length >= 10 && (
+                                <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
+                              )}
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="deliveryInstruction"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Delivery Instruction</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select delivery instruction" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="concierge">
+                              Leave with concierge
+                            </SelectItem>
+                            <SelectItem value="door">Leave at door</SelectItem>
+                            <SelectItem value="hand">Hand delivery</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* <FormField
+                    control={form.control}
+                    name="sameAsBilling"
+                    render={({ field }) => (
+                      <FormItem className="flex items-center space-x-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <label
+                          htmlFor="billing"
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          Billing is the same as delivery
+                        </label>
+                      </FormItem>
+                    )}
+                  /> */}
+                </div>
+              </form>
+            </Form>
+          </div>
+
+          {/* Shipping Info */}
+          <div>
+            <Card className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Shipping</h2>
+                <Button variant="link" className="text-green-700">
+                  Edit
+                </Button>
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm mb-2">Delivery details</h3>
+                <p className="text-muted-foreground text-xs">
+                  <span className="font-semibold text-black">
+                    First delivery:
+                  </span>
+                  <br /> Tuesday, February 25 09:00-20:00
+                </p>
+                <p className="text-muted-foreground text-xs mt-2">
+                  <span className="font-semibold text-black">
+                    Delivery instructions:
+                  </span>
+                  <br /> Tuesday, February 25 09:00-20:00
+                </p>
+                <p className="text-muted-foreground text-xs mt-2">
+                  <span className="font-semibold text-black">
+                    Subsequent deliveries:
+                  </span>
+                  <br /> Tuesday, February 25 09:00-20:00
+                </p>
+              </div>
+            </Card>
+            <div className="bg-muted/50 flex gap-2 p-4 rounded-lg mt-4">
               <span className="text-muted-foreground text-sm">
-                Please provide your address to see available delivery dates.
+                You can{" "}
+                <span className="font-semibold text-black">
+                  skip a week or cancel
+                </span>{" "}
+                at any time.
               </span>
             </div>
+          </div>
+        </div>
 
-            <div className="grid gap-6">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First name *</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input {...field} placeholder="First name" />
-                          {!form.formState.errors.firstName &&
-                            field.value.length >= 2 && (
-                              <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                            )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last name *</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input {...field} placeholder="Last name" />
-                          {!form.formState.errors.lastName &&
-                            field.value.length >= 2 && (
-                              <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                            )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="address1"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address line 1 *</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input {...field} placeholder="Address line 1" />
-                        {!form.formState.errors.address1 &&
-                          field.value.length >= 5 && (
-                            <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                          )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address2"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address line 2</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input {...field} placeholder="Address line 2" />
-                        {!form.formState.errors.address2 &&
-                          typeof field.value === "string" &&
-                          field.value.length > 0 && (
-                            <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                          )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>City *</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input {...field} placeholder="City" />
-                          {!form.formState.errors.city &&
-                            field.value.length >= 2 && (
-                              <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                            )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="zipCode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ZIP code *</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input {...field} placeholder="ZIP code" />
-                          {!form.formState.errors.zipCode &&
-                            field.value.length >= 5 && (
-                              <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                            )}
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone number *</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Input
-                          {...field}
-                          type="tel"
-                          placeholder="Phone number"
-                        />
-                        {!form.formState.errors.phone &&
-                          field.value.length >= 10 && (
-                            <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                          )}
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="deliveryInstruction"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Delivery Instruction</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select delivery instruction" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="concierge">
-                          Leave with concierge
-                        </SelectItem>
-                        <SelectItem value="door">Leave at door</SelectItem>
-                        <SelectItem value="hand">Hand delivery</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* <FormField
-                control={form.control}
-                name="sameAsBilling"
-                render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <label
-                      htmlFor="billing"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Billing is the same as delivery
-                    </label>
-                  </FormItem>
-                )}
-              /> */}
-            </div>
-
-            <div className="flex gap-4">
-              <Button
-                type="button"
-                onClick={handleBack}
-                className="w-full bg-red-200 text-black hover:bg-red-300"
-                size="lg"
-              >
-                Go back
-              </Button>
-              <Button
-                type="submit"
-                className="w-full bg-green-700 hover:bg-green-800"
-                size="lg"
-                disabled={loading}
-              >
-                {loading ? "Processing..." : "Checkout"}
-              </Button>
-            </div>
-          </form>
-        </Form>
-
-        {/* Order Summary */}
-        <div className="space-y-6">
+        {/* Order Summary and Checkout */}
+        <div className="space-y-6 lg:col-start-2 lg:sticky lg:top-24 lg:self-start">
           <Card className="p-6">
             <h2 className="text-2xl font-semibold mb-6">Order summary</h2>
             <div className="space-y-4">
@@ -472,46 +504,26 @@ export default function DeliveryForm({
               <span className="font-medium">as few as 6 days</span>
             </div>
           </div>
-          <div>
-            <Card className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Shipping</h2>
-                <Button variant="link" className="text-green-700">
-                  Edit
-                </Button>
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm mb-2">Delivery details</h3>
-                <p className="text-muted-foreground text-xs">
-                  <span className="font-semibold text-black">
-                    First delivery:
-                  </span>
-                  <br /> Tuesday, February 25 09:00-20:00
-                </p>
-                <p className="text-muted-foreground text-xs mt-2">
-                  <span className="font-semibold text-black">
-                    Delivery instructions:
-                  </span>
-                  <br /> Tuesday, February 25 09:00-20:00
-                </p>
-                <p className="text-muted-foreground text-xs mt-2">
-                  <span className="font-semibold text-black">
-                    Subsequent deliveries:
-                  </span>
-                  <br /> Tuesday, February 25 09:00-20:00
-                </p>
-              </div>
-            </Card>
-            <div className="bg-muted/50 flex gap-2 p-4 rounded-lg ">
-              <span className="text-muted-foreground text-sm">
-                You can{" "}
-                <span className="font-semibold text-black">
-                  {" "}
-                  skip a week or cancel{" "}
-                </span>{" "}
-                at any time.
-              </span>
-            </div>
+
+          {/* Checkout Buttons */}
+          <div className="flex gap-4">
+            <Button
+              type="button"
+              onClick={handleBack}
+              className="w-full bg-red-200 text-black hover:bg-red-300"
+              size="lg"
+            >
+              Go back
+            </Button>
+            <Button
+              type="submit"
+              className="w-full bg-green-700 hover:bg-green-800"
+              size="lg"
+              disabled={loading}
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              {loading ? "Processing..." : "Checkout"}
+            </Button>
           </div>
         </div>
       </div>
