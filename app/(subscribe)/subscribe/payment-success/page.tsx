@@ -31,8 +31,8 @@ function PaymentSuccessContent() {
           </div>
         </div>
         <p className="text-gray-600 mb-8">
-          Thank you for your subscription. We'll send you a confirmation email
-          with your order details shortly.
+          Thank you for your subscription. We&apos;ll send you a confirmation
+          email with your order details shortly.
         </p>
         <div className="space-y-4">
           <Link href="/dashboard" className="block">
