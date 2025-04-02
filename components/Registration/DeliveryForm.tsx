@@ -31,6 +31,11 @@ import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useAtom } from "jotai";
+import { mealPlanAtom, cartAtom } from "@/store/atoms";
+import { createClient } from "@/utils/supabase/client";
+import { useCart } from "@/components/Subscription/Cart/CartProvider";
+
 const deliverySchema = z.object({
   firstName: z.string().min(2, "Please enter a valid first name"),
   lastName: z.string().min(2, "Please enter a valid last name"),
@@ -77,19 +82,60 @@ const makePaymentIntent = async () => {
 const createSubscription = async (orderData: {
   transactionId: string;
   deliveryDetails: DeliveryFormValues;
+  mealPlan: any;
+  cartItems: any[];
 }) => {
   try {
+    // Get Supabase client
+    const supabase = createClient();
+
+    // Get the current session
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      console.error("No active session:", sessionError);
+      throw new Error("Authentication required");
+    }
+
+    // Transform cart items to match the required format with hardcoded meal ID
+    const selectedMeals = orderData.cartItems.map((item) => ({
+      meal_kit_id: "daa81877-1f4a-4828-80b4-0a242d370986",
+      quantity: item.quantity,
+    }));
+
+    // Create subscription payload
+    const subscriptionPayload = {
+      meals_per_week: orderData.mealPlan.mealsPerWeek,
+      people_count: orderData.mealPlan.people,
+      price: orderData.mealPlan.prices.firstBoxTotal,
+      preferred_delivery_day: "Monday", // Hardcoded as requested
+      next_delivery_date: "2024-03-25", // Hardcoded as requested
+      start_date: "2024-03-18", // Hardcoded as requested
+      next_billing_date: "2024-04-18", // Hardcoded as requested
+      payment_method: "credit_card", // Hardcoded as requested
+      transaction_id: orderData.transactionId,
+      selected_meals: selectedMeals,
+    };
+
+    console.log("Creating subscription with payload:", subscriptionPayload);
+
     const response = await fetch("http://localhost:3001/api/subscriptions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify(orderData),
+      body: JSON.stringify(subscriptionPayload),
       credentials: "include", // Include cookies for authentication
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create subscription");
+      const errorData = await response.json();
+      console.error("Subscription creation failed:", errorData);
+      throw new Error(errorData.message || "Failed to create subscription");
     }
 
     return await response.json();
@@ -106,6 +152,15 @@ export default function DeliveryForm({
   handleNext: () => void;
   handleBack: () => void;
 }) {
+  const [mealPlan] = useAtom(mealPlanAtom);
+  const [cartItems] = useAtom(cartAtom);
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    console.log("DeliveryForm - Selected Meal Plan:", mealPlan);
+    console.log("DeliveryForm - Cart Items:", cartItems);
+  }, [mealPlan, cartItems]);
+
   const form = useForm<DeliveryFormValues>({
     resolver: zodResolver(deliverySchema),
     defaultValues: {
@@ -157,15 +212,20 @@ export default function DeliveryForm({
                 // Get form data
                 const formData = form.getValues();
 
-                // Create subscription in database and get the order number
+                // Create subscription in database with meal plan and cart data
                 const subscriptionResponse = await createSubscription({
                   transactionId,
                   deliveryDetails: formData,
+                  mealPlan,
+                  cartItems,
                 });
 
-                // Navigate to success page with both transaction ID and order number
+                // Clear the cart after successful payment
+                clearCart();
+
+                // Navigate to success page with both transaction ID and subscription ID
                 router.replace(
-                  `/subscribe/payment-success?transactionId=${transactionId}&orderNumber=${subscriptionResponse.orderNumber}`
+                  `/subscribe/payment-success?transactionId=${transactionId}&orderNumber=${subscriptionResponse.id}`
                 );
               } catch (error) {
                 console.error("Error creating subscription:", error);

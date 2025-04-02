@@ -1,20 +1,8 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  type ReactNode,
-} from "react";
-
-export type CartItem = {
-  id: string;
-  name: string;
-  image: string;
-  price: number;
-  quantity: number;
-};
+import { createContext, useContext, useEffect, type ReactNode } from "react";
+import { useAtom } from "jotai";
+import { cartAtom, type CartItem } from "@/store/atoms";
 
 type CartContextType = {
   items: CartItem[];
@@ -29,7 +17,7 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useAtom(cartAtom);
 
   // Calculate totals
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);

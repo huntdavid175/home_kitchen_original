@@ -6,6 +6,8 @@ import { Check, Tag, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "./progressBar";
 import BrowseMenuCTA from "./BrowseMenuCTA";
+import { useAtom } from "jotai";
+import { mealPlanAtom } from "@/store/atoms";
 
 const PRICE_PER_SERVING = 11.49;
 const SHIPPING_COST = 10.99;
@@ -16,31 +18,40 @@ export default function MealPlanSelection({
 }: {
   handlePlanSelect: any;
 }) {
-  const [people, setPeople] = useState(4);
+  const [mealPlan, setMealPlan] = useAtom(mealPlanAtom);
   const [discount, setDiscount] = useState(true);
-  const [mealsPerWeek, setMealsPerWeek] = useState(3);
-  const [prices, setPrices] = useState({
-    boxPrice: 0,
-    pricePerServing: 0,
-    firstBoxTotal: 0,
-    discount: 0,
-  });
 
   useEffect(() => {
-    const totalServings = people * mealsPerWeek;
+    console.log("MealPlanSelection - Current meal plan:", mealPlan);
+  }, [mealPlan]);
+
+  useEffect(() => {
+    const totalServings = mealPlan.people * mealPlan.mealsPerWeek;
     const originalBoxPrice = totalServings * PRICE_PER_SERVING;
     const discountedBoxPrice = originalBoxPrice * (1 - DISCOUNT_PERCENTAGE);
     const discountedPricePerServing = discountedBoxPrice / totalServings;
     const firstBoxTotal = discountedBoxPrice + SHIPPING_COST;
     const discount = originalBoxPrice - discountedBoxPrice + SHIPPING_COST;
 
-    setPrices({
-      boxPrice: discountedBoxPrice,
-      pricePerServing: discountedPricePerServing,
-      firstBoxTotal: firstBoxTotal,
-      discount: discount,
+    console.log("Calculating prices:", {
+      totalServings,
+      originalBoxPrice,
+      discountedBoxPrice,
+      discountedPricePerServing,
+      firstBoxTotal,
+      discount,
     });
-  }, [people, mealsPerWeek]);
+
+    setMealPlan((prev) => ({
+      ...prev,
+      prices: {
+        boxPrice: discountedBoxPrice,
+        pricePerServing: discountedPricePerServing,
+        firstBoxTotal: firstBoxTotal,
+        discount: discount,
+      },
+    }));
+  }, [mealPlan.people, mealPlan.mealsPerWeek]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -85,9 +96,11 @@ export default function MealPlanSelection({
                 {[2, 4, 6].map((num) => (
                   <button
                     key={num}
-                    onClick={() => setPeople(num)}
+                    onClick={() =>
+                      setMealPlan((prev) => ({ ...prev, people: num }))
+                    }
                     className={`py-3 border-2 rounded-lg text-sm ${
-                      people === num
+                      mealPlan.people === num
                         ? "border-[#067a46] bg-[#f8faf6] font-medium text-[#067a46]"
                         : "hover:border-[#067a46] hover:bg-[#f8faf6]"
                     }`}
@@ -104,9 +117,11 @@ export default function MealPlanSelection({
                 {[3, 4, 5].map((num) => (
                   <button
                     key={num}
-                    onClick={() => setMealsPerWeek(num)}
+                    onClick={() =>
+                      setMealPlan((prev) => ({ ...prev, mealsPerWeek: num }))
+                    }
                     className={`py-3 border-2 rounded-lg text-sm ${
-                      mealsPerWeek === num
+                      mealPlan.mealsPerWeek === num
                         ? "border-[#067a46] bg-[#f8faf6] font-medium text-[#067a46]"
                         : "hover:border-[#067a46] hover:bg-[#f8faf6]"
                     }`}
@@ -123,17 +138,18 @@ export default function MealPlanSelection({
             <h2 className="font-bold text-lg">Price Summary</h2>
             <div className="space-y-2">
               <div className="text-sm">
-                {mealsPerWeek} meals for {people} people per week
+                {mealPlan.mealsPerWeek} meals for {mealPlan.people} people per
+                week
               </div>
               <div className="text-gray-600 text-sm">
-                {mealsPerWeek * people} total servings
+                {mealPlan.mealsPerWeek * mealPlan.people} total servings
               </div>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between">
                 <span className="text-sm">Box price</span>
                 <span className="font-medium text-sm">
-                  ₵{prices.boxPrice.toFixed(2)}
+                  ₵{mealPlan.prices.boxPrice.toFixed(2)}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -143,7 +159,7 @@ export default function MealPlanSelection({
                     ₵{PRICE_PER_SERVING.toFixed(2)}
                   </span>
                   <span className="text-[#c92020] text-sm font-medium">
-                    ₵{prices.pricePerServing.toFixed(2)}
+                    ₵{mealPlan.prices.pricePerServing.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -163,14 +179,14 @@ export default function MealPlanSelection({
                   <span className="font-medium text-sm">First box total</span>
                   <div className="text-right">
                     <div className="inline-block bg-[#c92020] text-white text-xs px-2 py-0.5 rounded mb-1">
-                      ₵{prices.discount.toFixed(2)} off
+                      ₵{mealPlan.prices.discount.toFixed(2)} off
                     </div>
                     <div>
                       <span className="line-through text-gray-400 mr-2 text-lg">
-                        ₵{(prices.boxPrice + SHIPPING_COST).toFixed(2)}
+                        ₵{(mealPlan.prices.boxPrice + SHIPPING_COST).toFixed(2)}
                       </span>
                       <span className="text-[#c92020] font-bold text-lg">
-                        ₵{prices.firstBoxTotal.toFixed(2)}
+                        ₵{mealPlan.prices.firstBoxTotal.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -184,9 +200,9 @@ export default function MealPlanSelection({
               className="w-full py-6 text-base bg-[#067a46] hover:bg-[#056835]"
               onClick={() =>
                 handlePlanSelect({
-                  people,
-                  mealsPerWeek,
-                  total: prices.firstBoxTotal,
+                  people: mealPlan.people,
+                  mealsPerWeek: mealPlan.mealsPerWeek,
+                  total: mealPlan.prices.firstBoxTotal,
                 })
               }
             >

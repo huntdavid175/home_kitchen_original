@@ -97,21 +97,20 @@ export default function PurchaseList() {
   };
 
   return (
-    <CartProvider>
-      <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[140px]">
-        <SubscriptionNav />
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-7xl mx-auto"
-        >
-          {/* <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
+    <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[140px]">
+      <SubscriptionNav />
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-7xl mx-auto"
+      >
+        {/* <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
             Our Recipes
           </h1> */}
 
-          {/* Tag filter */}
-          {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {/* Tag filter */}
+        {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
             {allTags.map((tag) => (
               <motion.button
                 key={tag}
@@ -129,43 +128,42 @@ export default function PurchaseList() {
             ))}
           </div> */}
 
-          {/* Recipe grid */}
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: {
-                  staggerChildren: 0.1,
-                },
+        {/* Recipe grid */}
+        <motion.div
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1,
               },
-            }}
-          >
-            {filteredRecipes.map((recipe, index) => (
-              <motion.div
-                key={index}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.5 }}
-              >
-                <RecipeCard {...recipe} showDetails={setOpenHandler} />
-              </motion.div>
-            ))}
-          </motion.div>
+            },
+          }}
+        >
+          {filteredRecipes.map((recipe, index) => (
+            <motion.div
+              key={index}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.5 }}
+            >
+              <RecipeCard {...recipe} showDetails={setOpenHandler} />
+            </motion.div>
+          ))}
         </motion.div>
-        <RecipeDetailsDialog
-          isOpen={open}
-          setIsOpen={setOpenHandler}
-          showNutrition={showNutrition}
-          setShowNutrition={setShowNutritionHandler}
-        />
-        <FloatingCart />
-      </div>
-    </CartProvider>
+      </motion.div>
+      <RecipeDetailsDialog
+        isOpen={open}
+        setIsOpen={setOpenHandler}
+        showNutrition={showNutrition}
+        setShowNutrition={setShowNutritionHandler}
+      />
+      <FloatingCart />
+    </div>
   );
 }

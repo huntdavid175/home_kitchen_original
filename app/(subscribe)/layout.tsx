@@ -1,5 +1,6 @@
 import Footer from "@/components/Landing/Footer";
 import "../globals.css";
+import { CartProvider } from "@/components/Subscription/Cart/CartProvider";
 
 export const metadata = {
   title: "Next.js",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <>
       <main lang="en">
-        <div className="min-h-screen">{children}</div>
+        <CartProvider>
+          <div className="min-h-screen">{children}</div>
+        </CartProvider>
       </main>
       <Footer />
     </>
