@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
       "media.blueapron.com",
       "images.pexels.com",
       "media.istockphoto.com",
+      "images.everyplate.com",
     ], // Add your image domains here
   },
 };

@@ -105,7 +105,7 @@ const createSubscription = async (orderData: {
 
     // Transform cart items to match the required format with hardcoded meal ID
     const selectedMeals = orderData.cartItems.map((item) => ({
-      meal_kit_id: "daa81877-1f4a-4828-80b4-0a242d370986",
+      meal_kit_id: item.id,
       quantity: item.quantity,
     }));
 
@@ -231,7 +231,7 @@ export default function DeliveryForm({
 
                 // Navigate to success page with both transaction ID and subscription ID
                 router.replace(
-                  `/subscribe/payment-success?transactionId=${transactionId}&orderNumber=${subscriptionResponse.id}`
+                  `/subscribe/order-confirmation?transactionId=${transactionId}&orderNumber=${subscriptionResponse.id}`
                 );
               } catch (error) {
                 console.error("Error creating subscription:", error);
