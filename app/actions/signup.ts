@@ -37,7 +37,7 @@ export async function checkEmail(
 
     // Make a fetch request to the local API
     const response = await fetch(
-      `http://localhost:3001/api/users/${validatedData.email}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/users/${validatedData.email}`,
       {
         method: "GET",
         headers: {
@@ -118,15 +118,18 @@ export async function signup(formData: FormData) {
 
     // Sync user with our database
     if (signUpData.user?.id) {
-      const syncResponse = await fetch("http://localhost:3001/api/users/sync", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          supabaseUserId: signUpData.user.id,
-        }),
-      });
+      const syncResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/users/sync`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            supabaseUserId: signUpData.user.id,
+          }),
+        }
+      );
 
       if (!syncResponse.ok) {
         console.error("Failed to sync user with database");

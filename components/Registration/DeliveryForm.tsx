@@ -52,17 +52,20 @@ type DeliveryFormValues = z.infer<typeof deliverySchema>;
 
 const makePaymentIntent = async () => {
   try {
-    const response = await fetch("http://localhost:3001/api/payment", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: "fawaz.dogbe@gmail.com",
-        amount: 1000,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/payment`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "fawaz.dogbe@gmail.com",
+          amount: 1000,
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -122,15 +125,18 @@ const createSubscription = async (orderData: {
 
     console.log("Creating subscription with payload:", subscriptionPayload);
 
-    const response = await fetch("http://localhost:3001/api/subscriptions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${session.access_token}`,
-      },
-      body: JSON.stringify(subscriptionPayload),
-      credentials: "include", // Include cookies for authentication
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/subscriptions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(subscriptionPayload),
+        credentials: "include", // Include cookies for authentication
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();

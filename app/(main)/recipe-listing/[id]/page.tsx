@@ -79,7 +79,7 @@ export default function RecipeDetailsPage() {
     const fetchRecipe = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/recipes/${params.id}`
+          `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/recipes/${params.id}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch recipe");

@@ -110,7 +110,7 @@ export default function RecipeListingPage() {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:3001/api/recipes?page=${pagination.currentPage}`
+          `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/recipes?page=${pagination.currentPage}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch recipes");
