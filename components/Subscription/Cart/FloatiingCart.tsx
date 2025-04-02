@@ -91,7 +91,7 @@ export function FloatingCart() {
                 duration: 0.4,
               },
             }}
-            className={`fixed bottom-20 right-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden
+            className={`fixed bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden
               ${
                 isMobile
                   ? "w-[calc(100vw-32px)] max-h-[80vh]"
@@ -100,13 +100,15 @@ export function FloatingCart() {
             style={{
               maxWidth: isMobile ? "calc(100vw - 32px)" : "24rem",
               zIndex: 101,
-              bottom: isMobile ? "5rem" : "2rem",
+              bottom: isMobile ? "5rem" : "6rem",
               right: isMobile ? "1rem" : "2rem",
             }}
           >
             {/* Cart Content */}
             <div className="p-3 sm:p-4 border-b dark:border-gray-700 flex justify-between items-center">
-              <h3 className="font-semibold text-base sm:text-lg">Your Cart</h3>
+              <h3 className="font-semibold text-base sm:text-base">
+                Your Cart
+              </h3>
               <Button
                 variant="ghost"
                 size="icon"
@@ -120,7 +122,7 @@ export function FloatingCart() {
             {/* Rest of the cart content */}
             <div
               className={`${
-                isMobile ? "max-h-[60vh]" : "max-h-[70vh]"
+                isMobile ? "max-h-[50vh]" : "max-h-[60vh]"
               } overflow-y-auto`}
             >
               {items.length === 0 ? (
@@ -160,11 +162,11 @@ export function FloatingCart() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium text-sm sm:text-base">
+                        <h4 className="font-medium text-sm sm:text-sm">
                           {item.name}
                         </h4>
-                        <p className="text-orange-700 font-semibold mt-1 text-sm sm:text-base">
-                          ₵{item.price}
+                        <p className="text-orange-700 font-semibold mt-1 text-sm sm:text-sm">
+                          ₵{item.price.toFixed(2)}
                         </p>
                         <div className="flex items-center mt-2">
                           <Button
@@ -180,7 +182,7 @@ export function FloatingCart() {
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
-                          <span className="mx-2 w-6 sm:w-8 text-center text-sm">
+                          <span className="mx-2 w-6 sm:w-8 text-center text-xs">
                             {item.quantity}
                           </span>
                           <Button
@@ -196,7 +198,7 @@ export function FloatingCart() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="ml-auto text-muted-foreground text-xs sm:text-sm py-0 h-6 sm:h-8"
+                            className="ml-auto text-muted-foreground text-xs sm:text-xs py-0 h-6 sm:h-8"
                             onClick={() => removeItem(item.id)}
                           >
                             Remove
@@ -212,8 +214,10 @@ export function FloatingCart() {
             {items.length > 0 && (
               <div className="p-3 sm:p-4 border-t dark:border-gray-700">
                 <div className="flex justify-between mb-3 sm:mb-4">
-                  <span className="font-medium">Total</span>
-                  <span className="font-bold text-red-600">₵{totalPrice}</span>
+                  <span className="font-medium text-sm">Total</span>
+                  <span className="font-semibold text-sm text-red-600">
+                    ₵{totalPrice.toFixed(2)}
+                  </span>
                 </div>
                 <Button
                   className="w-full bg-green-700 text-white hover:bg-green-800"

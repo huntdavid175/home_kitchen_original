@@ -1,100 +1,154 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import RecipeCard from "@/components/Subscription/PurchaseRecipeCard";
 import RecipeDetailsDialog from "./RecipeDetailsDialog";
 import SubscriptionNav from "./SubscriptionNav";
 import { FloatingCart } from "./Cart/FloatiingCart";
 import { CartProvider } from "./Cart/CartProvider";
+import { toast } from "sonner";
+import PagePagination from "../Landing/Recipes/PagePagination";
 
-const recipes = [
-  {
-    title: "Cream cheese stuffed pork tenderloin with baked beets",
-    images: [
-      "https://www.cleankitchen.ee/cdn/shop/files/a8C361u3tUAUD2xtCZdlA_zaIvtZyhfwv6TbO59A6cU.jpg?v=1722046023&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/ij2GrXD7XdhMLTJdpzNyP6YC46fdpLn1RbOxGT6oZ9k.jpg?v=1722218664&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-    ],
-    price: 10.13,
-    cookingTime: 35,
-    tags: ["FAMILY FRIENDLY"],
-  },
-  {
-    title: "Grilled salmon with asparagus and lemon butter sauce",
-    images: [
-      "https://www.cleankitchen.ee/cdn/shop/files/UzbT9ZKHKeqoB-_4b2zeZgSW-wsEtLwj4nqBcoHE_gI.jpg?v=1721743606&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/ij2GrXD7XdhMLTJdpzNyP6YC46fdpLn1RbOxGT6oZ9k.jpg?v=1722218664&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-    ],
-    price: 12.5,
-    cookingTime: 25,
-    tags: ["HEALTHY", "GLUTEN-FREE"],
-  },
-  {
-    title: "Vegetarian lasagna with roasted vegetables",
-    images: [
-      "https://www.cleankitchen.ee/cdn/shop/files/ij2GrXD7XdhMLTJdpzNyP6YC46fdpLn1RbOxGT6oZ9k.jpg?v=1722218664&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
-    ],
-    price: 9.75,
-    cookingTime: 45,
-    tags: ["VEGETARIAN", "FAMILY FRIENDLY"],
-  },
-  {
-    title: "Spicy chicken stir-fry with mixed vegetables",
-    images: [
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
-    ],
-    price: 11.25,
-    cookingTime: 30,
-    tags: ["SPICY", "QUICK"],
-  },
-  {
-    title: "Spicy chicken stir-fry with mixed vegetables",
-    images: [
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
-    ],
-    price: 11.25,
-    cookingTime: 30,
-    tags: ["SPICY", "QUICK"],
-  },
-  {
-    title: "Spicy chicken stir-fry with mixed vegetables",
-    images: [
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/cro5gZYstLPTVjH0nT5sl71qylNtjnMv9Q8Wyh4GPWk.jpg?v=1722272721&width=1200",
-      "https://www.cleankitchen.ee/cdn/shop/files/PECHYKTxgiO1eQG0YrK-Niki4jCwmvX-wKifw60fOrM.jpg?v=1722823520&width=1200",
-    ],
-    price: 11.25,
-    cookingTime: 30,
-    tags: ["SPICY", "QUICK"],
-  },
-];
+interface Nutrition {
+  id: string;
+  nutrition: string;
+  value: string;
+  created_at: string;
+}
+
+interface Tag {
+  id: string;
+  name: string;
+  created_at: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+}
+
+interface Recipe {
+  recipe_id: string;
+  recipe_name: string;
+  subname: string;
+  description: string;
+  difficulty: string;
+  cooking_time: string;
+  total_time: string;
+  image_url: string | null;
+  recipe_created_at: string;
+  category: Category;
+  cooking_steps: any[];
+  tags: Tag[];
+  cooking_tools: any[];
+  ingredients: any[];
+  not_shipped_ingredients: any[];
+  nutritions: Nutrition[];
+}
+
+interface PaginationData {
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+}
 
 export default function PurchaseList() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [showNutrition, setShowNutrition] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [pagination, setPagination] = useState<PaginationData>({
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 20,
+  });
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://localhost:3001/api/recipes?page=${pagination.currentPage}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch recipes");
+        }
+        const { data, pagination: paginationData } = await response.json();
+        console.log("Recipes data:", data);
+        setRecipes(data || []);
+        setPagination({
+          currentPage: paginationData.currentPage,
+          totalPages: paginationData.totalPages,
+          totalItems: paginationData.totalItems,
+          itemsPerPage: paginationData.itemsPerPage,
+        });
+        // Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+        toast.error("Failed to load recipes");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipes();
+  }, [pagination.currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setPagination((prev) => ({ ...prev, currentPage: page }));
+  };
 
   const filteredRecipes = selectedTag
-    ? recipes.filter((recipe) => recipe.tags.includes(selectedTag))
+    ? recipes.filter((recipe) =>
+        recipe.tags.some((tag) => tag.name === selectedTag)
+      )
     : recipes;
 
-  const allTags = Array.from(new Set(recipes.flatMap((recipe) => recipe.tags)));
+  const allTags = Array.from(
+    new Set(recipes.flatMap((recipe) => recipe.tags.map((tag) => tag.name)))
+  );
 
-  const setOpenHandler = (open: boolean) => {
+  const setOpenHandler = (open: boolean, recipe?: Recipe) => {
     setOpen(open);
+    if (recipe) {
+      setSelectedRecipe(recipe);
+    }
   };
 
   const setShowNutritionHandler = (show: boolean) => {
     setShowNutrition(show);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6D1D3A] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading recipes...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button onClick={() => window.location.reload()}>Try Again</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-2 px-4 sm:px-6 lg:px-8 pt-[140px]">
@@ -105,28 +159,24 @@ export default function PurchaseList() {
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
-        {/* <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
-            Our Recipes
-          </h1> */}
-
         {/* Tag filter */}
-        {/* <div className="flex flex-wrap justify-center gap-2 mb-8">
-            {allTags.map((tag) => (
-              <motion.button
-                key={tag}
-                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  selectedTag === tag
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-100"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {tag}
-              </motion.button>
-            ))}
-          </div> */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {allTags.map((tag) => (
+            <motion.button
+              key={tag}
+              onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                selectedTag === tag
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {tag}
+            </motion.button>
+          ))}
+        </div>
 
         {/* Recipe grid */}
         <motion.div
@@ -145,23 +195,43 @@ export default function PurchaseList() {
         >
           {filteredRecipes.map((recipe, index) => (
             <motion.div
-              key={index}
+              key={recipe.recipe_id}
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: 0.5 }}
             >
-              <RecipeCard {...recipe} showDetails={setOpenHandler} />
+              <RecipeCard
+                {...recipe}
+                title={recipe.recipe_name}
+                images={[
+                  recipe.image_url ||
+                    "https://www.cleankitchen.ee/cdn/shop/files/UzbT9ZKHKeqoB-_4b2zeZgSW-wsEtLwj4nqBcoHE_gI.jpg?v=1721743606&width=1200",
+                ]}
+                price={10.13} // You might want to add price to your recipe interface
+                cookingTime={parseInt(recipe.cooking_time)}
+                tags={recipe.tags.map((tag) => tag.name)}
+                showDetails={(open) => setOpenHandler(open, recipe)}
+                id={recipe.recipe_id}
+              />
             </motion.div>
           ))}
         </motion.div>
+        <div className="flex justify-center my-8">
+          <PagePagination
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </motion.div>
       <RecipeDetailsDialog
         isOpen={open}
         setIsOpen={setOpenHandler}
         showNutrition={showNutrition}
         setShowNutrition={setShowNutritionHandler}
+        recipe={selectedRecipe}
       />
       <FloatingCart />
     </div>

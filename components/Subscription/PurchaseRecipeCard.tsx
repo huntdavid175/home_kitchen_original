@@ -14,6 +14,7 @@ interface RecipeCardProps {
   cookingTime: number;
   tags: string[];
   showDetails: (open: boolean) => void;
+  id: string;
 }
 
 export default function PurchaseRecipeCard({
@@ -23,6 +24,7 @@ export default function PurchaseRecipeCard({
   cookingTime,
   tags,
   showDetails,
+  id,
 }: RecipeCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -30,9 +32,7 @@ export default function PurchaseRecipeCard({
   const { items, addItem, updateQuantity, removeItem } = useCart();
 
   // Get the current quantity from cart
-  const cartItem = items.find(
-    (item) => item.id === title.toLowerCase().replace(/\s+/g, "-")
-  );
+  const cartItem = items.find((item) => item.id === id);
   const quantity = cartItem?.quantity || 0;
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function PurchaseRecipeCard({
   const handleAddToCart = (event: React.MouseEvent | React.TouchEvent) => {
     event.stopPropagation();
     addItem({
-      id: title.toLowerCase().replace(/\s+/g, "-"),
+      id: id,
       name: title,
       image: images[0],
       price: price,
@@ -71,13 +71,13 @@ export default function PurchaseRecipeCard({
     event.stopPropagation();
     const newQuantity = quantity + amount;
     if (newQuantity >= 0) {
-      updateQuantity(title.toLowerCase().replace(/\s+/g, "-"), newQuantity);
+      updateQuantity(id, newQuantity);
     }
   };
 
   const handleRemove = (event: React.MouseEvent | React.TouchEvent) => {
     event.stopPropagation();
-    removeItem(title.toLowerCase().replace(/\s+/g, "-"));
+    removeItem(id);
   };
 
   return (
