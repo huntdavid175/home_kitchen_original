@@ -46,9 +46,9 @@ const PagePagination = ({
               e.preventDefault();
               onPageChange(currentPage - 1);
             }}
-            className={
+            className={`${
               currentPage === 1 ? "pointer-events-none opacity-50" : ""
-            }
+            } hover:bg-green-100 hover:text-green-700`}
           />
         </PaginationItem>
 
@@ -61,6 +61,11 @@ const PagePagination = ({
                 onPageChange(page);
               }}
               isActive={currentPage === page}
+              className={`${
+                currentPage === page
+                  ? "bg-green-700 text-white hover:bg-green-800"
+                  : "hover:bg-green-100 hover:text-green-700"
+              }`}
             >
               {page}
             </PaginationLink>
@@ -74,9 +79,9 @@ const PagePagination = ({
               e.preventDefault();
               onPageChange(currentPage + 1);
             }}
-            className={
+            className={`${
               currentPage === totalPages ? "pointer-events-none opacity-50" : ""
-            }
+            } hover:bg-green-100 hover:text-green-700`}
           />
         </PaginationItem>
       </PaginationContent>

@@ -9,7 +9,7 @@ import NavigationContainer from "@/components/Landing/Navigation/NavigationConta
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Meal Prep Service",
+  title: "Home",
   description: "Healthy, delicious meals delivered to your door",
 };
 

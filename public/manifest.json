@@ -1,0 +1,16 @@
+{
+  "name": "House Kitchen",
+  "short_name": "House Kitchen",
+  "description": "Delicious Meals, Delivered to Your Door",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#006B5F",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
