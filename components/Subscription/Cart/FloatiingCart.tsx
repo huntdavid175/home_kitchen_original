@@ -219,7 +219,7 @@ export function FloatingCart() {
                   className="w-full bg-green-700 text-white hover:bg-green-800"
                   onClick={() => router.push("/subscribe/checkout")}
                 >
-                  Checkout
+                  Proceed
                 </Button>
               </div>
             )}

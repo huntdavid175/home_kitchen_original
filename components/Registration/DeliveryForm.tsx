@@ -74,6 +74,31 @@ const makePaymentIntent = async () => {
   }
 };
 
+const createSubscription = async (orderData: {
+  transactionId: string;
+  deliveryDetails: DeliveryFormValues;
+}) => {
+  try {
+    const response = await fetch("http://localhost:3001/api/subscriptions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+      credentials: "include", // Include cookies for authentication
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create subscription");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Subscription creation error:", error);
+    throw error;
+  }
+};
+
 export default function DeliveryForm({
   handleNext,
   handleBack,
@@ -113,32 +138,42 @@ export default function DeliveryForm({
   const handlePayment = async () => {
     try {
       setLoading(true);
-      // const response = await makePaymentIntent();
-      const response = { status: true };
+      const response = await makePaymentIntent();
 
       if (response.status === true && paystackHandler) {
         try {
-          // Generate a unique order number
-          const timestamp = Date.now();
-          const randomNum = Math.floor(Math.random() * 1000);
-          const orderNumber = `ORD-${timestamp}-${randomNum}`;
-
           paystackHandler.newTransaction({
             key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
             email: "fawaz.dogbe@gmail.com",
             amount: 1000,
             currency: "GHS",
-            onSuccess: (transaction: any) => {
-              setProgress(4);
-              console.log("Payment successful:", transaction);
-              const transactionId = transaction.reference;
-              console.log("Transaction ID:", transactionId);
-              console.log("Order Number:", orderNumber);
+            onSuccess: async (transaction: any) => {
+              try {
+                setProgress(4);
+                console.log("Payment successful:", transaction);
+                const transactionId = transaction.reference;
+                console.log("Transaction ID:", transactionId);
 
-              // Navigate to success page with both transaction ID and order number
-              router.replace(
-                `/subscribe/payment-success?transactionId=${transactionId}&orderNumber=${orderNumber}`
-              );
+                // Get form data
+                const formData = form.getValues();
+
+                // Create subscription in database and get the order number
+                const subscriptionResponse = await createSubscription({
+                  transactionId,
+                  deliveryDetails: formData,
+                });
+
+                // Navigate to success page with both transaction ID and order number
+                router.replace(
+                  `/subscribe/payment-success?transactionId=${transactionId}&orderNumber=${subscriptionResponse.orderNumber}`
+                );
+              } catch (error) {
+                console.error("Error creating subscription:", error);
+                toast.error(
+                  "Payment successful but failed to create subscription. Please contact support."
+                );
+                setLoading(false);
+              }
             },
             onCancel: () => {
               console.log("Payment cancelled");
