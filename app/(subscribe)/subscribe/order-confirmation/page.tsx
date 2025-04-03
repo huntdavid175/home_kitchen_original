@@ -1,12 +1,12 @@
+import React, { Suspense } from "react";
 import OrderConfirmationPage from "@/components/Subscription/OrderConfirmationPage";
-import React from "react";
 
-const page = () => {
+const Page = () => {
   return (
-    <div>
+    <Suspense fallback={<div>Loading...</div>}>
       <OrderConfirmationPage />
-    </div>
+    </Suspense>
   );
 };
 
-export default page;
+export default Page;
