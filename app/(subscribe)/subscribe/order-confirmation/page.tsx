@@ -160,8 +160,8 @@ export default function OrderConfirmationPage() {
           </div>
           <h1 className="text-3xl font-bold">Order Placed Successfully!</h1>
           <p className="mt-2 text-muted-foreground">
-            Thank you for your order. We've received your meal kit selection and
-            are preparing it for delivery.
+            Thank you for your order. We&apos;ve received your meal kit
+            selection and are preparing it for delivery.
           </p>
         </div>
 
@@ -262,7 +262,7 @@ export default function OrderConfirmationPage() {
         </div>
 
         {/* What's next section with visual cards */}
-        <h2 className="mb-6 text-xl font-semibold">What's Next?</h2>
+        <h2 className="mb-6 text-xl font-semibold">What&apos;s Next?</h2>
         <div className="grid gap-6 md:grid-cols-3">
           <Card>
             <CardContent className="p-6 text-center">
@@ -294,7 +294,7 @@ export default function OrderConfirmationPage() {
               </div>
               <h3 className="mb-2 font-semibold">Delivery Updates</h3>
               <p className="text-sm text-muted-foreground">
-                You'll receive email updates as your order is prepared and
+                You&apos;ll receive email updates as your order is prepared and
                 shipped to your door.
               </p>
             </CardContent>
