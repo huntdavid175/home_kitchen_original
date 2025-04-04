@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   AlertTriangle,
@@ -37,6 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createClient } from "@/utils/supabase/client";
 
 interface Meal {
   id: number;
@@ -72,7 +73,6 @@ interface TempSelectedMeals {
 }
 
 export default function SubscriptionOverview() {
-  // This would come from your API in a real app
   const [hasMealsSelected, setHasMealsSelected] = useState(false);
   const [isSelectingMeals, setIsSelectingMeals] = useState(false);
   const [selectedMeals, setSelectedMeals] = useState<number[]>([]);
@@ -81,6 +81,47 @@ export default function SubscriptionOverview() {
   const [deliveryFilter, setDeliveryFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const deliveriesPerPage = 5;
+
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      try {
+        const supabase = createClient();
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError) {
+          console.error("Error getting session:", sessionError);
+          return;
+        }
+
+        if (!session?.access_token) {
+          console.error("No access token found");
+          return;
+        }
+
+        const response = await fetch(
+          "http://localhost:3001/api/subscriptions?limit=5",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+              Authorization: `Bearer ${session.access_token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+        console.log("Subscription data:", data);
+      } catch (error) {
+        console.error("Error fetching subscriptions:", error);
+      }
+    };
+
+    fetchSubscriptions();
+  }, []);
 
   const availableMeals: Meal[] = [
     {

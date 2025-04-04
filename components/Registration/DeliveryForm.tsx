@@ -82,75 +82,6 @@ const makePaymentIntent = async () => {
   }
 };
 
-const createSubscription = async (orderData: {
-  transactionId: string;
-  deliveryDetails: DeliveryFormValues;
-  mealPlan: any;
-  cartItems: any[];
-}) => {
-  try {
-    // Get Supabase client
-    const supabase = createClient();
-
-    // Get the current session
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-      console.error("No active session:", sessionError);
-      throw new Error("Authentication required");
-    }
-
-    // Transform cart items to match the required format with hardcoded meal ID
-    const selectedMeals = orderData.cartItems.map((item) => ({
-      meal_kit_id: item.id,
-      quantity: item.quantity,
-    }));
-
-    // Create subscription payload
-    const subscriptionPayload = {
-      meals_per_week: orderData.mealPlan.mealsPerWeek,
-      people_count: orderData.mealPlan.people,
-      price: orderData.mealPlan.prices.firstBoxTotal,
-      preferred_delivery_day: "Monday", // Hardcoded as requested
-      next_delivery_date: "2024-03-25", // Hardcoded as requested
-      start_date: "2024-03-18", // Hardcoded as requested
-      next_billing_date: "2024-04-18", // Hardcoded as requested
-      payment_method: "credit_card", // Hardcoded as requested
-      transaction_id: orderData.transactionId,
-      selected_meals: selectedMeals,
-    };
-
-    console.log("Creating subscription with payload:", subscriptionPayload);
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/subscriptions`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify(subscriptionPayload),
-        credentials: "include", // Include cookies for authentication
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Subscription creation failed:", errorData);
-      throw new Error(errorData.message || "Failed to create subscription");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error("Subscription creation error:", error);
-    throw error;
-  }
-};
-
 export default function DeliveryForm({
   handleNext,
   handleBack,
@@ -161,12 +92,10 @@ export default function DeliveryForm({
   const [mealPlan] = useAtom(mealPlanAtom);
   const [cartItems] = useAtom(cartAtom);
   const { clearCart } = useCart();
-
-  useEffect(() => {
-    console.log("DeliveryForm - Selected Meal Plan:", mealPlan);
-    console.log("DeliveryForm - Cart Items:", cartItems);
-  }, [mealPlan, cartItems]);
-
+  const [loading, setLoading] = useState(false);
+  const [paystackHandler, setPaystackHandler] = useState<any>(null);
+  const [progress, setProgress] = useState(3);
+  const router = useRouter();
   const form = useForm<DeliveryFormValues>({
     resolver: zodResolver(deliverySchema),
     defaultValues: {
@@ -182,10 +111,78 @@ export default function DeliveryForm({
     },
   });
 
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [paystackHandler, setPaystackHandler] = useState<any>(null);
-  const [progress, setProgress] = useState(3);
+  const createPendingSubscription = async (
+    deliveryDetails: DeliveryFormValues
+  ) => {
+    try {
+      // Get Supabase client
+      const supabase = createClient();
+
+      // Get the current session
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
+
+      if (sessionError || !session) {
+        console.error("No active session:", sessionError);
+        throw new Error("Authentication required");
+      }
+
+      // Transform cart items to match the required format
+      const selectedMeals = cartItems.map((item: any) => ({
+        meal_kit_id: item.id,
+        quantity: item.quantity,
+      }));
+
+      // Create subscription payload
+      const subscriptionPayload = {
+        meals_per_week: mealPlan.mealsPerWeek,
+        people_count: mealPlan.people,
+        price: mealPlan.prices.firstBoxTotal.toString(),
+        preferred_delivery_day: "Monday", // Hardcoded as requested
+        next_delivery_date: "2024-03-25", // Hardcoded as requested
+        start_date: "2024-03-18", // Hardcoded as requested
+        next_billing_date: "2024-04-18", // Hardcoded as requested
+        payment_method: "credit_card", // Hardcoded as requested
+        selected_meals: selectedMeals,
+      };
+
+      console.log(
+        "Creating pending subscription with payload:",
+        subscriptionPayload
+      );
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/subscriptions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify(subscriptionPayload),
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Subscription creation failed:", errorData);
+        throw new Error(errorData.message || "Failed to create subscription");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Subscription creation error:", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    console.log("DeliveryForm - Selected Meal Plan:", mealPlan);
+    console.log("DeliveryForm - Cart Items:", cartItems);
+  }, [mealPlan, cartItems]);
 
   useEffect(() => {
     // Dynamically import PaystackPop only on the client side
@@ -199,9 +196,16 @@ export default function DeliveryForm({
   const handlePayment = async () => {
     try {
       setLoading(true);
-      const response = await makePaymentIntent();
 
-      if (response.status === true && paystackHandler) {
+      // First, create a pending subscription
+      const formData = form.getValues();
+      const subscriptionResponse = await createPendingSubscription(formData);
+      const subscriptionId = subscriptionResponse.id;
+
+      // Then process the payment
+      const paymentResponse = await makePaymentIntent();
+
+      if (paymentResponse.status === true && paystackHandler) {
         try {
           paystackHandler.newTransaction({
             key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
@@ -213,30 +217,18 @@ export default function DeliveryForm({
                 setProgress(4);
                 console.log("Payment successful:", transaction);
                 const transactionId = transaction.reference;
-                console.log("Transaction ID:", transactionId);
-
-                // Get form data
-                const formData = form.getValues();
-
-                // Create subscription in database with meal plan and cart data
-                const subscriptionResponse = await createSubscription({
-                  transactionId,
-                  deliveryDetails: formData,
-                  mealPlan,
-                  cartItems,
-                });
 
                 // Clear the cart after successful payment
                 clearCart();
 
-                // Navigate to success page with both transaction ID and subscription ID
+                // Navigate to success page
                 router.replace(
-                  `/subscribe/order-confirmation?transactionId=${transactionId}&orderNumber=${subscriptionResponse.id}`
+                  `/subscribe/order-confirmation?transactionId=${transactionId}&orderNumber=${subscriptionId}`
                 );
               } catch (error) {
-                console.error("Error creating subscription:", error);
+                console.error("Error after payment:", error);
                 toast.error(
-                  "Payment successful but failed to create subscription. Please contact support."
+                  "Payment successful but there was an error. Please contact support."
                 );
                 setLoading(false);
               }
@@ -257,7 +249,8 @@ export default function DeliveryForm({
         }
       }
     } catch (error) {
-      console.error("Payment error:", error);
+      console.error("Payment process error:", error);
+      toast.error("An error occurred during the payment process");
       setLoading(false);
     }
   };
