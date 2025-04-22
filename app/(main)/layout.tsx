@@ -20,12 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <main>
-      <div className={cn("min-h-screen bg-white")}>
+      <div className={cn("min-h-screen bg-gray-50")}>
         {/* Main site header */}
         <NavigationContainer />
 
         {/* Main content */}
-        <main>{children}</main>
+        <main className="max-w-6xl mx-auto py-16">{children}</main>
 
         {/* Main site footer */}
         <Footer />

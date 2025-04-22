@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
       "images.pexels.com",
       "media.istockphoto.com",
       "images.everyplate.com",
+      "www.howsweeteats.com",
+      "www.budgetbytes.com",
+      "whatsgabycooking.com",
+      "assets.epicurious.com",
     ], // Add your image domains here
   },
 };

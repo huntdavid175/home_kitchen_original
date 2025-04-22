@@ -1,12 +1,11 @@
 "use client";
 
 import { DashboardTabs } from "@/components/User/Dashboard/DashBoardTabs";
-import { RecentOrders } from "@/components/User/Dashboard/RecentOrders";
-import { AccountSummary } from "@/components/User/Dashboard/AccountSummary";
+import { OrdersList } from "@/components/User/Dashboard/OrderList";
 import { useEffect, useState } from "react";
 
-// Add page transition animation to the main dashboard page
-export default function DashboardPage() {
+// Add page transition animation to the orders page
+export default function OrdersPage() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -14,9 +13,9 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <DashboardTabs defaultTab="dashboard">
+    <DashboardTabs defaultTab="orders">
       <div
-        className={`flex flex-col gap-8 ${
+        className={`${
           isLoaded
             ? "animate-[fadeIn_0.5s_cubic-bezier(0.22,1,0.36,1)]"
             : "opacity-0"
@@ -34,8 +33,7 @@ export default function DashboardPage() {
             }
           }
         `}</style>
-        <AccountSummary />
-        <RecentOrders />
+        <OrdersList />
       </div>
     </DashboardTabs>
   );

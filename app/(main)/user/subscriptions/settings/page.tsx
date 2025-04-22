@@ -1,12 +1,10 @@
 "use client";
 
 import { DashboardTabs } from "@/components/User/Dashboard/DashBoardTabs";
-import { RecentOrders } from "@/components/User/Dashboard/RecentOrders";
-import { AccountSummary } from "@/components/User/Dashboard/AccountSummary";
+import { AccountSettings } from "@/components/User/Dashboard/AccountSettings";
 import { useEffect, useState } from "react";
 
-// Add page transition animation to the main dashboard page
-export default function DashboardPage() {
+export default function SettingsPage() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -14,9 +12,9 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <DashboardTabs defaultTab="dashboard">
+    <DashboardTabs defaultTab="settings">
       <div
-        className={`flex flex-col gap-8 ${
+        className={`${
           isLoaded
             ? "animate-[fadeIn_0.5s_cubic-bezier(0.22,1,0.36,1)]"
             : "opacity-0"
@@ -34,8 +32,7 @@ export default function DashboardPage() {
             }
           }
         `}</style>
-        <AccountSummary />
-        <RecentOrders />
+        <AccountSettings />
       </div>
     </DashboardTabs>
   );
