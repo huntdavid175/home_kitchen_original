@@ -111,9 +111,7 @@ export default function DeliveryForm({
     },
   });
 
-  const createPendingSubscription = async (
-    deliveryDetails: DeliveryFormValues
-  ) => {
+  const createPendingOrder = async (deliveryDetails: DeliveryFormValues) => {
     try {
       // Get Supabase client
       const supabase = createClient();
@@ -130,22 +128,27 @@ export default function DeliveryForm({
       }
 
       // Transform cart items to match the required format
+      console.log("Cart items:", cartItems);
       const selectedMeals = cartItems.map((item: any) => ({
-        meal_kit_id: item.id,
+        recipe_id: item.id,
         quantity: item.quantity,
+        price: item.price,
       }));
 
       // Create subscription payload
       const subscriptionPayload = {
-        meals_per_week: mealPlan.mealsPerWeek,
-        people_count: mealPlan.people,
-        price: mealPlan.prices.firstBoxTotal.toString(),
-        preferred_delivery_day: "Monday", // Hardcoded as requested
-        next_delivery_date: "2024-03-25", // Hardcoded as requested
-        start_date: "2024-03-18", // Hardcoded as requested
-        next_billing_date: "2024-04-18", // Hardcoded as requested
+        // meals_per_week: mealPlan.mealsPerWeek,
+        // people_count: mealPlan.people,
+        // price: mealPlan.prices.firstBoxTotal.toString(),
+        // preferred_delivery_day: "Monday", // Hardcoded as requested
+        // next_delivery_date: "2024-03-25", // Hardcoded as requested
+        delivery_date: "2024-03-18", // Hardcoded as requested
+        delivery_instruction: form.getValues().deliveryInstruction,
+        delivery_address: `${form.getValues().address1}, ${
+          form.getValues().address2
+        }, ${form.getValues().city}, ${form.getValues().zipCode}`,
         payment_method: "credit_card", // Hardcoded as requested
-        selected_meals: selectedMeals,
+        items: selectedMeals,
       };
 
       console.log(
@@ -154,7 +157,7 @@ export default function DeliveryForm({
       );
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/subscriptions`,
+        `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/orders`,
         {
           method: "POST",
           headers: {
@@ -179,10 +182,10 @@ export default function DeliveryForm({
     }
   };
 
-  useEffect(() => {
-    console.log("DeliveryForm - Selected Meal Plan:", mealPlan);
-    console.log("DeliveryForm - Cart Items:", cartItems);
-  }, [mealPlan, cartItems]);
+  // useEffect(() => {
+  //   console.log("DeliveryForm - Selected Meal Plan:", mealPlan);
+  //   console.log("DeliveryForm - Cart Items:", cartItems);
+  // }, [mealPlan, cartItems]);
 
   useEffect(() => {
     // Dynamically import PaystackPop only on the client side
@@ -199,8 +202,9 @@ export default function DeliveryForm({
 
       // First, create a pending subscription
       const formData = form.getValues();
-      const subscriptionResponse = await createPendingSubscription(formData);
-      const subscriptionId = subscriptionResponse.id;
+      const orderResponse = await createPendingOrder(formData);
+      const orderId = orderResponse.order.id;
+      console.log("Order ID:", orderResponse);
 
       // Then process the payment
       const paymentResponse = await makePaymentIntent();
@@ -223,7 +227,7 @@ export default function DeliveryForm({
 
                 // Navigate to success page
                 router.replace(
-                  `/subscribe/order-confirmation?transactionId=${transactionId}&orderNumber=${subscriptionId}`
+                  `/subscribe/order-confirmation?transactionId=${transactionId}&orderNumber=${orderId}`
                 );
               } catch (error) {
                 console.error("Error after payment:", error);

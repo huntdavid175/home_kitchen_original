@@ -26,7 +26,7 @@ interface Recipe {
   cooking_time: string;
 }
 
-interface SelectedMeal {
+interface Item {
   id: string;
   recipe: Recipe;
   quantity: number;
@@ -58,14 +58,16 @@ interface Subscription {
   people_count: number;
   price: string;
   preferred_delivery_day: string;
-  next_delivery_date: string;
+  delivery_date: string;
+  delivery_instruction: string;
+  delivery_address: string;
   status: string;
   start_date: string;
   end_date: string | null;
   next_billing_date: string;
   created_at: string;
   updated_at: string;
-  selected_meals: SelectedMeal[];
+  items: Item[];
   deliveries: Delivery[];
   payment: Payment;
 }
@@ -103,7 +105,7 @@ export default function OrderConfirmationPage() {
         }
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/subscriptions/${subscriptionId}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/orders/${subscriptionId}`,
           {
             headers: {
               Authorization: `Bearer ${session.access_token}`,
@@ -116,6 +118,7 @@ export default function OrderConfirmationPage() {
         }
 
         const data = await response.json();
+        console.log("Subscription data:", data);
         setSubscription(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -190,10 +193,7 @@ export default function OrderConfirmationPage() {
                   <h3 className="font-medium">Estimated Delivery</h3>
                 </div>
                 <p className="text-sm">
-                  {format(
-                    new Date(subscription.next_delivery_date),
-                    "MMMM d, yyyy"
-                  )}
+                  {format(new Date(subscription.delivery_date), "MMMM d, yyyy")}
                 </p>
               </div>
 
@@ -203,7 +203,7 @@ export default function OrderConfirmationPage() {
                   <h3 className="font-medium">Delivery Address</h3>
                 </div>
                 <p className="text-sm">
-                  {subscription.deliveries[0]?.address ||
+                  {subscription.delivery_address ||
                     "Address will be updated soon"}
                 </p>
               </div>
@@ -216,7 +216,7 @@ export default function OrderConfirmationPage() {
                   <h3 className="font-medium">Order Summary</h3>
                 </div>
                 <div className="grid gap-2">
-                  {subscription.selected_meals.map((meal) => (
+                  {subscription.items.map((meal: any) => (
                     <div key={meal.id} className="flex justify-between text-sm">
                       <span>
                         {meal.quantity} × {meal.recipe.name}
@@ -224,8 +224,7 @@ export default function OrderConfirmationPage() {
                       <span>
                         $
                         {(
-                          Number(subscription.price) /
-                          subscription.selected_meals.length
+                          Number(meal.price) / subscription.items.length
                         ).toFixed(2)}
                       </span>
                     </div>

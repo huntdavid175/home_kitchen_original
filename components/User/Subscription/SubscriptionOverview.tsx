@@ -82,6 +82,8 @@ export default function SubscriptionOverview() {
   const [currentPage, setCurrentPage] = useState(1);
   const deliveriesPerPage = 5;
 
+  const [subscriptions, setSubscriptions] = useState<any[]>([]);
+
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
@@ -115,6 +117,7 @@ export default function SubscriptionOverview() {
 
         const data = await response.json();
         console.log("Subscription data:", data);
+        setSubscriptions(data);
       } catch (error) {
         console.error("Error fetching subscriptions:", error);
       }
