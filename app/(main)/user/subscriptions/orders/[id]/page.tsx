@@ -1,14 +1,15 @@
 import { DashboardTabs } from "@/components/User/Dashboard/DashBoardTabs";
 import { OrderDetails } from "@/components/User/Dashboard/OrderDetails";
 
-export default async function OrderDetailsPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function OrderDetailsPage({ params }: PageProps) {
+  const resolvedParams = await params;
   return (
     <DashboardTabs defaultTab="orders">
-      <OrderDetails orderId={params.id} />
+      <OrderDetails orderId={resolvedParams.id} />
     </DashboardTabs>
   );
 }
