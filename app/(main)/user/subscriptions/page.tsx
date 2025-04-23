@@ -1,42 +1,30 @@
-"use client";
+import SummaryPage from "@/components/User/Dashboard/SummaryPage";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-import { DashboardTabs } from "@/components/User/Dashboard/DashBoardTabs";
-import { RecentOrders } from "@/components/User/Dashboard/RecentOrders";
-import { AccountSummary } from "@/components/User/Dashboard/AccountSummary";
-import { useEffect, useState } from "react";
+// Revalidate every 60 seconds
+export const revalidate = 60;
 
 // Add page transition animation to the main dashboard page
-export default function DashboardPage() {
-  const [isLoaded, setIsLoaded] = useState(false);
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  if (!session) {
+    redirect("/login");
+  }
 
-  return (
-    <DashboardTabs defaultTab="dashboard">
-      <div
-        className={`flex flex-col gap-8 ${
-          isLoaded
-            ? "animate-[fadeIn_0.5s_cubic-bezier(0.22,1,0.36,1)]"
-            : "opacity-0"
-        }`}
-      >
-        <style jsx global>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}</style>
-        <AccountSummary />
-        <RecentOrders />
-      </div>
-    </DashboardTabs>
-  );
+  const stats = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/orders/stats`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      // next: { revalidate: 60 }, // Also revalidate the fetch request
+    }
+  ).then((res) => res.json());
+
+  return <SummaryPage stats={stats} />;
 }

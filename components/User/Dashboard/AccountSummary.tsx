@@ -7,7 +7,7 @@ import { Package, User, Settings, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export function AccountSummary() {
+export function AccountSummary({ totalOrders }: { totalOrders: number }) {
   // Add ripple effect to buttons
   const addRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
     const button = event.currentTarget;
@@ -80,7 +80,7 @@ export function AccountSummary() {
             </div>
           </CardHeader>
           <CardContent className="pt-6">
-            <div className="text-3xl font-bold">12</div>
+            <div className="text-3xl font-bold">{totalOrders}</div>
             <div className="mt-4 flex items-center justify-between">
               <p className="text-xs text-muted-foreground">Since you joined</p>
               <Button

@@ -16,30 +16,31 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ArrowRight, Eye } from "lucide-react";
 
-export function RecentOrders() {
-  const orders = [
-    {
-      id: "ORD-7291",
-      date: "April 11, 2023",
-      status: "Delivered",
-      meals: 4,
-      total: "$59.96",
-    },
-    {
-      id: "ORD-6384",
-      date: "April 4, 2023",
-      status: "Preparing",
-      meals: 3,
-      total: "$44.97",
-    },
-    {
-      id: "ORD-5127",
-      date: "March 28, 2023",
-      status: "Cancelled",
-      meals: 4,
-      total: "$59.96",
-    },
-  ];
+export function RecentOrders({ recentOrders }: { recentOrders: any }) {
+  const orders = recentOrders;
+  //    [
+  //     {
+  //       id: "ORD-7291",
+  //       date: "April 11, 2023",
+  //       status: "Delivered",
+  //       meals: 4,
+  //       total: "$59.96",
+  //     },
+  //     {
+  //       id: "ORD-6384",
+  //       date: "April 4, 2023",
+  //       status: "Preparing",
+  //       meals: 3,
+  //       total: "$44.97",
+  //     },
+  //     {
+  //       id: "ORD-5127",
+  //       date: "March 28, 2023",
+  //       status: "Cancelled",
+  //       meals: 4,
+  //       total: "$59.96",
+  //     },
+  //   ];
 
   // Add ripple effect to buttons
   const addRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -138,7 +139,7 @@ export function RecentOrders() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order, index) => (
+              {orders.map((order: any, index: number) => (
                 <TableRow
                   key={order.id}
                   className="transition-all duration-300 hover:bg-gray-50 hover:scale-[1.01] opacity-0 animate-[fadeIn_0.5s_cubic-bezier(0.22,1,0.36,1)_forwards]"
@@ -148,35 +149,40 @@ export function RecentOrders() {
                     {order.id}
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100">
-                    {order.date}
+                    {new Date(order.created_at).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100">
                     <Badge
                       variant="outline"
                       className={`rounded-full px-3 py-1 text-xs font-medium ${
-                        order.status === "Delivered"
+                        order.status.toLowerCase() === "delivered"
                           ? "bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-700 animate-[pulse_2s_infinite]"
-                          : order.status === "Preparing"
+                          : order.status.toLowerCase() === "preparing"
                           ? "bg-purple-50 text-purple-700 hover:bg-purple-50 hover:text-purple-700 animate-[pulse_2s_infinite]"
-                          : order.status === "Pending"
+                          : order.status.toLowerCase() === "pending"
                           ? "bg-amber-50 text-amber-700 hover:bg-amber-50 hover:text-amber-700 animate-[pulse_2s_infinite]"
-                          : order.status === "Confirmed"
+                          : order.status.toLowerCase() === "confirmed"
                           ? "bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-700 animate-[pulse_2s_infinite]"
-                          : order.status === "Ready"
+                          : order.status.toLowerCase() === "ready"
                           ? "bg-teal-50 text-teal-700 hover:bg-teal-50 hover:text-teal-700 animate-[pulse_2s_infinite]"
-                          : order.status === "Cancelled"
+                          : order.status.toLowerCase() === "cancelled"
                           ? "bg-red-50 text-red-700 hover:bg-red-50 hover:text-red-700"
                           : ""
                       }`}
                     >
-                      {order.status}
+                      {order.status.charAt(0).toUpperCase() +
+                        order.status.slice(1)}
                     </Badge>
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100">
-                    {order.meals}
+                    {order.items.length}
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100 text-right font-medium">
-                    {order.total}
+                    ${order.total_price}
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100">
                     <Button
