@@ -70,7 +70,7 @@ export function AccountSettings() {
 
         <TabsContent value="profile" className="mt-0 space-y-6">
           <Card className="border-none shadow-lg overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+            <CardHeader className="bg-gradient-to-r from-yellow-100 to-green-300">
               <CardTitle>Personal Information</CardTitle>
               <CardDescription>Update your personal details</CardDescription>
             </CardHeader>
@@ -120,7 +120,7 @@ export function AccountSettings() {
           </Card>
 
           <Card className="border-none shadow-lg overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+            <CardHeader className="bg-gradient-to-r from-yellow-100 to-green-300">
               <CardTitle>Password</CardTitle>
               <CardDescription>Change your password</CardDescription>
             </CardHeader>

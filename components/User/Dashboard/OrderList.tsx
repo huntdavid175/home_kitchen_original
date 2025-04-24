@@ -288,7 +288,11 @@ export function OrdersList({ orders }: { orders: any[] }) {
                 </TableCell>
                 <TableCell className="py-3 px-4 border-t border-gray-100 flex items-center gap-2">
                   <Calendar className="h-3 w-3 text-muted-foreground" />
-                  {order.date}
+                  {new Date(order.created_at).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 </TableCell>
                 <TableCell className="py-3 px-4 border-t border-gray-100">
                   <Badge
@@ -416,7 +420,7 @@ export function OrdersList({ orders }: { orders: any[] }) {
               : "opacity-0"
           }`}
         >
-          <CardHeader className="pb-3 bg-gradient-to-r from-green-50 to-emerald-50">
+          <CardHeader className="pb-3 bg-gradient-to-r from-green-300 to-emerald-500">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle>Your Orders</CardTitle>
               <div className="flex items-center gap-2">

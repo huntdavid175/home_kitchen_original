@@ -17,9 +17,20 @@ export default async function OrderDetailsPage({ params }: PageProps) {
     redirect("/login");
   }
 
+  const order = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/orders/${params.id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    }
+  ).then((res) => res.json());
+
+  console.log(order);
+
   return (
     <DashboardTabs defaultTab="orders">
-      <OrderDetails orderId={params.id} />
+      <OrderDetails orderDetails={order} />
     </DashboardTabs>
   );
 }

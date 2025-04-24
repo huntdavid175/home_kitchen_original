@@ -64,116 +64,118 @@ interface Order {
   timeline: TimelineEvent[];
 }
 
-export function OrderDetails({ orderId }: OrderDetailsProps) {
-  const order: Order = {
-    id: orderId,
-    date: "April 11, 2023",
-    deliveryDate: "April 13, 2023",
-    status:
-      orderId === "ORD-7291" || orderId === "ORD-1745"
-        ? "Delivered"
-        : orderId === "ORD-6384"
-        ? "Preparing"
-        : orderId === "ORD-5127"
-        ? "Ready"
-        : orderId === "ORD-4982"
-        ? "Confirmed"
-        : orderId === "ORD-3756"
-        ? "Pending"
-        : "Cancelled",
-    total: "$59.96",
-    subtotal: "$64.96",
-    discount: "-$5.00",
-    payment: {
-      method: "Visa •••• 4242",
-      date: "April 11, 2023",
-    },
-    address: {
-      name: "Alex Johnson",
-      street: "123 Main Street, Apt 4B",
-      city: "New York, NY 10001",
-      phone: "(555) 123-4567",
-    },
-    meals: [
-      {
-        id: 1,
-        name: "Garlic Butter Salmon",
-        description:
-          "Pan-seared salmon with garlic butter sauce, served with roasted vegetables",
-        price: "$14.99",
-        image:
-          "https://www.howsweeteats.com/wp-content/uploads/2023/01/sticky-garlic-butter-salmon-9.jpg",
-      },
-      {
-        id: 2,
-        name: "Vegetable Stir Fry",
-        description:
-          "Fresh vegetables stir-fried with tofu in a savory sauce, served with rice",
-        price: "$14.99",
-        image:
-          "https://www.budgetbytes.com/wp-content/uploads/2022/03/Easy-Vegetable-Stir-Fry-V1.jpg",
-      },
-      {
-        id: 3,
-        name: "Chicken Fajita Bowl",
-        description:
-          "Grilled chicken with bell peppers and onions, served over cilantro lime rice",
-        price: "$14.99",
-        image:
-          "https://whatsgabycooking.com/wp-content/uploads/2019/01/Albertsons-Chicken-Fajita-Bowls-Prep-Shot-2-copy-2.jpg",
-      },
-      {
-        id: 4,
-        name: "Mushroom Risotto",
-        description:
-          "Creamy arborio rice with sautéed mushrooms, garlic, and parmesan cheese",
-        price: "$14.99",
-        image:
-          "https://assets.epicurious.com/photos/5c191ba2b950cf635908c333/1:1/w_2560%2Cc_limit/Oven-Risotto-with-Mushrooms-recipe-13122018.jpg",
-      },
-    ],
-    timeline: [],
-  };
+export function OrderDetails({ orderDetails }: any) {
+  //   const order: Order = {
+  //     id: orderId,
+  //     date: "April 11, 2023",
+  //     deliveryDate: "April 13, 2023",
+  //     status:
+  //       orderId === "ORD-7291" || orderId === "ORD-1745"
+  //         ? "Delivered"
+  //         : orderId === "ORD-6384"
+  //         ? "Preparing"
+  //         : orderId === "ORD-5127"
+  //         ? "Ready"
+  //         : orderId === "ORD-4982"
+  //         ? "Confirmed"
+  //         : orderId === "ORD-3756"
+  //         ? "Pending"
+  //         : "Cancelled",
+  //     total: "$59.96",
+  //     subtotal: "$64.96",
+  //     discount: "-$5.00",
+  //     payment: {
+  //       method: "Visa •••• 4242",
+  //       date: "April 11, 2023",
+  //     },
+  //     address: {
+  //       name: "Alex Johnson",
+  //       street: "123 Main Street, Apt 4B",
+  //       city: "New York, NY 10001",
+  //       phone: "(555) 123-4567",
+  //     },
+  //     meals: [
+  //       {
+  //         id: 1,
+  //         name: "Garlic Butter Salmon",
+  //         description:
+  //           "Pan-seared salmon with garlic butter sauce, served with roasted vegetables",
+  //         price: "$14.99",
+  //         image:
+  //           "https://www.howsweeteats.com/wp-content/uploads/2023/01/sticky-garlic-butter-salmon-9.jpg",
+  //       },
+  //       {
+  //         id: 2,
+  //         name: "Vegetable Stir Fry",
+  //         description:
+  //           "Fresh vegetables stir-fried with tofu in a savory sauce, served with rice",
+  //         price: "$14.99",
+  //         image:
+  //           "https://www.budgetbytes.com/wp-content/uploads/2022/03/Easy-Vegetable-Stir-Fry-V1.jpg",
+  //       },
+  //       {
+  //         id: 3,
+  //         name: "Chicken Fajita Bowl",
+  //         description:
+  //           "Grilled chicken with bell peppers and onions, served over cilantro lime rice",
+  //         price: "$14.99",
+  //         image:
+  //           "https://whatsgabycooking.com/wp-content/uploads/2019/01/Albertsons-Chicken-Fajita-Bowls-Prep-Shot-2-copy-2.jpg",
+  //       },
+  //       {
+  //         id: 4,
+  //         name: "Mushroom Risotto",
+  //         description:
+  //           "Creamy arborio rice with sautéed mushrooms, garlic, and parmesan cheese",
+  //         price: "$14.99",
+  //         image:
+  //           "https://assets.epicurious.com/photos/5c191ba2b950cf635908c333/1:1/w_2560%2Cc_limit/Oven-Risotto-with-Mushrooms-recipe-13122018.jpg",
+  //       },
+  //     ],
+  //     timeline: [],
+  //   };
 
   // Define timeline after order is created
-  order.timeline = [
-    {
-      status: "Order Placed",
-      date: "April 11, 2023",
-      time: "10:23 AM",
-      description: "Your order has been received and is being processed",
-      completed: true,
-    },
-    {
-      status: "Order Confirmed",
-      date: "April 11, 2023",
-      time: "10:30 AM",
-      description:
-        "Your order has been confirmed and scheduled for preparation",
-      completed: order.status !== "Pending",
-    },
-    {
-      status: "Preparing",
-      date: "April 12, 2023",
-      time: "8:15 AM",
-      description: "Your meals are being prepared by our chefs",
-      completed: ["Preparing", "Ready", "Delivered"].includes(order.status),
-    },
-    {
-      status: "Out for Delivery",
-      date: "April 13, 2023",
-      time: "9:45 AM",
-      description: "Your order is on its way to you",
-      completed: ["Ready", "Delivered"].includes(order.status),
-    },
-    {
-      status: "Delivered",
-      date: "April 13, 2023",
-      time: "2:30 PM",
-      description: "Your order has been delivered successfully",
-      completed: order.status === "Delivered",
-    },
-  ];
+  //   order.timeline = [
+  //     {
+  //       status: "Order Placed",
+  //       date: "April 11, 2023",
+  //       time: "10:23 AM",
+  //       description: "Your order has been received and is being processed",
+  //       completed: true,
+  //     },
+  //     {
+  //       status: "Order Confirmed",
+  //       date: "April 11, 2023",
+  //       time: "10:30 AM",
+  //       description:
+  //         "Your order has been confirmed and scheduled for preparation",
+  //       completed: orderDetails.status !== "Pending",
+  //     },
+  //     {
+  //       status: "Preparing",
+  //       date: "April 12, 2023",
+  //       time: "8:15 AM",
+  //       description: "Your meals are being prepared by our chefs",
+  //       completed: ["Preparing", "Ready", "Delivered"].includes(
+  //         orderDetails.status
+  //       ),
+  //     },
+  //     {
+  //       status: "Out for Delivery",
+  //       date: "April 13, 2023",
+  //       time: "9:45 AM",
+  //       description: "Your order is on its way to you",
+  //       completed: ["Ready", "Delivered"].includes(orderDetails.status),
+  //     },
+  //     {
+  //       status: "Delivered",
+  //       date: "April 13, 2023",
+  //       time: "2:30 PM",
+  //       description: "Your order has been delivered successfully",
+  //       completed: orderDetails.status === "Delivered",
+  //     },
+  //   ];
 
   return (
     <div className="space-y-6">
@@ -199,29 +201,37 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
         </Button>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">
-            Order {order.id}
+            Order {orderDetails.id}
           </h2>
-          <p className="text-muted-foreground">Placed on {order.date}</p>
+          <p className="text-muted-foreground">
+            Placed on{" "}
+            {new Date(orderDetails.created_at).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
         </div>
         <Badge
           variant="outline"
           className={`mt-2 sm:mt-0 sm:ml-auto rounded-full px-3 py-1 text-xs font-medium ${
-            order.status === "Delivered"
+            orderDetails.status === "Delivered"
               ? "bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-700 animate-[pulse_2s_infinite]"
-              : order.status === "Preparing"
+              : orderDetails.status.toLowerCase() === "preparing"
               ? "bg-purple-50 text-purple-700 hover:bg-purple-50 hover:text-purple-700 animate-[pulse_2s_infinite]"
-              : order.status === "Pending"
+              : orderDetails.status.toLowerCase() === "pending"
               ? "bg-amber-50 text-amber-700 hover:bg-amber-50 hover:text-amber-700 animate-[pulse_2s_infinite]"
-              : order.status === "Confirmed"
+              : orderDetails.status.toLowerCase() === "confirmed"
               ? "bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-700 animate-[pulse_2s_infinite]"
-              : order.status === "Ready"
+              : orderDetails.status.toLowerCase() === "ready"
               ? "bg-teal-50 text-teal-700 hover:bg-teal-50 hover:text-teal-700 animate-[pulse_2s_infinite]"
-              : order.status === "Cancelled"
+              : orderDetails.status.toLowerCase() === "cancelled"
               ? "bg-red-50 text-red-700 hover:bg-red-50 hover:text-red-700"
               : ""
           }`}
         >
-          {order.status}
+          {orderDetails.status.charAt(0).toUpperCase() +
+            orderDetails.status.slice(1).toLowerCase()}
         </Badge>
       </div>
 
@@ -233,7 +243,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
               <CardDescription>Track the status of your order</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              {/* <div className="space-y-4">
                 {order.timeline.map((event: TimelineEvent, index: number) => (
                   <div key={index} className="flex gap-4">
                     <div className="relative flex flex-col items-center">
@@ -274,7 +284,7 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </CardContent>
           </Card>
 
@@ -285,29 +295,32 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {order.meals.map((meal: Meal) => (
+                {orderDetails.items.map((meal: any) => (
                   <div
                     key={meal.id}
                     className="flex flex-col sm:flex-row gap-4 p-2 rounded-md transition-colors duration-200 hover:bg-muted/20"
                   >
                     <div className="relative h-20 w-20 overflow-hidden rounded-md">
                       <Image
-                        src={meal.image || "/placeholder.svg"}
-                        alt={meal.name}
+                        src={
+                          meal.recipe.image_url ||
+                          "https://www.howsweeteats.com/wp-content/uploads/2023/01/sticky-garlic-butter-salmon-9.jpg"
+                        }
+                        alt={meal.recipe.name}
                         fill
                         className="object-cover"
                       />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-medium">{meal.name}</h3>
+                      <h3 className="font-medium">{meal.recipe.name}</h3>
                       <p className="text-sm text-muted-foreground line-clamp-2">
-                        {meal.description}
+                        {meal.recipe.description}
                       </p>
                     </div>
                     <div className="text-left sm:text-right mt-2 sm:mt-0">
-                      <p className="font-medium">{meal.price}</p>
+                      <p className="font-medium">${meal.price}</p>
                       <p className="text-sm text-muted-foreground">
-                        1 × {meal.price}
+                        1 × ${meal.price}
                       </p>
                     </div>
                   </div>
@@ -325,16 +338,20 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
             <CardContent className="space-y-4">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
-                <span>{order.subtotal}</span>
+                <span>${orderDetails.total_price}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Discount</span>
-                <span className="text-green-600">{order.discount}</span>
+                <span className="text-green-600">
+                  {orderDetails.discount_price
+                    ? `-$${orderDetails.discount_price}`
+                    : "$0"}
+                </span>
               </div>
               <Separator />
               <div className="flex justify-between font-medium">
                 <span>Total</span>
-                <span>{order.total}</span>
+                <span>${orderDetails.total_price}</span>
               </div>
             </CardContent>
           </Card>
@@ -349,16 +366,16 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                 <div>
                   <h3 className="font-medium">Delivery Address</h3>
                   <p className="text-sm text-muted-foreground">
-                    {order.address.name}
+                    {orderDetails?.delivery_address.split(",")[0]}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {order.address.street}
+                    {orderDetails?.delivery_address.split(",")[1]}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {order.address.city}
+                    {orderDetails?.delivery_address.split(",")[2]}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {order.address.phone}
+                    {orderDetails?.delivery_address?.phone}
                   </p>
                 </div>
               </div>
@@ -367,9 +384,15 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                 <div>
                   <h3 className="font-medium">Delivery Date</h3>
                   <p className="text-sm text-muted-foreground">
-                    {order.status === "Cancelled"
+                    {orderDetails?.status === "Cancelled"
                       ? "Cancelled"
-                      : order.deliveryDate}
+                      : new Date(
+                          orderDetails?.delivery_date
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
                   </p>
                 </div>
               </div>
@@ -386,12 +409,20 @@ export function OrderDetails({ orderId }: OrderDetailsProps) {
                 <div>
                   <h3 className="font-medium">Payment Method</h3>
                   <p className="text-sm text-muted-foreground">
-                    {order.payment.method}
+                    {orderDetails.payment.payment_method === "credit_card"
+                      ? "Credit Card"
+                      : "Mobile Money"}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {order.status === "Cancelled"
+                    {orderDetails.status === "Cancelled"
                       ? "Payment not processed"
-                      : `Charged on ${order.payment.date}`}
+                      : `Charged on ${new Date(
+                          orderDetails?.payment?.created_at
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}`}
                   </p>
                 </div>
               </div>
