@@ -138,7 +138,7 @@ export function DashboardTabs({ children, defaultTab }: DashboardTabsProps) {
         </SheetContent>
       </Sheet>
 
-      <div className="border-b bg-white/80 backdrop-blur-md">
+      <div className="border-b bg-white/80 backdrop-blur-md rounded-xl shadow-md">
         <div className="container mx-auto px-4">
           <Tabs value={activeTab} className="w-full">
             <TabsList className="grid w-full grid-cols-3 md:grid-cols-3 p-1 rounded-xl bg-gray-100/80 my-2">

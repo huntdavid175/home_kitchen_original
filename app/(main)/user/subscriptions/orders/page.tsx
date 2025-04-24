@@ -1,40 +1,30 @@
-"use client";
-
 import { DashboardTabs } from "@/components/User/Dashboard/DashBoardTabs";
 import { OrdersList } from "@/components/User/Dashboard/OrderList";
+import OrdersContainer from "@/components/User/Dashboard/OrdersContainer";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 
 // Add page transition animation to the orders page
-export default function OrdersPage() {
-  const [isLoaded, setIsLoaded] = useState(false);
+export default async function OrdersPage() {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  if (!session) {
+    redirect("/login");
+  }
 
-  return (
-    <DashboardTabs defaultTab="orders">
-      <div
-        className={`${
-          isLoaded
-            ? "animate-[fadeIn_0.5s_cubic-bezier(0.22,1,0.36,1)]"
-            : "opacity-0"
-        }`}
-      >
-        <style jsx global>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}</style>
-        <OrdersList />
-      </div>
-    </DashboardTabs>
-  );
+  const orders = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/orders`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      // next: { revalidate: 60 }, // Also revalidate the fetch request
+    }
+  ).then((res) => res.json());
+
+  return <OrdersContainer orders={orders.data} />;
 }
