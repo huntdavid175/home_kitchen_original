@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,8 +23,62 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { createClient } from "@/utils/supabase/client";
+import { useState } from "react";
+import { toast } from "sonner";
 
-export function AccountSettings() {
+export function AccountSettings({ user }: { user: any }) {
+  const [userData, setUserData] = useState(user);
+
+  const userInputHandler = async (e: any) => {
+    console.log(e.target.name);
+    console.log(e.target.value);
+    setUserData({ ...userData, [e.target.name]: e.target.value });
+  };
+
+  const updateUser = async (user: any) => {
+    try {
+      console.log(user);
+      const supabase = await createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/users/${user.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            address: user.address,
+            role: user.role,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Your profile has been updated successfully");
+      } else {
+        throw new Error(data.message || "Failed to update profile");
+      }
+
+      return data;
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update profile"
+      );
+      throw error;
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
@@ -42,18 +98,18 @@ export function AccountSettings() {
           >
             Profile
           </TabsTrigger>
-          <TabsTrigger
+          {/* <TabsTrigger
             value="addresses"
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
           >
             Addresses
-          </TabsTrigger>
-          <TabsTrigger
+          </TabsTrigger> */}
+          {/* <TabsTrigger
             value="payment"
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
           >
             Payment Methods
-          </TabsTrigger>
+          </TabsTrigger> */}
           <TabsTrigger
             value="notifications"
             className="rounded-lg data-[state=active]:bg-white data-[state=active]:shadow-sm"
@@ -79,41 +135,53 @@ export function AccountSettings() {
                 <div className="space-y-2">
                   <Label htmlFor="first-name">First name</Label>
                   <Input
-                    id="first-name"
-                    defaultValue="Alex"
+                    id="name"
+                    name="name"
+                    defaultValue={userData.name}
                     className="rounded-xl"
+                    onChange={userInputHandler}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="last-name">Last name</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
-                    id="last-name"
-                    defaultValue="Johnson"
+                    id="email"
+                    type="email"
+                    name="email"
+                    defaultValue={userData.email}
                     className="rounded-xl"
+                    onChange={userInputHandler}
                   />
                 </div>
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
-                  defaultValue="alex.johnson@example.com"
+                  name="email"
+                  defaultValue={userData.email}
                   className="rounded-xl"
+                  onChange={userInputHandler}
                 />
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone number</Label>
                 <Input
                   id="phone"
                   type="tel"
-                  defaultValue="(555) 123-4567"
+                  name="phone"
+                  defaultValue={userData.phone}
                   className="rounded-xl"
+                  onChange={userInputHandler}
                 />
               </div>
             </CardContent>
             <CardFooter className="px-6 pb-6">
-              <Button className="rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+              <Button
+                className="rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                onClick={() => updateUser(userData)}
+              >
                 Save Changes
               </Button>
             </CardFooter>
@@ -158,7 +226,7 @@ export function AccountSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="addresses" className="mt-0 space-y-6">
+        {/* <TabsContent value="addresses" className="mt-0 space-y-6">
           <Card className="border-none shadow-lg overflow-hidden">
             <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 flex flex-row items-center justify-between">
               <div>
@@ -228,9 +296,9 @@ export function AccountSettings() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
 
-        <TabsContent value="payment" className="mt-0 space-y-6">
+        {/* <TabsContent value="payment" className="mt-0 space-y-6">
           <Card className="border-none shadow-lg overflow-hidden">
             <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 flex flex-row items-center justify-between">
               <div>
@@ -332,7 +400,7 @@ export function AccountSettings() {
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
 
         <TabsContent value="notifications" className="mt-0 space-y-6">
           <Card className="border-none shadow-lg overflow-hidden">

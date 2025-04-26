@@ -1,39 +1,26 @@
-"use client";
+import Settings from "@/components/User/Dashboard/Settings";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-import { DashboardTabs } from "@/components/User/Dashboard/DashBoardTabs";
-import { AccountSettings } from "@/components/User/Dashboard/AccountSettings";
-import { useEffect, useState } from "react";
+export default async function SettingsPage() {
+  const supabase = await createClient();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-export default function SettingsPage() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  if (!session) {
+    redirect("/login");
+  }
 
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
+  const order = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/users/me`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    }
+  ).then((res) => res.json());
 
-  return (
-    <DashboardTabs defaultTab="settings">
-      <div
-        className={`${
-          isLoaded
-            ? "animate-[fadeIn_0.5s_cubic-bezier(0.22,1,0.36,1)]"
-            : "opacity-0"
-        }`}
-      >
-        <style jsx global>{`
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-        `}</style>
-        <AccountSettings />
-      </div>
-    </DashboardTabs>
-  );
+  console.log(order);
+  return <Settings user={order} />;
 }

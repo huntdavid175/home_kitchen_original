@@ -68,7 +68,7 @@ export default function RootLayout({
         className={`${plusJakarta.className} ${GeistMono.variable} font-sans`}
       >
         {children}
-        <Toaster position="top-right" richColors />
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );
