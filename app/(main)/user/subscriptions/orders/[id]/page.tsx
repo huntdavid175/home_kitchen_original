@@ -3,11 +3,13 @@ import { OrderDetails } from "@/components/User/Dashboard/OrderDetails";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-type PageProps = {
-  params: { id: string };
-};
+interface PageProps {
+  params: Promise<{ id: string }>;
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
 export default async function OrderDetailsPage({ params }: PageProps) {
+  const resolvedParams = await params;
   const supabase = await createClient();
   const {
     data: { session },
@@ -18,7 +20,7 @@ export default async function OrderDetailsPage({ params }: PageProps) {
   }
 
   const order = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/orders/${params.id}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/orders/${resolvedParams.id}`,
     {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
