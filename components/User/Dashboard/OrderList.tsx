@@ -148,46 +148,29 @@ const OrdersTable = ({ orders }: { orders: any[] }) => (
 );
 
 export function OrdersList({ orders }: { orders: any[] }) {
+  // Move all hooks to the top level
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(15);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filteredOrders, setFilteredOrders] = useState(orders);
 
+  // Single useEffect for initialization
   useEffect(() => {
     setIsLoaded(true);
   }, []);
 
-  // Add ripple effect to buttons
-  const addRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const button = event.currentTarget;
-    const ripple = document.createElement("span");
-    const rect = button.getBoundingClientRect();
-
-    const size = Math.max(rect.width, rect.height);
-    const x = event.clientX - rect.left - size / 2;
-    const y = event.clientY - rect.top - size / 2;
-
-    ripple.style.width = ripple.style.height = `${size}px`;
-    ripple.style.left = `${x}px`;
-    ripple.style.top = `${y}px`;
-    ripple.className =
-      "absolute rounded-full bg-white bg-opacity-30 pointer-events-none";
-    ripple.style.animation = "ripple 0.6s linear";
-
-    button.appendChild(ripple);
-
-    setTimeout(() => {
-      ripple.remove();
-    }, 600);
-  };
-
-  // Filter orders based on search term
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.created_at.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.status.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Update filtered orders when search term changes
+  useEffect(() => {
+    const filtered = orders.filter(
+      (order) =>
+        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.created_at.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.status.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredOrders(filtered);
+    setCurrentPage(1); // Reset to first page on search
+  }, [searchTerm, orders]);
 
   // Calculate pagination
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -230,6 +213,30 @@ export function OrdersList({ orders }: { orders: any[] }) {
       "...",
       totalPages,
     ];
+  };
+
+  // Add ripple effect to buttons
+  const addRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget;
+    const ripple = document.createElement("span");
+    const rect = button.getBoundingClientRect();
+
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${x}px`;
+    ripple.style.top = `${y}px`;
+    ripple.className =
+      "absolute rounded-full bg-white bg-opacity-30 pointer-events-none";
+    ripple.style.animation = "ripple 0.6s linear";
+
+    button.appendChild(ripple);
+
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
   };
 
   return (
