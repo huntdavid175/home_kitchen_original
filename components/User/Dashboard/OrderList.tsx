@@ -31,189 +31,24 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-// Move OrdersTable outside of OrdersList
-const OrdersTable = ({ orders }: { orders: any[] }) => (
-  <div className="overflow-x-auto">
-    <Table className="border-collapse border-spacing-0">
-      <TableHeader>
-        <TableRow className="bg-gray-50">
-          <TableHead className="py-3 px-4 text-sm font-medium text-gray-600">
-            Order ID
-          </TableHead>
-          <TableHead className="py-3 px-4 text-sm font-medium text-gray-600">
-            Date
-          </TableHead>
-          <TableHead className="py-3 px-4 text-sm font-medium text-gray-600">
-            Status
-          </TableHead>
-          <TableHead className="py-3 px-4 text-sm font-medium text-gray-600 hidden md:table-cell">
-            Meals
-          </TableHead>
-          <TableHead className="py-3 px-4 text-sm font-medium text-gray-600 hidden md:table-cell">
-            Payment
-          </TableHead>
-          <TableHead className="py-3 px-4 text-sm font-medium text-gray-600 text-right">
-            Total
-          </TableHead>
-          <TableHead className="py-3 px-4 text-sm font-medium text-gray-600"></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {orders.length > 0 ? (
-          orders.map((order, index) => (
-            <TableRow
-              key={order.id}
-              className="transition-all duration-300 hover:bg-gray-50 hover:scale-[1.01] opacity-0 animate-[fadeIn_0.5s_cubic-bezier(0.22,1,0.36,1)_forwards]"
-              style={{
-                animationDelay: `${0.1 + (index % 15) * 0.1}s`,
-              }}
-            >
-              <TableCell className="py-3 px-4 border-t border-gray-100 font-medium">
-                {order.id}
-              </TableCell>
-              <TableCell className="py-3 px-4 border-t border-gray-100 flex items-center gap-2">
-                <Calendar className="h-3 w-3 text-muted-foreground" />
-                {new Date(order.created_at).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </TableCell>
-              <TableCell className="py-3 px-4 border-t border-gray-100">
-                <Badge
-                  variant="outline"
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
-                    order.status.toLowerCase() === "delivered"
-                      ? "bg-green-50 text-green-700 hover:bg-green-50 hover:text-green-700 animate-[pulse_2s_infinite]"
-                      : order.status.toLowerCase() === "preparing"
-                      ? "bg-purple-50 text-purple-700 hover:bg-purple-50 hover:text-purple-700 animate-[pulse_2s_infinite]"
-                      : order.status.toLowerCase() === "pending"
-                      ? "bg-amber-50 text-amber-700 hover:bg-amber-50 hover:text-amber-700 animate-[pulse_2s_infinite]"
-                      : order.status.toLowerCase() === "confirmed"
-                      ? "bg-blue-50 text-blue-700 hover:bg-blue-50 hover:text-blue-700 animate-[pulse_2s_infinite]"
-                      : order.status.toLowerCase() === "ready"
-                      ? "bg-teal-50 text-teal-700 hover:bg-teal-50 hover:text-teal-700 animate-[pulse_2s_infinite]"
-                      : order.status.toLowerCase() === "cancelled"
-                      ? "bg-red-50 text-red-700 hover:bg-red-50 hover:text-red-700"
-                      : ""
-                  }`}
-                >
-                  {order.status.charAt(0).toUpperCase() +
-                    order.status.slice(1).toLowerCase()}
-                </Badge>
-              </TableCell>
-              <TableCell className="py-3 px-4 border-t border-gray-100 hidden md:table-cell">
-                {order.items.length} meals
-              </TableCell>
-              <TableCell className="py-3 px-4 border-t border-gray-100 hidden md:table-cell">
-                {order.payment.payment_method === "credit_card"
-                  ? "Momo •••• 7432"
-                  : order.payment.payment_method}
-              </TableCell>
-              <TableCell className="py-3 px-4 border-t border-gray-100 text-right font-medium">
-                ${order.total_price}
-              </TableCell>
-              <TableCell className="py-3 px-4 border-t border-gray-100">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="rounded-xl relative overflow-hidden transition-all hover:-translate-y-1"
-                  asChild
-                >
-                  <Link
-                    href={`/user/subscriptions/orders/${order.id}`}
-                    className="flex items-center gap-1"
-                  >
-                    <Eye className="h-3 w-3 mr-1" />
-                    View
-                  </Link>
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))
-        ) : (
-          <TableRow>
-            <TableCell
-              colSpan={7}
-              className="py-6 text-center text-muted-foreground"
-            >
-              No orders found
-            </TableCell>
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-  </div>
-);
+import { OrdersTable } from "./OrdersTable";
+import { useOrders } from "./useOrders";
 
 export function OrdersList({ orders }: { orders: any[] }) {
-  // Move all hooks to the top level
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(15);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredOrders, setFilteredOrders] = useState(orders);
-
-  // Single useEffect for initialization
-  useEffect(() => {
-    setIsLoaded(true);
-  }, []);
-
-  // Update filtered orders when search term changes
-  useEffect(() => {
-    const filtered = orders.filter(
-      (order) =>
-        order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.created_at.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.status.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredOrders(filtered);
-    setCurrentPage(1); // Reset to first page on search
-  }, [searchTerm, orders]);
-
-  // Calculate pagination
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
-
-  // Change page
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  const nextPage = () =>
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-
-  // Generate page numbers
-  const pageNumbers: number[] = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
-
-  // Limit visible page numbers
-  const getVisiblePageNumbers = (): (number | string)[] => {
-    if (totalPages <= 5) {
-      return pageNumbers;
-    }
-
-    if (currentPage <= 3) {
-      return [...pageNumbers.slice(0, 5), "...", totalPages];
-    }
-
-    if (currentPage >= totalPages - 2) {
-      return [1, "...", ...pageNumbers.slice(totalPages - 5)];
-    }
-
-    return [
-      1,
-      "...",
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      "...",
-      totalPages,
-    ];
-  };
+  const {
+    isLoaded,
+    currentPage,
+    searchTerm,
+    setSearchTerm,
+    currentItems,
+    totalPages,
+    indexOfFirstItem,
+    indexOfLastItem,
+    paginate,
+    nextPage,
+    prevPage,
+    getVisiblePageNumbers,
+  } = useOrders(orders);
 
   // Add ripple effect to buttons
   const addRipple = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -307,10 +142,7 @@ export function OrdersList({ orders }: { orders: any[] }) {
                     placeholder="Search orders..."
                     className="pl-9 rounded-xl border-none bg-white shadow-sm"
                     value={searchTerm}
-                    onChange={(e) => {
-                      setSearchTerm(e.target.value);
-                      setCurrentPage(1); // Reset to first page on search
-                    }}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
                 <DropdownMenu>
@@ -366,7 +198,7 @@ export function OrdersList({ orders }: { orders: any[] }) {
               <TabsContent value="all" className="mt-0">
                 <OrdersTable orders={currentItems} />
                 {/* Pagination */}
-                {filteredOrders.length > 0 && (
+                {currentItems.length > 0 && (
                   <div className="flex items-center justify-between px-4 py-4 border-t border-gray-100">
                     <div className="text-sm text-muted-foreground">
                       Showing{" "}
@@ -375,12 +207,10 @@ export function OrdersList({ orders }: { orders: any[] }) {
                       </span>{" "}
                       to{" "}
                       <span className="font-medium">
-                        {Math.min(indexOfLastItem, filteredOrders.length)}
+                        {Math.min(indexOfLastItem, currentItems.length)}
                       </span>{" "}
                       of{" "}
-                      <span className="font-medium">
-                        {filteredOrders.length}
-                      </span>{" "}
+                      <span className="font-medium">{currentItems.length}</span>{" "}
                       orders
                     </div>
                     <div className="flex items-center space-x-2">
