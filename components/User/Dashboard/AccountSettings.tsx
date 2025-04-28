@@ -29,6 +29,12 @@ import { toast } from "sonner";
 
 export function AccountSettings({ user }: { user: any }) {
   const [userData, setUserData] = useState(user);
+  const [preferredDeliveryDay, setPreferredDeliveryDay] = useState(
+    userData.settings?.preferred_delivery_day || "tuesday"
+  );
+  const [deliveryInstructions, setDeliveryInstructions] = useState(
+    userData.settings?.delivery_instructions || ""
+  );
 
   const userInputHandler = async (e: any) => {
     console.log(e.target.name);
@@ -38,7 +44,6 @@ export function AccountSettings({ user }: { user: any }) {
 
   const updateUser = async (user: any) => {
     try {
-      console.log(user);
       const supabase = await createClient();
       const {
         data: { session },
@@ -77,6 +82,103 @@ export function AccountSettings({ user }: { user: any }) {
       );
       throw error;
     }
+  };
+
+  const notificationSettingsUpdate = async (
+    notificationType: string,
+    notificationStatus: boolean
+  ) => {
+    try {
+      const supabase = await createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      console.log(notificationType);
+      console.log(notificationStatus);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/user-settings`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            [notificationType]: notificationStatus,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        toast.success(
+          "Your notification settings have been updated successfully"
+        );
+      } else {
+        throw new Error("Failed to update notification settings");
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to update notification settings"
+      );
+      throw error;
+    }
+  };
+
+  const updateDeliveryInstructions = async (
+    preferredDeliveryDay: string,
+    deliveryInstructions: string
+  ) => {
+    try {
+      const supabase = await createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/user-settings`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            preferred_delivery_day: preferredDeliveryDay,
+            delivery_instructions: deliveryInstructions,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+        toast.success(
+          "Your delivery preferences have been updated successfully"
+        );
+      } else {
+        throw new Error("Failed to update delivery instructions");
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to update delivery instructions"
+      );
+      throw error;
+    }
+  };
+
+  const handleSavePreferences = async () => {
+    await updateDeliveryInstructions(
+      preferredDeliveryDay,
+      deliveryInstructions
+    );
   };
 
   return (
@@ -419,7 +521,12 @@ export function AccountSettings({ user }: { user: any }) {
                       Receive notifications about your order status
                     </p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch
+                    defaultChecked={userData.settings.order_updates}
+                    onCheckedChange={(checked) =>
+                      notificationSettingsUpdate("order_updates", checked)
+                    }
+                  />
                 </div>
                 <Separator />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-xl hover:bg-muted/20 transition-colors">
@@ -429,7 +536,12 @@ export function AccountSettings({ user }: { user: any }) {
                       Get reminders about upcoming deliveries
                     </p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch
+                    defaultChecked={userData.settings.delivery_reminders}
+                    onCheckedChange={(checked) =>
+                      notificationSettingsUpdate("delivery_reminders", checked)
+                    }
+                  />
                 </div>
                 <Separator />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-xl hover:bg-muted/20 transition-colors">
@@ -439,7 +551,12 @@ export function AccountSettings({ user }: { user: any }) {
                       Be notified when new menus are available
                     </p>
                   </div>
-                  <Switch defaultChecked />
+                  <Switch
+                    defaultChecked={userData.settings.weekly_menu_updates}
+                    onCheckedChange={(checked) =>
+                      notificationSettingsUpdate("weekly_menu_updates", checked)
+                    }
+                  />
                 </div>
                 <Separator />
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 rounded-xl hover:bg-muted/20 transition-colors">
@@ -449,7 +566,12 @@ export function AccountSettings({ user }: { user: any }) {
                       Receive promotional offers and discounts
                     </p>
                   </div>
-                  <Switch />
+                  <Switch
+                    defaultChecked={userData.settings.special_offers}
+                    onCheckedChange={(checked) =>
+                      notificationSettingsUpdate("special_offers", checked)
+                    }
+                  />
                 </div>
               </div>
             </CardContent>
@@ -487,7 +609,10 @@ export function AccountSettings({ user }: { user: any }) {
             <CardContent className="p-6 space-y-4">
               <div className="space-y-2">
                 <Label>Preferred Delivery Day</Label>
-                <Select defaultValue="tuesday">
+                <Select
+                  value={preferredDeliveryDay}
+                  onValueChange={setPreferredDeliveryDay}
+                >
                   <SelectTrigger className="rounded-xl">
                     <SelectValue placeholder="Select delivery day" />
                   </SelectTrigger>
@@ -501,33 +626,20 @@ export function AccountSettings({ user }: { user: any }) {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Preferred Time Window</Label>
-                <Select defaultValue="afternoon">
-                  <SelectTrigger className="rounded-xl">
-                    <SelectValue placeholder="Select time window" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl">
-                    <SelectItem value="morning">
-                      Morning (8am - 12pm)
-                    </SelectItem>
-                    <SelectItem value="afternoon">
-                      Afternoon (12pm - 4pm)
-                    </SelectItem>
-                    <SelectItem value="evening">Evening (4pm - 8pm)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
                 <Label>Delivery Instructions</Label>
                 <Textarea
                   placeholder="Add any special delivery instructions here..."
                   className="h-24 rounded-xl"
-                  defaultValue="Please leave the package at the front door. The building has a keypad entry - code is 1234."
+                  value={deliveryInstructions}
+                  onChange={(e) => setDeliveryInstructions(e.target.value)}
                 />
               </div>
             </CardContent>
             <CardFooter className="px-6 pb-6">
-              <Button className="rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+              <Button
+                className="rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                onClick={handleSavePreferences}
+              >
                 Save Preferences
               </Button>
             </CardFooter>

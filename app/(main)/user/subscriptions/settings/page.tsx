@@ -12,7 +12,7 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  const order = await fetch(
+  const userData = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/users/me`,
     {
       headers: {
@@ -21,6 +21,5 @@ export default async function SettingsPage() {
     }
   ).then((res) => res.json());
 
-  console.log(order);
-  return <Settings user={order} />;
+  return <Settings user={userData} />;
 }
