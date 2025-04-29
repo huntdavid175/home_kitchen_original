@@ -7,7 +7,7 @@ type PageProps = {
   params: { id: string };
 };
 
-export default async function OrderDetailsPage({ params }: PageProps) {
+export default async function OrderDetailsPage({ params }: any) {
   const supabase = await createClient();
   const {
     data: { session },
