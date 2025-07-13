@@ -208,45 +208,51 @@ export default function DeliveryForm({
 
       // Then process the payment
       const paymentResponse = await makePaymentIntent();
+      console.log("Paymentintent response:", paymentResponse);
 
       if (paymentResponse.status === true && paystackHandler) {
         try {
-          paystackHandler.newTransaction({
-            key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
-            email: "fawaz.dogbe@gmail.com",
-            amount: 1000,
-            currency: "GHS",
-            onSuccess: async (transaction: any) => {
-              try {
-                setProgress(4);
-                console.log("Payment successful:", transaction);
-                const transactionId = transaction.reference;
+          const response = await paystackHandler.resumeTransaction(
+            paymentResponse.data.access_code
+          );
+          console.log("response of resume:", response);
+          //     paystackHandler.resumeTransaction({
+          //       // key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
+          //       // email: "fawaz.dogbe@gmail.com",
+          //       // amount: orderResponse.payment.amount * 100,
+          //       // currency: "GHS",
+          //       accessCode: paymentResponse.data.access_code,
+          //       onSuccess: async (transaction: any) => {
+          //         try {
+          //           setProgress(4);
+          //           console.log("Payment successful:", transaction);
+          //           const transactionId = transaction.reference;
 
-                // Clear the cart after successful payment
-                clearCart();
+          //           // Clear the cart after successful payment
+          //           clearCart();
 
-                // Navigate to success page
-                router.replace(
-                  `/subscribe/order-confirmation?transactionId=${transactionId}&orderNumber=${orderId}`
-                );
-              } catch (error) {
-                console.error("Error after payment:", error);
-                toast.error(
-                  "Payment successful but there was an error. Please contact support."
-                );
-                setLoading(false);
-              }
-            },
-            onCancel: () => {
-              console.log("Payment cancelled");
-              setLoading(false);
-            },
-            onError: (error: any) => {
-              console.error("Payment error:", error);
-              toast.error("Payment failed");
-              setLoading(false);
-            },
-          });
+          //           // Navigate to success page
+          //           router.replace(
+          //             `/subscribe/order-confirmation?transactionId=${transactionId}&orderNumber=${orderId}`
+          //           );
+          //         } catch (error) {
+          //           console.error("Error after payment:", error);
+          //           toast.error(
+          //             "Payment successful but there was an error. Please contact support."
+          //           );
+          //           setLoading(false);
+          //         }
+          //       },
+          //       onCancel: () => {
+          //         console.log("Payment cancelled");
+          //         setLoading(false);
+          //       },
+          //       onError: (error: any) => {
+          //         console.error("Payment error:", error);
+          //         toast.error("Payment failed");
+          //         setLoading(false);
+          //       },
+          //     });
         } catch (error) {
           console.error("Paystack popup error:", error);
           setLoading(false);

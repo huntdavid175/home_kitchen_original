@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
       "www.budgetbytes.com",
       "whatsgabycooking.com",
       "assets.epicurious.com",
+      "res.cloudinary.com",
     ], // Add your image domains here
   },
 };

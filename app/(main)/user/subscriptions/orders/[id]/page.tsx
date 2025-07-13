@@ -26,8 +26,6 @@ export default async function OrderDetailsPage({ params }: any) {
     }
   ).then((res) => res.json());
 
-  console.log(order);
-
   return (
     <DashboardTabs defaultTab="orders">
       <OrderDetails orderDetails={order} />

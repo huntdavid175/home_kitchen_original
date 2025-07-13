@@ -182,7 +182,7 @@ export function RecentOrders({ recentOrders }: { recentOrders: any }) {
                     {order.items.length}
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100 text-right font-medium">
-                    ${order.total_price}
+                    ${Number(order.total_price).toFixed(2)}
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100">
                     <Button

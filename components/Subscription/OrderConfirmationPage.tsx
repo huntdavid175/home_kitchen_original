@@ -56,7 +56,7 @@ interface Subscription {
   user_id: string;
   meals_per_week: number;
   people_count: number;
-  price: string;
+  total_price: number;
   preferred_delivery_day: string;
   delivery_date: string;
   delivery_instruction: string;
@@ -224,7 +224,7 @@ export default function OrderConfirmationPage() {
                       <span>
                         $
                         {(
-                          Number(meal.price) / subscription.items.length
+                          Number(meal.price) * subscription.items.length
                         ).toFixed(2)}
                       </span>
                     </div>
@@ -233,7 +233,7 @@ export default function OrderConfirmationPage() {
                 <Separator className="my-2" />
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
-                  <span>${subscription.price}</span>
+                  <span>${subscription.total_price}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
@@ -241,7 +241,7 @@ export default function OrderConfirmationPage() {
                 </div>
                 <div className="flex justify-between font-medium">
                   <span>Total</span>
-                  <span>${subscription.price}</span>
+                  <span>${subscription.total_price}</span>
                 </div>
               </div>
             </div>
