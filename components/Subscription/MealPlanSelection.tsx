@@ -81,28 +81,27 @@ export default function MealPlanSelection({
       <main className="container max-w-4xl mx-auto px-4 py-12 mt-[152px] shadow-lg mb-12">
         <div className="max-w-xl mx-auto">
           <h1 className="text-3xl font-medium text-center mb-4">
-            Choose your plan size
+            How many meals do you need?
           </h1>
           <p className="text-center text-gray-600 mb-8 text-medium">
-            We&apos;ll set this as your default size, but you can always change
-            it from week to week.
+            Select the number of people and meals for this week&apos;s delivery.
           </p>
 
           {/* Selection Controls */}
           <div className="space-y-8 mb-8">
             <div className="space-y-2">
               <label className="font-medium text-sm">Number of people</label>
-              <div className="grid grid-cols-3 gap-2">
-                {[2, 4, 6].map((num) => (
+              <div className="grid grid-cols-4 gap-2">
+                {[1, 2, 3, 4].map((num) => (
                   <button
                     key={num}
                     onClick={() =>
                       setMealPlan((prev) => ({ ...prev, people: num }))
                     }
-                    className={`py-3 border-2 rounded-lg text-sm ${
+                    className={`py-3 border-2 text-sm transition-colors ${
                       mealPlan.people === num
-                        ? "border-[#067a46] bg-[#f8faf6] font-medium text-[#067a46]"
-                        : "hover:border-[#067a46] hover:bg-[#f8faf6]"
+                        ? "border-[#067a46] bg-[#067a46] font-bold text-white"
+                        : "border-gray-200 hover:border-[#067a46] hover:bg-[#f8faf6]"
                     }`}
                   >
                     {num}
@@ -113,17 +112,17 @@ export default function MealPlanSelection({
 
             <div className="space-y-2">
               <label className="font-medium text-sm">Meals per week</label>
-              <div className="grid grid-cols-3 gap-2">
-                {[3, 4, 5].map((num) => (
+              <div className="grid grid-cols-4 gap-2">
+                {[1, 2, 3, 4].map((num) => (
                   <button
                     key={num}
                     onClick={() =>
                       setMealPlan((prev) => ({ ...prev, mealsPerWeek: num }))
                     }
-                    className={`py-3 border-2 rounded-lg text-sm ${
+                    className={`py-3 border-2 text-sm transition-colors ${
                       mealPlan.mealsPerWeek === num
-                        ? "border-[#067a46] bg-[#f8faf6] font-medium text-[#067a46]"
-                        : "hover:border-[#067a46] hover:bg-[#f8faf6]"
+                        ? "border-[#067a46] bg-[#067a46] font-bold text-white"
+                        : "border-gray-200 hover:border-[#067a46] hover:bg-[#f8faf6]"
                     }`}
                   >
                     {num}
@@ -135,11 +134,12 @@ export default function MealPlanSelection({
 
           {/* Price Summary */}
           <div className="bg-white border rounded-lg p-6 space-y-6">
-            <h2 className="font-bold text-lg">Price Summary</h2>
+            <h2 className="font-bold text-lg">Order Summary</h2>
             <div className="space-y-2">
               <div className="text-sm">
-                {mealPlan.mealsPerWeek} meals for {mealPlan.people} people per
-                week
+                {mealPlan.mealsPerWeek}{" "}
+                {mealPlan.mealsPerWeek === 1 ? "meal" : "meals"} for{" "}
+                {mealPlan.people} {mealPlan.people === 1 ? "person" : "people"}
               </div>
               <div className="text-gray-600 text-sm">
                 {mealPlan.mealsPerWeek * mealPlan.people} total servings
@@ -176,7 +176,7 @@ export default function MealPlanSelection({
               </div>
               <div className="bg-gray-100 -mx-6 px-6 py-4">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-sm">First box total</span>
+                  <span className="font-medium text-sm">Order total</span>
                   <div className="text-right">
                     <div className="inline-block bg-[#c92020] text-white text-xs px-2 py-0.5 rounded mb-1">
                       ₵{mealPlan.prices.discount.toFixed(2)} off
@@ -197,7 +197,7 @@ export default function MealPlanSelection({
 
           <div className="mt-6">
             <Button
-              className="w-full py-6 text-base bg-[#067a46] hover:bg-[#056835]"
+              className="w-full py-6 text-base bg-[#067a46] hover:bg-[#056835] rounded-none"
               onClick={() =>
                 handlePlanSelect({
                   people: mealPlan.people,
@@ -206,7 +206,7 @@ export default function MealPlanSelection({
                 })
               }
             >
-              Select this plan
+              Continue to menu selection
             </Button>
           </div>
         </div>

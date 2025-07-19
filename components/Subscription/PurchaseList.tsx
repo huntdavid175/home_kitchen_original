@@ -9,6 +9,8 @@ import { FloatingCart } from "./Cart/FloatiingCart";
 import { CartProvider } from "./Cart/CartProvider";
 import { toast } from "sonner";
 import PagePagination from "../Landing/Recipes/PagePagination";
+import { useAtom } from "jotai";
+import { mealPlanAtom } from "@/store/atoms";
 
 interface Nutrition {
   id: string;
@@ -47,6 +49,7 @@ interface Recipe {
   ingredients: any[];
   not_shipped_ingredients: any[];
   nutritions: Nutrition[];
+  price: number;
 }
 
 interface PaginationData {
@@ -64,12 +67,16 @@ export default function PurchaseList() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mealPlan] = useAtom(mealPlanAtom);
   const [pagination, setPagination] = useState<PaginationData>({
     currentPage: 1,
     totalPages: 1,
     totalItems: 0,
     itemsPerPage: 20,
   });
+
+  // Calculate total servings needed
+  const totalServingsNeeded = mealPlan.people * mealPlan.mealsPerWeek;
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -159,6 +166,32 @@ export default function PurchaseList() {
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
+        {/* Order Summary Banner */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-full">
+                <span className="text-blue-600 font-semibold text-sm">📋</span>
+              </div>
+              <div>
+                <h3 className="font-semibold text-blue-900">
+                  Your Order: {mealPlan.mealsPerWeek} meals for{" "}
+                  {mealPlan.people}{" "}
+                  {mealPlan.people === 1 ? "person" : "people"}
+                </h3>
+                <p className="text-sm text-blue-700">
+                  Select {mealPlan.mealsPerWeek} different meals
+                </p>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-blue-600 font-medium">
+                {mealPlan.mealsPerWeek} meals needed
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Tag filter */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           {allTags.map((tag) => (
@@ -209,11 +242,12 @@ export default function PurchaseList() {
                   recipe.image_url ||
                     "https://www.cleankitchen.ee/cdn/shop/files/UzbT9ZKHKeqoB-_4b2zeZgSW-wsEtLwj4nqBcoHE_gI.jpg?v=1721743606&width=1200",
                 ]}
-                price={10.13} // You might want to add price to your recipe interface
+                price={Number(recipe.price)} // You might want to add price to your recipe interface
                 cookingTime={parseInt(recipe.cooking_time)}
                 tags={recipe.tags.map((tag) => tag.name)}
                 showDetails={(open) => setOpenHandler(open, recipe)}
                 id={recipe.recipe_id}
+                maxServings={mealPlan.mealsPerWeek}
               />
             </motion.div>
           ))}

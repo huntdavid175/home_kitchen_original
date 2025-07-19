@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Check } from "lucide-react";
+import { Check, Truck, MapPin, Phone, User, CreditCard } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Truck } from "lucide-react";
 import ProgressBar from "../Subscription/progressBar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -213,7 +212,30 @@ export default function DeliveryForm({
       if (paymentResponse.status === true && paystackHandler) {
         try {
           const response = await paystackHandler.resumeTransaction(
-            paymentResponse.data.access_code
+            paymentResponse.data.access_code,
+            {
+              onSuccess: () => {
+                try {
+                  setProgress(4);
+                  // console.log("Payment successful:", transaction);
+                  // const transactionId = transaction.reference;
+
+                  // Clear the cart after successful payment
+                  clearCart();
+
+                  // Navigate to success page
+                  router.replace(
+                    `/subscribe/order-confirmation?&orderNumber=${orderId}`
+                  );
+                } catch (error) {
+                  console.error("Error after payment:", error);
+                  toast.error(
+                    "Payment successful but there was an error. Please contact support."
+                  );
+                  setLoading(false);
+                }
+              },
+            }
           );
           console.log("response of resume:", response);
           //     paystackHandler.resumeTransaction({
@@ -245,14 +267,14 @@ export default function DeliveryForm({
           //       },
           //       onCancel: () => {
           //         console.log("Payment cancelled");
-          //         setLoading(false);
-          //       },
-          //       onError: (error: any) => {
-          //         console.error("Payment error:", error);
-          //         toast.error("Payment failed");
-          //         setLoading(false);
-          //       },
-          //     });
+          //           setLoading(false);
+          //         },
+          //         onError: (error: any) => {
+          //           console.error("Payment error:", error);
+          //           toast.error("Payment failed");
+          //           setLoading(false);
+          //         },
+          //       });
         } catch (error) {
           console.error("Paystack popup error:", error);
           setLoading(false);
@@ -275,373 +297,411 @@ export default function DeliveryForm({
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       <ProgressBar progress={progress} />
-      <div className="max-w-5xl mx-auto grid gap-8 lg:gap-16 pt-16 lg:grid-cols-[1fr,400px]">
-        {/* Main Content */}
-        <div className="space-y-8">
-          {/* Delivery Form */}
-          <div className="lg:col-start-1">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
-                <div className="bg-muted/50 flex gap-2 p-4 rounded-lg">
-                  <Truck className="w-5 h-5 text-black" />
-                  <span className="text-muted-foreground text-sm">
-                    Please provide your address to see available delivery dates.
-                  </span>
-                </div>
 
-                <div className="grid gap-6">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="firstName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>First name *</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input {...field} placeholder="First name" />
-                              {!form.formState.errors.firstName &&
-                                field.value.length >= 2 && (
-                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                                )}
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="lastName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Last name *</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input {...field} placeholder="Last name" />
-                              {!form.formState.errors.lastName &&
-                                field.value.length >= 2 && (
-                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                                )}
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="address1"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Address line 1 *</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input {...field} placeholder="Address line 1" />
-                            {!form.formState.errors.address1 &&
-                              field.value.length >= 5 && (
-                                <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                              )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="address2"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Address line 2</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input {...field} placeholder="Address line 2" />
-                            {!form.formState.errors.address2 &&
-                              typeof field.value === "string" &&
-                              field.value.length > 0 && (
-                                <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                              )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="city"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>City *</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input {...field} placeholder="City" />
-                              {!form.formState.errors.city &&
-                                field.value.length >= 2 && (
-                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                                )}
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="zipCode"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>ZIP code *</FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input {...field} placeholder="ZIP code" />
-                              {!form.formState.errors.zipCode &&
-                                field.value.length >= 5 && (
-                                  <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                                )}
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone number *</FormLabel>
-                        <FormControl>
-                          <div className="relative">
-                            <Input
-                              {...field}
-                              type="tel"
-                              placeholder="Phone number"
-                            />
-                            {!form.formState.errors.phone &&
-                              field.value.length >= 10 && (
-                                <Check className="absolute right-3 top-2.5 h-5 w-5 text-green-600" />
-                              )}
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="deliveryInstruction"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Delivery Instruction</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select delivery instruction" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="concierge">
-                              Leave with concierge
-                            </SelectItem>
-                            <SelectItem value="door">Leave at door</SelectItem>
-                            <SelectItem value="hand">Hand delivery</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* <FormField
-                    control={form.control}
-                    name="sameAsBilling"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center space-x-2">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <label
-                          htmlFor="billing"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Billing is the same as delivery
-                        </label>
-                      </FormItem>
-                    )}
-                  /> */}
-                </div>
-              </form>
-            </Form>
+      <div className="container mx-auto px-4 py-8 pt-24">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              Delivery Information
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Please provide your delivery details to complete your order
+            </p>
           </div>
 
-          {/* Shipping Info */}
-          <div>
-            <Card className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold">Shipping</h2>
-                <Button variant="link" className="text-green-700">
-                  Edit
+          <div className="grid gap-8 lg:grid-cols-[1fr,400px]">
+            {/* Main Content */}
+            <div className="space-y-8">
+              {/* Delivery Form */}
+              <Card className="p-8 shadow-lg border-0">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-3 bg-blue-100 rounded-lg">
+                    <Truck className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      Delivery Details
+                    </h2>
+                    <p className="text-gray-600">
+                      Where should we deliver your meals?
+                    </p>
+                  </div>
+                </div>
+
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-8"
+                  >
+                    {/* Personal Information */}
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <User className="w-5 h-5 text-gray-600" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Personal Information
+                        </h3>
+                      </div>
+
+                      <div className="grid gap-6 sm:grid-cols-2">
+                        <FormField
+                          control={form.control}
+                          name="firstName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700">
+                                First name *
+                              </FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter your first name"
+                                    className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                  />
+                                  {!form.formState.errors.firstName &&
+                                    field.value.length >= 2 && (
+                                      <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                    )}
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="lastName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700">
+                                Last name *
+                              </FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter your last name"
+                                    className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                  />
+                                  {!form.formState.errors.lastName &&
+                                    field.value.length >= 2 && (
+                                      <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                    )}
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Address Information */}
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <MapPin className="w-5 h-5 text-gray-600" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Address Information
+                        </h3>
+                      </div>
+
+                      <div className="space-y-6">
+                        <FormField
+                          control={form.control}
+                          name="address1"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700">
+                                Address line 1 *
+                              </FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Input
+                                    {...field}
+                                    placeholder="Street address, apartment, suite, etc."
+                                    className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                  />
+                                  {!form.formState.errors.address1 &&
+                                    field.value.length >= 5 && (
+                                      <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                    )}
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="address2"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm font-medium text-gray-700">
+                                Address line 2
+                              </FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Input
+                                    {...field}
+                                    placeholder="Apartment, suite, unit, etc. (optional)"
+                                    className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                  />
+                                  {!form.formState.errors.address2 &&
+                                    typeof field.value === "string" &&
+                                    field.value.length > 0 && (
+                                      <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                    )}
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <div className="grid gap-6 sm:grid-cols-2">
+                          <FormField
+                            control={form.control}
+                            name="city"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium text-gray-700">
+                                  City *
+                                </FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <Input
+                                      {...field}
+                                      placeholder="Enter your city"
+                                      className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                    />
+                                    {!form.formState.errors.city &&
+                                      field.value.length >= 2 && (
+                                        <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                      )}
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="zipCode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="text-sm font-medium text-gray-700">
+                                  ZIP code *
+                                </FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <Input
+                                      {...field}
+                                      placeholder="Enter ZIP code"
+                                      className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                    />
+                                    {!form.formState.errors.zipCode &&
+                                      field.value.length >= 5 && (
+                                        <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                      )}
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contact Information */}
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <Phone className="w-5 h-5 text-gray-600" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Contact Information
+                        </h3>
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Phone number *
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Input
+                                  {...field}
+                                  type="tel"
+                                  placeholder="Enter your phone number"
+                                  className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                />
+                                {!form.formState.errors.phone &&
+                                  field.value.length >= 10 && (
+                                    <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                  )}
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="deliveryInstruction"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Delivery Instructions
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                                  <SelectValue placeholder="Select delivery instruction" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="concierge">
+                                  Leave with concierge
+                                </SelectItem>
+                                <SelectItem value="door">
+                                  Leave at door
+                                </SelectItem>
+                                <SelectItem value="hand">
+                                  Hand delivery
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </form>
+                </Form>
+              </Card>
+            </div>
+
+            {/* Order Summary and Checkout */}
+            <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
+              <Card className="p-6 shadow-lg border-0">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <CreditCard className="w-5 h-5 text-green-600" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Order Summary
+                  </h2>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <Image
+                      src="https://img.hellofresh.com/w_256,q_auto,f_auto,c_limit,fl_lossy/f_auto,fl_lossy,q_auto/hellofresh_website/us/cms/checkout/order-summary.png"
+                      alt="Meal box"
+                      width={80}
+                      height={80}
+                      className="rounded-lg"
+                    />
+                    <div>
+                      <h3 className="font-semibold text-sm text-gray-900">
+                        5 meals for 4 people per week
+                      </h3>
+                      <p className="text-xs text-gray-600 mt-1">
+                        20 servings at{" "}
+                        <span className="line-through">$9.99</span>{" "}
+                        <span className="text-red-600 font-semibold">
+                          ₵5.00
+                        </span>{" "}
+                        each
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 pt-4 border-t">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Box price</span>
+                      <span className="font-semibold text-gray-900">
+                        ₵199.80
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">Shipping</span>
+                      <div className="flex items-center gap-2">
+                        <span className="line-through text-gray-400">
+                          ₵10.99
+                        </span>
+                        <span className="text-green-600 font-semibold">
+                          FREE
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-red-600">Discount</span>
+                      <span className="text-red-600 font-semibold">
+                        ₵110.89
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-gray-900">
+                        First box total
+                      </span>
+                      <div className="text-right">
+                        <span className="line-through text-gray-400 mr-2">
+                          ₵210.79
+                        </span>
+                        <span className="text-2xl font-bold text-red-600">
+                          ₵99.90
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-blue-700 text-sm">
+                  <span className="font-medium">Order now</span> to get a box in{" "}
+                  <span className="font-medium">as few as 6 days</span>
+                </div>
+              </div>
+
+              {/* Checkout Buttons */}
+              <div className="space-y-4">
+                <Button
+                  type="button"
+                  onClick={handleBack}
+                  className="w-full h-12 bg-gray-100 text-gray-700 hover:bg-gray-200 border-0 font-semibold"
+                  size="lg"
+                >
+                  Go back
+                </Button>
+                <Button
+                  type="submit"
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 border-0 font-semibold shadow-lg"
+                  size="lg"
+                  disabled={loading}
+                  onClick={form.handleSubmit(onSubmit)}
+                >
+                  {loading ? "Processing..." : "Complete Order"}
                 </Button>
               </div>
-              <div>
-                <h3 className="font-semibold text-sm mb-2">Delivery details</h3>
-                <p className="text-muted-foreground text-xs">
-                  <span className="font-semibold text-black">
-                    First delivery:
-                  </span>
-                  <br /> Tuesday, February 25 09:00-20:00
-                </p>
-                <p className="text-muted-foreground text-xs mt-2">
-                  <span className="font-semibold text-black">
-                    Delivery instructions:
-                  </span>
-                  <br /> Tuesday, February 25 09:00-20:00
-                </p>
-                <p className="text-muted-foreground text-xs mt-2">
-                  <span className="font-semibold text-black">
-                    Subsequent deliveries:
-                  </span>
-                  <br /> Tuesday, February 25 09:00-20:00
-                </p>
-              </div>
-            </Card>
-            <div className="bg-muted/50 flex gap-2 p-4 rounded-lg mt-4">
-              <span className="text-muted-foreground text-sm">
-                You can{" "}
-                <span className="font-semibold text-black">
-                  skip a week or cancel
-                </span>{" "}
-                at any time.
-              </span>
             </div>
-          </div>
-        </div>
-
-        {/* Order Summary and Checkout */}
-        <div className="space-y-6 lg:col-start-2 lg:sticky lg:top-24 lg:self-start">
-          <Card className="p-6">
-            <h2 className="text-2xl font-semibold mb-6">Order summary</h2>
-            <div className="space-y-4">
-              <div className="flex gap-4">
-                <Image
-                  src="https://img.hellofresh.com/w_256,q_auto,f_auto,c_limit,fl_lossy/f_auto,fl_lossy,q_auto/hellofresh_website/us/cms/checkout/order-summary.png"
-                  alt="Meal box"
-                  width={80}
-                  height={80}
-                  className="rounded-lg"
-                />
-                <div>
-                  <h3 className="font-semibold text-sm">
-                    5 meals for 4 people per week
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    20 servings at <span className="line-through">$9.99</span>{" "}
-                    <span className="text-red-600">₵5.00</span> each
-                  </p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Box price</span>
-                  <span>₵199.80</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Shipping</span>
-                  <div>
-                    <span className="line-through text-muted-foreground mr-2">
-                      ₵10.99
-                    </span>
-                    <span className="text-red-600 ">FREE</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* <div className="bg-green-50 p-4 rounded-lg">
-                <div className="flex justify-between text-green-700 text-sm">
-                  <span>Free Item for Life</span>
-                  <span>FREE</span>
-                </div>
-                <p className="text-xs text-green-600 mt-1">
-                  Choose a breakfast item or side item every time you order,
-                  while subscription is active.
-                </p>
-              </div> */}
-
-              <div className="flex justify-between text-red-600 text-sm">
-                <span>Discount</span>
-                <span>₵110.89</span>
-              </div>
-
-              <button className="text-green-700 text-sm font-medium">
-                Apply promo code ▼
-              </button>
-
-              <div className="border-t pt-4">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="font-semibold">First box total</span>
-                  <div>
-                    <span className="line-through text-muted-foreground mr-2">
-                      ₵210.79
-                    </span>
-                    <span className="text-base font-bold text-red-600">
-                      ₵99.90
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <div className="bg-red-50 p-4 rounded-lg">
-            <div className="flex items-center gap-2 text-red-700 text-sm">
-              <span className="font-medium">Order now</span> to get a box in{" "}
-              <span className="font-medium">as few as 6 days</span>
-            </div>
-          </div>
-
-          {/* Checkout Buttons */}
-          <div className="flex gap-4">
-            <Button
-              type="button"
-              onClick={handleBack}
-              className="w-full bg-red-200 text-black hover:bg-red-300"
-              size="lg"
-            >
-              Go back
-            </Button>
-            <Button
-              type="submit"
-              className="w-full bg-green-700 hover:bg-green-800"
-              size="lg"
-              disabled={loading}
-              onClick={form.handleSubmit(onSubmit)}
-            >
-              {loading ? "Processing..." : "Checkout"}
-            </Button>
           </div>
         </div>
       </div>
