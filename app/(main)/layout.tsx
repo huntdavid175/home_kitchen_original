@@ -25,7 +25,7 @@ export default function RootLayout({
         <NavigationContainer />
 
         {/* Main content */}
-        <main className="max-w-6xl mx-auto py-16">{children}</main>
+        <main className=" mx-auto py-16">{children}</main>
 
         {/* Main site footer */}
         <Footer />

@@ -134,6 +134,7 @@ export default function RecipeDetailsPage() {
 
   return (
     <div className="min-h-screen bg-white mt-8 md:mt-0">
+      {/* Hero Section - Full Width */}
       <div className="relative w-full overflow-hidden">
         {/* Mobile Layout */}
         <div className="md:hidden mx-2">
@@ -258,7 +259,7 @@ export default function RecipeDetailsPage() {
         </div>
       </div>
 
-      {/* Recipe Detail */}
+      {/* Recipe Detail - Contained Layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
           <div className="md:col-span-1">
@@ -289,7 +290,7 @@ export default function RecipeDetailsPage() {
                     </div>
                   </li>
                 ))}
-                {recipe.not_shipped_ingredients.length > 0 && (
+                {/* {recipe.not_shipped_ingredients.length > 0 && (
                   <>
                     <li className="text-sm font-semibold text-gray-500 mt-4">
                       Not Shipped:
@@ -319,7 +320,7 @@ export default function RecipeDetailsPage() {
                       </li>
                     ))}
                   </>
-                )}
+                )} */}
               </ul>
 
               <div className="mt-6 pt-6 border-t border-gray-200">

@@ -171,7 +171,7 @@ export default function RecipeListingPage() {
       <div className="container mx-auto px-4 py-8 lg:py-12">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar - Desktop */}
-          <div className="hidden md:block w-64 flex-shrink-0">
+          <div className="hidden md:block w-48 flex-shrink-0">
             <div className="sticky top-8">
               <h1 className="text-xl font-bold mb-6">RECIPES</h1>
               <nav className="space-y-1">
@@ -179,7 +179,7 @@ export default function RecipeListingPage() {
                   <Link
                     key={category}
                     href="#"
-                    className="block px-4 py-2.5 text-sm text-gray-600 hover:bg-white hover:text-[#6D1D3A] rounded-lg transition-colors"
+                    className="block px-3 py-2 text-sm text-gray-600 hover:bg-white hover:text-[#6D1D3A] rounded-lg transition-colors"
                   >
                     {category}
                   </Link>
@@ -222,7 +222,7 @@ export default function RecipeListingPage() {
           </div>
 
           {/* Recipe Grid */}
-          <div className="flex-1">
+          <div className="flex-1 max-w-4xl">
             <motion.div
               className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8"
               variants={containerVariants}
