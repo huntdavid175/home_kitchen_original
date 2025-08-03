@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { useAtom } from "jotai";
-import { cartAtom, type CartItem } from "@/store/atoms";
+import { cartAtom, type CartItem, mealPlanAtom } from "@/store/atoms";
 
 type CartContextType = {
   items: CartItem[];
@@ -18,11 +18,12 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useAtom(cartAtom);
+  const [mealPlan] = useAtom(mealPlanAtom);
 
   // Calculate totals
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
   const totalPrice = items.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + item.price * item.quantity * mealPlan.people,
     0
   );
 

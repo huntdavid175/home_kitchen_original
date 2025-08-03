@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import RecipeCard from "@/components/Subscription/PurchaseRecipeCard";
 import RecipeDetailsDialog from "./RecipeDetailsDialog";
 import SubscriptionNav from "./SubscriptionNav";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import PagePagination from "../Landing/Recipes/PagePagination";
 import { useAtom } from "jotai";
 import { mealPlanAtom } from "@/store/atoms";
+import { useCart } from "./Cart/CartProvider";
 
 interface Nutrition {
   id: string;
@@ -68,6 +69,7 @@ export default function PurchaseList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [mealPlan] = useAtom(mealPlanAtom);
+  const { items } = useCart();
   const [pagination, setPagination] = useState<PaginationData>({
     currentPage: 1,
     totalPages: 1,
@@ -77,6 +79,9 @@ export default function PurchaseList() {
 
   // Calculate total servings needed
   const totalServingsNeeded = mealPlan.people * mealPlan.mealsPerWeek;
+
+  // Calculate unique meals in cart
+  const uniqueMealsInCart = items.filter((item) => item.quantity > 0).length;
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -166,32 +171,6 @@ export default function PurchaseList() {
         transition={{ duration: 0.5 }}
         className="max-w-7xl mx-auto"
       >
-        {/* Order Summary Banner */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-full">
-                <span className="text-blue-600 font-semibold text-sm">📋</span>
-              </div>
-              <div>
-                <h3 className="font-semibold text-blue-900">
-                  Your Order: {mealPlan.mealsPerWeek} meals for{" "}
-                  {mealPlan.people}{" "}
-                  {mealPlan.people === 1 ? "person" : "people"}
-                </h3>
-                <p className="text-sm text-blue-700">
-                  Select {mealPlan.mealsPerWeek} different meals
-                </p>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-blue-600 font-medium">
-                {mealPlan.mealsPerWeek} meals needed
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Tag filter */}
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           {allTags.map((tag) => (
@@ -268,6 +247,63 @@ export default function PurchaseList() {
         recipe={selectedRecipe}
       />
       <FloatingCart />
+
+      {/* Floating Progress Banner - Bottom Left */}
+      <AnimatePresence>
+        {uniqueMealsInCart > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
+            className="fixed bottom-6 left-6 z-50 bg-white rounded-lg shadow-lg border border-gray-200 p-4 max-w-sm"
+          >
+            {uniqueMealsInCart >= mealPlan.mealsPerWeek ? (
+              // Success message when all meals selected
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 rounded-full">
+                  <span className="text-green-600 font-semibold text-sm">
+                    ✓
+                  </span>
+                </div>
+                <div className="text-sm text-gray-700 font-medium">
+                  Nice! You've got the best price per serving
+                </div>
+              </div>
+            ) : (
+              // Progress message when still selecting
+              <div className="space-y-3">
+                <div className="text-sm text-gray-700">
+                  <span className="font-bold text-sm">
+                    {Math.round(
+                      (uniqueMealsInCart / mealPlan.mealsPerWeek) * 100
+                    )}
+                    %
+                  </span>{" "}
+                  Add{" "}
+                  <span className="font-bold">
+                    {Math.max(0, mealPlan.mealsPerWeek - uniqueMealsInCart)}
+                  </span>{" "}
+                  more recipes for the best price per serving
+                </div>
+
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-red-500 h-2 rounded-full transition-all duration-300"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (uniqueMealsInCart / mealPlan.mealsPerWeek) * 100
+                      )}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

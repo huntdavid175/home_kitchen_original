@@ -3,9 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Plus } from "lucide-react";
+import { Check, Plus, Minus } from "lucide-react";
 import TimeBadge from "./TimeBadge";
 import { useCart } from "./Cart/CartProvider";
+import { useAtom } from "jotai";
+import { mealPlanAtom } from "@/store/atoms";
 
 interface RecipeCardProps {
   title: string;
@@ -32,6 +34,7 @@ export default function PurchaseRecipeCard({
   const [isHovered, setIsHovered] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { items, addItem, removeItem } = useCart();
+  const [mealPlan] = useAtom(mealPlanAtom);
 
   // Get the current quantity from cart
   const cartItem = items.find((item) => item.id === id);
@@ -83,14 +86,18 @@ export default function PurchaseRecipeCard({
 
   return (
     <motion.div
-      className={`bg-white overflow-hidden shadow-xl w-full group cursor-pointer transition-all duration-300 ${
-        isMaxedOut ? "blur-sm" : ""
-      }`}
+      className={`bg-white overflow-hidden shadow-sm border border-gray-200 w-full group cursor-pointer transition-all duration-300`}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      whileHover={isMaxedOut ? {} : { scale: 1.02, y: -4 }}
+      whileHover={isMaxedOut ? {} : { y: -2 }}
       transition={{ duration: 0.3 }}
       onClick={() => showDetails(true)}
+      style={{
+        boxShadow:
+          isHovered && !isMaxedOut
+            ? "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+            : undefined,
+      }}
     >
       {/* Image Container */}
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -107,73 +114,34 @@ export default function PurchaseRecipeCard({
               src={images[currentImageIndex] || "/placeholder.svg"}
               alt={`${title} - image ${currentImageIndex + 1}`}
               fill
-              className={`object-cover transition-transform duration-500 ${
-                isMaxedOut ? "" : "group-hover:scale-110"
-              }`}
+              className="object-cover transition-transform duration-500"
               priority
             />
           </motion.div>
         </AnimatePresence>
-
-        {/* Cooking Time Badge */}
-        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full shadow-md">
-          <TimeBadge time={cookingTime} />
-        </div>
-
-        {/* Max Meals Warning */}
-        {isMaxedOut && (
-          <div className="absolute top-4 right-4 bg-gray-500 text-white text-xs px-3 py-1.5 rounded-full font-medium">
-            Max meals
-          </div>
-        )}
-
-        {/* Selected Badge */}
-        {isSelected && (
-          <div className="absolute top-4 right-4 bg-green-500 text-white text-xs px-3 py-1.5 rounded-full font-medium flex items-center gap-1">
-            <Check size={12} />
-            Selected
-          </div>
-        )}
-
-        {/* Overlay for selected state */}
-        {isSelected && (
-          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-            <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">
-              <Check size={24} className="text-green-600" />
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Content */}
       <div className="p-4 space-y-3">
-        {/* Tags */}
-        <div className="flex flex-wrap gap-1">
-          {tags.slice(0, 3).map((tag, index) => (
-            <span
-              key={index}
-              className="px-2 py-0.5 bg-orange-100 text-orange-600 rounded-full text-[8px] font-medium"
-            >
-              {tag}
-            </span>
-          ))}
-          {tags.length > 3 && (
-            <span className="px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-[8px] font-medium">
-              +{tags.length - 3}
-            </span>
-          )}
-        </div>
-
         {/* Title */}
-        <h3 className="text-sm font-semibold leading-tight text-gray-900 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-base font-bold leading-tight text-gray-900 group-hover:text-green-600 transition-colors">
           {title}
         </h3>
 
+        {/* Key Metrics */}
+        <div className="flex items-center gap-2 text-xs text-gray-600">
+          <span>{cookingTime} mins</span>
+          <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+          <span>619 kcal</span>
+          <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+          <span>30.8g protein</span>
+        </div>
+
         {/* Price and Action */}
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center justify-between pt-2">
           <div className="flex items-baseline gap-1">
-            <span className="text-lg font-bold text-red-500">₵</span>
-            <span className="text-lg font-bold text-red-500">
+            <span className="text-red-500 font-bold">₵</span>
+            <span className="text-red-500 font-bold text-lg">
               {price.toFixed(2)}
             </span>
             <span className="text-gray-500 text-xs">/ meal</span>
@@ -183,20 +151,20 @@ export default function PurchaseRecipeCard({
             <button
               onClick={(e) => handleAddToCart(e)}
               disabled={!canAddMore}
-              className={`w-10 h-10 flex items-center justify-center font-bold text-sm transition-all duration-200 ${
+              className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200 ${
                 canAddMore
-                  ? "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg transform hover:scale-105"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  ? "bg-orange-500 text-white hover:bg-orange-600 hover:shadow-md"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
             >
-              {canAddMore ? <Plus size={16} /> : "×"}
+              <Plus size={16} />
             </button>
           ) : (
             <button
               onClick={(e) => handleRemove(e)}
-              className="w-10 h-10 flex items-center justify-center font-bold text-sm bg-red-500 text-white hover:bg-red-600 hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-white border-2 border-orange-500 text-orange-500 hover:bg-orange-50 hover:shadow-md transition-all duration-200"
             >
-              ×
+              <Minus size={16} />
             </button>
           )}
         </div>

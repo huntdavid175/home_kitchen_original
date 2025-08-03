@@ -223,9 +223,9 @@ export default function OrderConfirmationPage() {
                       </span>
                       <span>
                         $
-                        {(
-                          Number(meal.price) * subscription.items.length
-                        ).toFixed(2)}
+                        {(Number(meal.price) * Number(meal.quantity)).toFixed(
+                          2
+                        )}
                       </span>
                     </div>
                   ))}

@@ -136,8 +136,8 @@ export default function DeliveryForm({
 
       // Create subscription payload
       const subscriptionPayload = {
-        // meals_per_week: mealPlan.mealsPerWeek,
-        // people_count: mealPlan.people,
+        meals_per_week: mealPlan.mealsPerWeek,
+        people_count: mealPlan.people,
         // price: mealPlan.prices.firstBoxTotal.toString(),
         // preferred_delivery_day: "Monday", // Hardcoded as requested
         // next_delivery_date: "2024-03-25", // Hardcoded as requested

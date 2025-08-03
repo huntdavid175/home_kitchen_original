@@ -7,11 +7,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { Button } from "@/components/ui/button";
+import { useAtom } from "jotai";
+import { mealPlanAtom } from "@/store/atoms";
 
 export function FloatingCart() {
   const [isOpen, setIsOpen] = useState(false);
   const { items, totalItems, totalPrice, updateQuantity, removeItem } =
     useCart();
+  const [mealPlan] = useAtom(mealPlanAtom);
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   // Check if we're on a mobile device
@@ -165,36 +168,15 @@ export function FloatingCart() {
                         <h4 className="font-medium text-sm sm:text-sm">
                           {item.name}
                         </h4>
-                        <p className="text-orange-700 font-semibold mt-1 text-sm sm:text-sm">
-                          ₵{item.price.toFixed(2)}
-                        </p>
-                        <div className="flex items-center mt-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-6 w-6 sm:h-7 sm:w-7"
-                            onClick={() =>
-                              updateQuantity(
-                                item.id,
-                                Math.max(1, item.quantity - 1)
-                              )
-                            }
-                          >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="mx-2 w-6 sm:w-8 text-center text-xs">
-                            {item.quantity}
+                        <div className="flex items-center justify-between mt-2">
+                          <p className="text-orange-700 font-semibold text-sm">
+                            ₵{item.price.toFixed(2)}
+                          </p>
+                          <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium">
+                            ×{mealPlan.people}
                           </span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-6 w-6 sm:h-7 sm:w-7"
-                            onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
-                            }
-                          >
-                            <Plus className="h-3 w-3" />
-                          </Button>
+                        </div>
+                        <div className="flex items-center mt-2">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -219,12 +201,22 @@ export function FloatingCart() {
                     ₵{totalPrice.toFixed(2)}
                   </span>
                 </div>
-                <Button
-                  className="w-full bg-green-700 text-white hover:bg-green-800"
-                  onClick={() => router.push("/subscribe/checkout")}
-                >
-                  Proceed
-                </Button>
+                {items.length >= mealPlan.mealsPerWeek ? (
+                  <Button
+                    className="w-full bg-green-700 text-white hover:bg-green-800"
+                    onClick={() => router.push("/subscribe/checkout")}
+                  >
+                    Proceed
+                  </Button>
+                ) : (
+                  <div className="text-center text-sm text-gray-500 py-2">
+                    Select {mealPlan.mealsPerWeek - items.length} more{" "}
+                    {mealPlan.mealsPerWeek - items.length === 1
+                      ? "meal"
+                      : "meals"}{" "}
+                    to proceed
+                  </div>
+                )}
               </div>
             )}
           </motion.div>
