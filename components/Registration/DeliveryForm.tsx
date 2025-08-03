@@ -2,7 +2,15 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Check, Truck, MapPin, Phone, User, CreditCard } from "lucide-react";
+import {
+  Check,
+  Truck,
+  MapPin,
+  Phone,
+  User,
+  CreditCard,
+  Calendar,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -43,6 +51,7 @@ const deliverySchema = z.object({
   city: z.string().min(2, "Please enter a valid city"),
   zipCode: z.string().min(5, "Please enter a valid ZIP code"),
   phone: z.string().min(10, "Please enter a valid phone number"),
+  deliveryDate: z.string().min(1, "Please select a delivery date"),
   deliveryInstruction: z.string().optional(),
   sameAsBilling: z.boolean().default(true),
 });
@@ -105,6 +114,7 @@ export default function DeliveryForm({
       city: "",
       zipCode: "",
       phone: "",
+      deliveryDate: "",
       deliveryInstruction: "concierge",
       sameAsBilling: true,
     },
@@ -138,10 +148,7 @@ export default function DeliveryForm({
       const subscriptionPayload = {
         meals_per_week: mealPlan.mealsPerWeek,
         people_count: mealPlan.people,
-        // price: mealPlan.prices.firstBoxTotal.toString(),
-        // preferred_delivery_day: "Monday", // Hardcoded as requested
-        // next_delivery_date: "2024-03-25", // Hardcoded as requested
-        delivery_date: "2024-03-18", // Hardcoded as requested
+        delivery_date: form.getValues().deliveryDate,
         delivery_instruction: form.getValues().deliveryInstruction,
         delivery_address: `${form.getValues().address1}, ${
           form.getValues().address2
@@ -206,13 +213,13 @@ export default function DeliveryForm({
       console.log("Order ID:", orderResponse);
 
       // Then process the payment
-      const paymentResponse = await makePaymentIntent();
-      console.log("Paymentintent response:", paymentResponse);
+      // const paymentResponse = await makePaymentIntent();
+      // console.log("Paymentintent response:", paymentResponse);
 
-      if (paymentResponse.status === true && paystackHandler) {
+      if (orderResponse.payment.paystack.status === true && paystackHandler) {
         try {
           const response = await paystackHandler.resumeTransaction(
-            paymentResponse.data.access_code,
+            orderResponse.payment.paystack.data.access_code,
             {
               onSuccess: () => {
                 try {
@@ -554,6 +561,43 @@ export default function DeliveryForm({
                           </FormItem>
                         )}
                       />
+                    </div>
+
+                    {/* Delivery Information */}
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <Calendar className="w-5 h-5 text-gray-600" />
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Delivery Information
+                        </h3>
+                      </div>
+
+                      <FormField
+                        control={form.control}
+                        name="deliveryDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-medium text-gray-700">
+                              Delivery Date *
+                            </FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Input
+                                  {...field}
+                                  type="date"
+                                  placeholder="Select delivery date"
+                                  className="h-12 px-4 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                                />
+                                {!form.formState.errors.deliveryDate &&
+                                  field.value && (
+                                    <Check className="absolute right-3 top-3 h-6 w-6 text-green-600" />
+                                  )}
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
                       <FormField
                         control={form.control}
@@ -617,41 +661,36 @@ export default function DeliveryForm({
                     />
                     <div>
                       <h3 className="font-semibold text-sm text-gray-900">
-                        5 meals for 4 people per week
+                        {mealPlan.mealsPerWeek}{" "}
+                        {mealPlan.mealsPerWeek === 1 ? "meal" : "meals"} for{" "}
+                        {mealPlan.people}{" "}
+                        {mealPlan.people === 1 ? "person" : "people"} per week
                       </h3>
                       <p className="text-xs text-gray-600 mt-1">
-                        20 servings at{" "}
-                        <span className="line-through">$9.99</span>{" "}
-                        <span className="text-red-600 font-semibold">
-                          ₵5.00
-                        </span>{" "}
-                        each
+                        {mealPlan.mealsPerWeek * mealPlan.people} total servings
                       </p>
                     </div>
                   </div>
 
                   <div className="space-y-3 pt-4 border-t">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Box price</span>
+                      <span className="text-gray-600">Meals total</span>
                       <span className="font-semibold text-gray-900">
-                        ₵199.80
+                        ₵
+                        {cartItems
+                          .reduce(
+                            (total, item) =>
+                              total +
+                              item.price * item.quantity * mealPlan.people,
+                            0
+                          )
+                          .toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Shipping</span>
-                      <div className="flex items-center gap-2">
-                        <span className="line-through text-gray-400">
-                          ₵10.99
-                        </span>
-                        <span className="text-green-600 font-semibold">
-                          FREE
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-red-600">Discount</span>
-                      <span className="text-red-600 font-semibold">
-                        ₵110.89
+                      <span className="text-gray-500 text-xs">
+                        Paid at delivery
                       </span>
                     </div>
                   </div>
@@ -659,14 +698,19 @@ export default function DeliveryForm({
                   <div className="pt-4 border-t">
                     <div className="flex justify-between items-center">
                       <span className="font-bold text-gray-900">
-                        First box total
+                        Order total
                       </span>
                       <div className="text-right">
-                        <span className="line-through text-gray-400 mr-2">
-                          ₵210.79
-                        </span>
                         <span className="text-2xl font-bold text-red-600">
-                          ₵99.90
+                          ₵
+                          {cartItems
+                            .reduce(
+                              (total, item) =>
+                                total +
+                                item.price * item.quantity * mealPlan.people,
+                              0
+                            )
+                            .toFixed(2)}
                         </span>
                       </div>
                     </div>

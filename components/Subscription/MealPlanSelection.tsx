@@ -90,7 +90,10 @@ export default function MealPlanSelection({
           {/* Selection Controls */}
           <div className="space-y-8 mb-8">
             <div className="space-y-2">
-              <label className="font-medium text-sm">Number of people</label>
+              <label className="font-medium text-sm flex items-center gap-2">
+                <span className="text-blue-600">👥</span>
+                Number of people
+              </label>
               <div className="grid grid-cols-4 gap-2">
                 {[1, 2, 3, 4].map((num) => (
                   <button
@@ -111,7 +114,10 @@ export default function MealPlanSelection({
             </div>
 
             <div className="space-y-2">
-              <label className="font-medium text-sm">Meals per week</label>
+              <label className="font-medium text-sm flex items-center gap-2">
+                <span className="text-green-600">🍽️</span>
+                Meals per week
+              </label>
               <div className="grid grid-cols-4 gap-2">
                 {[1, 2, 3, 4].map((num) => (
                   <button
@@ -132,68 +138,23 @@ export default function MealPlanSelection({
             </div>
           </div>
 
-          {/* Price Summary */}
-          <div className="bg-white border rounded-lg p-6 space-y-6">
-            <h2 className="font-bold text-lg">Order Summary</h2>
-            <div className="space-y-2">
-              <div className="text-sm">
-                {mealPlan.mealsPerWeek}{" "}
-                {mealPlan.mealsPerWeek === 1 ? "meal" : "meals"} for{" "}
-                {mealPlan.people} {mealPlan.people === 1 ? "person" : "people"}
-              </div>
-              <div className="text-gray-600 text-sm">
-                {mealPlan.mealsPerWeek * mealPlan.people} total servings
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-sm">Box price</span>
-                <span className="font-medium text-sm">
-                  ₵{mealPlan.prices.boxPrice.toFixed(2)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm">Price per serving</span>
-                <div className="text-right">
-                  <span className="line-through text-gray-400 mr-2 text-sm">
-                    ₵{PRICE_PER_SERVING.toFixed(2)}
-                  </span>
-                  <span className="text-[#c92020] text-sm font-medium">
-                    ₵{mealPlan.prices.pricePerServing.toFixed(2)}
-                  </span>
+          {/* Quick Summary */}
+          {mealPlan.people > 0 && mealPlan.mealsPerWeek > 0 && (
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 mb-6">
+              <div className="text-center">
+                <div className="text-2xl mb-2">
+                  {mealPlan.mealsPerWeek}{" "}
+                  {mealPlan.mealsPerWeek === 1 ? "meal" : "meals"} for{" "}
+                  {mealPlan.people}{" "}
+                  {mealPlan.people === 1 ? "person" : "people"}
                 </div>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm">Shipping</span>
-                <div className="text-right">
-                  <span className="line-through text-gray-400 mr-2">
-                    ₵{SHIPPING_COST.toFixed(2)}
-                  </span>
-                  <span className="text-[#c92020] font-medium text-sm">
-                    FREE
-                  </span>
-                </div>
-              </div>
-              <div className="bg-gray-100 -mx-6 px-6 py-4">
-                <div className="flex justify-between items-center">
-                  <span className="font-medium text-sm">Order total</span>
-                  <div className="text-right">
-                    <div className="inline-block bg-[#c92020] text-white text-xs px-2 py-0.5 rounded mb-1">
-                      ₵{mealPlan.prices.discount.toFixed(2)} off
-                    </div>
-                    <div>
-                      <span className="line-through text-gray-400 mr-2 text-lg">
-                        ₵{(mealPlan.prices.boxPrice + SHIPPING_COST).toFixed(2)}
-                      </span>
-                      <span className="text-[#c92020] font-bold text-lg">
-                        ₵{mealPlan.prices.firstBoxTotal.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
+                <div className="text-sm text-gray-600">
+                  {mealPlan.mealsPerWeek * mealPlan.people} total servings this
+                  week
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="mt-6">
             <Button

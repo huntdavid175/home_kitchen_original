@@ -222,7 +222,7 @@ export default function OrderConfirmationPage() {
                         {meal.quantity} × {meal.recipe.name}
                       </span>
                       <span>
-                        $
+                        ₵
                         {(Number(meal.price) * Number(meal.quantity)).toFixed(
                           2
                         )}
@@ -233,7 +233,7 @@ export default function OrderConfirmationPage() {
                 <Separator className="my-2" />
                 <div className="flex justify-between text-sm">
                   <span>Subtotal</span>
-                  <span>${subscription.total_price}</span>
+                  <span>₵{subscription.total_price}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Shipping</span>
@@ -241,7 +241,7 @@ export default function OrderConfirmationPage() {
                 </div>
                 <div className="flex justify-between font-medium">
                   <span>Total</span>
-                  <span>${subscription.total_price}</span>
+                  <span>₵{subscription.total_price}</span>
                 </div>
               </div>
             </div>
