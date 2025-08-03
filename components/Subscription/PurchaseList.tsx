@@ -267,7 +267,7 @@ export default function PurchaseList() {
                   </span>
                 </div>
                 <div className="text-sm text-gray-700 font-medium">
-                  Nice! You've got the best price per serving
+                  Nice! You&apos;ve got the best price per serving
                 </div>
               </div>
             ) : (
