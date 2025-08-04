@@ -70,6 +70,7 @@ interface Subscription {
   items: Item[];
   deliveries: Delivery[];
   payment: Payment;
+  formatted_order_number: string;
 }
 
 export default function OrderConfirmationPage() {
@@ -174,7 +175,7 @@ export default function OrderConfirmationPage() {
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold">
-                    Order #{subscription.id}
+                    {subscription.formatted_order_number}
                   </h2>
                   <span className="text-sm text-muted-foreground">
                     Placed on{" "}

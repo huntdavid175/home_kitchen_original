@@ -48,7 +48,7 @@ export const OrdersTable = ({ orders }: { orders: any[] }) => (
               }}
             >
               <TableCell className="py-3 px-4 border-t border-gray-100 font-medium">
-                {order.id}
+                {order.formatted_order_number}
               </TableCell>
               <TableCell className="py-3 px-4 border-t border-gray-100 flex items-center gap-2">
                 <Calendar className="h-3 w-3 text-muted-foreground" />

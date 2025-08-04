@@ -146,7 +146,7 @@ export function RecentOrders({ recentOrders }: { recentOrders: any }) {
                   style={{ animationDelay: `${0.1 + index * 0.1}s` }}
                 >
                   <TableCell className="py-3 px-4 border-t border-gray-100 font-medium">
-                    {order.id}
+                    {order.formatted_order_number}
                   </TableCell>
                   <TableCell className="py-3 px-4 border-t border-gray-100">
                     {new Date(order.created_at).toLocaleDateString("en-US", {
