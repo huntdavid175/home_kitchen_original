@@ -65,117 +65,48 @@ interface Order {
 }
 
 export function OrderDetails({ orderDetails }: any) {
-  //   const order: Order = {
-  //     id: orderId,
-  //     date: "April 11, 2023",
-  //     deliveryDate: "April 13, 2023",
-  //     status:
-  //       orderId === "ORD-7291" || orderId === "ORD-1745"
-  //         ? "Delivered"
-  //         : orderId === "ORD-6384"
-  //         ? "Preparing"
-  //         : orderId === "ORD-5127"
-  //         ? "Ready"
-  //         : orderId === "ORD-4982"
-  //         ? "Confirmed"
-  //         : orderId === "ORD-3756"
-  //         ? "Pending"
-  //         : "Cancelled",
-  //     total: "$59.96",
-  //     subtotal: "$64.96",
-  //     discount: "-$5.00",
-  //     payment: {
-  //       method: "Visa •••• 4242",
-  //       date: "April 11, 2023",
-  //     },
-  //     address: {
-  //       name: "Alex Johnson",
-  //       street: "123 Main Street, Apt 4B",
-  //       city: "New York, NY 10001",
-  //       phone: "(555) 123-4567",
-  //     },
-  //     meals: [
-  //       {
-  //         id: 1,
-  //         name: "Garlic Butter Salmon",
-  //         description:
-  //           "Pan-seared salmon with garlic butter sauce, served with roasted vegetables",
-  //         price: "$14.99",
-  //         image:
-  //           "https://www.howsweeteats.com/wp-content/uploads/2023/01/sticky-garlic-butter-salmon-9.jpg",
-  //       },
-  //       {
-  //         id: 2,
-  //         name: "Vegetable Stir Fry",
-  //         description:
-  //           "Fresh vegetables stir-fried with tofu in a savory sauce, served with rice",
-  //         price: "$14.99",
-  //         image:
-  //           "https://www.budgetbytes.com/wp-content/uploads/2022/03/Easy-Vegetable-Stir-Fry-V1.jpg",
-  //       },
-  //       {
-  //         id: 3,
-  //         name: "Chicken Fajita Bowl",
-  //         description:
-  //           "Grilled chicken with bell peppers and onions, served over cilantro lime rice",
-  //         price: "$14.99",
-  //         image:
-  //           "https://whatsgabycooking.com/wp-content/uploads/2019/01/Albertsons-Chicken-Fajita-Bowls-Prep-Shot-2-copy-2.jpg",
-  //       },
-  //       {
-  //         id: 4,
-  //         name: "Mushroom Risotto",
-  //         description:
-  //           "Creamy arborio rice with sautéed mushrooms, garlic, and parmesan cheese",
-  //         price: "$14.99",
-  //         image:
-  //           "https://assets.epicurious.com/photos/5c191ba2b950cf635908c333/1:1/w_2560%2Cc_limit/Oven-Risotto-with-Mushrooms-recipe-13122018.jpg",
-  //       },
-  //     ],
-  //     timeline: [],
-  //   };
+  // Define order status progression
+  const getOrderProgress = () => {
+    const status = orderDetails.status.toLowerCase();
 
-  // Define timeline after order is created
-  //   order.timeline = [
-  //     {
-  //       status: "Order Placed",
-  //       date: "April 11, 2023",
-  //       time: "10:23 AM",
-  //       description: "Your order has been received and is being processed",
-  //       completed: true,
-  //     },
-  //     {
-  //       status: "Order Confirmed",
-  //       date: "April 11, 2023",
-  //       time: "10:30 AM",
-  //       description:
-  //         "Your order has been confirmed and scheduled for preparation",
-  //       completed: orderDetails.status !== "Pending",
-  //     },
-  //     {
-  //       status: "Preparing",
-  //       date: "April 12, 2023",
-  //       time: "8:15 AM",
-  //       description: "Your meals are being prepared by our chefs",
-  //       completed: ["Preparing", "Ready", "Delivered"].includes(
-  //         orderDetails.status
-  //       ),
-  //     },
-  //     {
-  //       status: "Out for Delivery",
-  //       date: "April 13, 2023",
-  //       time: "9:45 AM",
-  //       description: "Your order is on its way to you",
-  //       completed: ["Ready", "Delivered"].includes(orderDetails.status),
-  //     },
-  //     {
-  //       status: "Delivered",
-  //       date: "April 13, 2023",
-  //       time: "2:30 PM",
-  //       description: "Your order has been delivered successfully",
-  //       completed: orderDetails.status === "Delivered",
-  //     },
-  //   ];
+    if (status === "cancelled") {
+      return {
+        currentStep: 0,
+        totalSteps: 5,
+        steps: [
+          { name: "Order Placed", completed: true },
+          { name: "Order Confirmed", completed: false },
+          { name: "Preparing", completed: false },
+          { name: "Ready", completed: false },
+          { name: "Delivered", completed: false },
+        ],
+        cancelled: true,
+      };
+    }
+
+    const steps = [
+      { name: "Order Placed", completed: true },
+      { name: "Order Confirmed", completed: !["pending"].includes(status) },
+      {
+        name: "Preparing",
+        completed: ["preparing", "ready", "delivered"].includes(status),
+      },
+      { name: "Ready", completed: ["ready", "delivered"].includes(status) },
+      { name: "Delivered", completed: status === "delivered" },
+    ];
+
+    const currentStep = steps.findIndex((step) => !step.completed);
+    const totalSteps = steps.length;
+
+    return {
+      currentStep: currentStep === -1 ? totalSteps : currentStep,
+      totalSteps,
+      steps,
+      cancelled: false,
+    };
+  };
+
+  const progress = getOrderProgress();
 
   return (
     <div className="space-y-6">
@@ -194,14 +125,14 @@ export function OrderDetails({ orderDetails }: any) {
       `}</style>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <Button variant="outline" size="icon" asChild>
-          <Link href="/dashboard/orders">
+          <Link href="/user/subscriptions/orders">
             <ArrowLeft className="h-4 w-4" />
             <span className="sr-only">Back to orders</span>
           </Link>
         </Button>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">
-            Order {orderDetails.id}
+            {orderDetails.formatted_order_number}
           </h2>
           <p className="text-muted-foreground">
             Placed on{" "}
@@ -238,53 +169,203 @@ export function OrderDetails({ orderDetails }: any) {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <Card className="rounded-2xl border shadow-md overflow-hidden">
-            <CardHeader>
-              <CardTitle>Order Timeline</CardTitle>
-              <CardDescription>Track the status of your order</CardDescription>
-            </CardHeader>
+            {/* <CardHeader>
+              <CardTitle>Order Progress</CardTitle>
+              <CardDescription> Track your order journey</CardDescription>
+            </CardHeader> */}
             <CardContent>
-              {/* <div className="space-y-4">
-                {order.timeline.map((event: TimelineEvent, index: number) => (
-                  <div key={index} className="flex gap-4">
-                    <div className="relative flex flex-col items-center">
+              <div className="space-y-6">
+                {/* Modern Progress Bar */}
+                <div className="space-y-4">
+                  {/* Header */}
+                  <div className="flex justify-between items-center pt-4">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">
+                        Order Progress
+                      </h3>
+                      <p className="text-xs text-gray-500">
+                        Track your order journey
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-lg font-bold text-gray-900">
+                        {progress.currentStep}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        / {progress.totalSteps}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Modern Progress Bar */}
+                  <div className="relative">
+                    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden shadow-inner">
                       <div
-                        className={`flex h-8 w-8 items-center justify-center rounded-full border-2 transition-all duration-300 ${
-                          order.status === "Cancelled" && index > 0
-                            ? "border-red-600 bg-red-50"
-                            : event.completed
-                            ? "border-green-600 bg-green-50"
-                            : "border-muted-foreground bg-background"
+                        className={`h-full rounded-full transition-all duration-700 ease-out ${
+                          progress.cancelled
+                            ? "bg-gradient-to-r from-red-400 to-red-600"
+                            : "bg-gradient-to-r from-blue-500 via-purple-500 to-green-500"
                         }`}
-                      >
-                        {index === 0 && <Package className="h-4 w-4" />}
-                        {index === 1 && <Package className="h-4 w-4" />}
-                        {index === 2 && <Package className="h-4 w-4" />}
-                        {index === 3 && <Truck className="h-4 w-4" />}
-                        {index === 4 && <Package className="h-4 w-4" />}
-                      </div>
-                      {index < order.timeline.length - 1 && (
-                        <div className="absolute top-8 h-full w-0.5 bg-muted-foreground/30"></div>
+                        style={{
+                          width: `${
+                            (progress.currentStep / progress.totalSteps) * 100
+                          }%`,
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+
+                  {/* Modern Step Indicators */}
+                  <div className="relative">
+                    <div className="flex justify-between items-center">
+                      {progress.steps.map((step, index) => (
+                        <div
+                          key={index}
+                          className="flex flex-col items-center space-y-2 relative"
+                        >
+                          {/* Step Circle */}
+                          <div className="relative">
+                            <div
+                              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-500 ${
+                                progress.cancelled && index > 0
+                                  ? "bg-gradient-to-br from-red-100 to-red-200 text-red-700 border-2 border-red-300 shadow-lg"
+                                  : step.completed
+                                  ? "bg-gradient-to-br from-green-100 to-green-200 text-green-700 border-2 border-green-300 shadow-lg"
+                                  : "bg-white text-gray-400 border-2 border-gray-200 shadow-md"
+                              }`}
+                            >
+                              {step.completed ? (
+                                <svg
+                                  className="w-3 h-3"
+                                  fill="currentColor"
+                                  viewBox="0 0 20 20"
+                                >
+                                  <path
+                                    fillRule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clipRule="evenodd"
+                                  />
+                                </svg>
+                              ) : (
+                                index + 1
+                              )}
+                            </div>
+
+                            {/* Pulse animation for current step */}
+                            {!step.completed &&
+                              index === progress.currentStep - 1 &&
+                              !progress.cancelled && (
+                                <div className="absolute inset-0 w-8 h-8 rounded-full bg-green-400 animate-ping opacity-20"></div>
+                              )}
+                          </div>
+
+                          {/* Step Label */}
+                          <div className="text-center max-w-16">
+                            <span
+                              className={`text-xs font-medium ${
+                                progress.cancelled && index > 0
+                                  ? "text-red-600"
+                                  : step.completed
+                                  ? "text-green-600"
+                                  : "text-gray-400"
+                              }`}
+                            >
+                              {step.name}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Connecting Lines */}
+                    <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 -z-10"></div>
+                  </div>
+                </div>
+
+                {/* Modern Status Card */}
+                <div
+                  className={`rounded-lg p-4 ${
+                    progress.cancelled
+                      ? "bg-gradient-to-r from-red-50 to-red-100 border border-red-200"
+                      : "bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200"
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="relative">
+                      <div
+                        className={`w-3 h-3 rounded-full ${
+                          progress.cancelled ? "bg-red-500" : "bg-green-500"
+                        }`}
+                      ></div>
+                      {!progress.cancelled && (
+                        <div className="absolute inset-0 w-3 h-3 rounded-full bg-green-400 animate-ping"></div>
                       )}
                     </div>
-                    <div className="flex-1 pb-8">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-medium">{event.status}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {event.date} at {event.time}
-                        </p>
-                      </div>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {event.description}
+                    <div className="flex-1">
+                      <h4
+                        className={`text-sm font-semibold ${
+                          progress.cancelled ? "text-red-800" : "text-gray-900"
+                        }`}
+                      >
+                        {progress.cancelled
+                          ? "Order Cancelled"
+                          : progress.steps[progress.currentStep - 1]?.name ||
+                            "Order Placed"}
+                      </h4>
+                      <p
+                        className={`text-xs ${
+                          progress.cancelled ? "text-red-600" : "text-gray-600"
+                        }`}
+                      >
+                        {progress.cancelled
+                          ? "Your order has been cancelled and will not be processed"
+                          : progress.currentStep === progress.totalSteps
+                          ? "Your order has been delivered successfully! 🎉"
+                          : `Your order is currently being ${progress.steps[
+                              progress.currentStep - 1
+                            ]?.name.toLowerCase()}`}
                       </p>
-                      {order.status === "Cancelled" && index === 1 && (
-                        <p className="mt-2 text-sm text-red-600 font-medium">
-                          Order was cancelled on April 11, 2023 at 11:45 AM
-                        </p>
+                    </div>
+
+                    {/* Status Icon */}
+                    <div
+                      className={`p-2 rounded-full ${
+                        progress.cancelled ? "bg-red-100" : "bg-green-100"
+                      }`}
+                    >
+                      {progress.cancelled ? (
+                        <svg
+                          className="w-4 h-4 text-red-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          className="w-4 h-4 text-green-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
                       )}
                     </div>
                   </div>
-                ))}
-              </div> */}
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -318,9 +399,11 @@ export function OrderDetails({ orderDetails }: any) {
                       </p>
                     </div>
                     <div className="text-left sm:text-right mt-2 sm:mt-0">
-                      <p className="font-medium">${meal.price}</p>
+                      <p className="font-medium">
+                        ${meal.price * meal.quantity}
+                      </p>
                       <p className="text-sm text-muted-foreground">
-                        1 × ${meal.price}
+                        {meal.quantity} × ${meal.price}
                       </p>
                     </div>
                   </div>

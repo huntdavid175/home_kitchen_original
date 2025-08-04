@@ -88,7 +88,7 @@ export default function PurchaseList() {
       try {
         setLoading(true);
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/recipes?page=${pagination.currentPage}`
+          `${process.env.NEXT_PUBLIC_BACKEND_ENDPOINT_URL}/api/recipes?page=${pagination.currentPage}&limit=12`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch recipes");
@@ -192,7 +192,7 @@ export default function PurchaseList() {
 
         {/* Recipe grid */}
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-8"
           initial="hidden"
           animate="visible"
           variants={{
